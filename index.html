@@ -3,233 +3,360 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portafolio Micaela Alvarado Mendez</title>
+    <title>Micaela Alvarado Mendez | Analista en Sistemas & Full-Stack</title>
+    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome 6.4.0 -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <!-- Google Fonts: Inter, Space Grotesk & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Cosmic Glassmorphism Stylesheet -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body data-bs-spy="scroll" data-bs-target="#navbar">
 
-    <nav id="navbar" class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <!-- Fondo Cósmico Procedural (Galaxia + Nebulosas + Estrellas) -->
+    <div id="galaxy-bg" class="galaxy-bg"></div>
+
+    <!-- Navegación Flotante Glassmorphism -->
+    <nav id="navbar" class="navbar navbar-expand-lg fixed-top">
         <div class="container">
-            <p>Micaela Alvarado Mendez</p>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
+            <a class="navbar-brand" href="#">
+                <span class="brand-icon"><i class="fas fa-terminal"></i></span>
+                <span>Micaela Alvarado Mendez</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fas fa-bars text-light"></i>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav ms-auto align-items-lg-center">
                     <li class="nav-item"><a class="nav-link" href="#sobre-mi">Sobre mí</a></li>
                     <li class="nav-item"><a class="nav-link" href="#habilidades">Habilidades</a></li>
                     <li class="nav-item"><a class="nav-link" href="#proyectos">Proyectos</a></li>
                     <li class="nav-item"><a class="nav-link" href="#contacto">Contacto</a></li>
-                    <li class="nav-item ms-2 d-flex align-items-center">
-                        <a href="https://www.linkedin.com/in/micaelaalvaradomendez/" target="_blank" class="nav-link"><i class="fab fa-linkedin fa-lg"></i></a>
-                        <a href="https://github.com/micaelaalvaradomendez" target="_blank" class="nav-link"><i class="fab fa-github fa-lg"></i></a>
+                    <li class="nav-item ms-lg-3 d-flex gap-2 mt-2 mt-lg-0">
+                        <a href="https://www.linkedin.com/in/micaelaalvaradomendez/" target="_blank" class="btn-glass-icon" title="LinkedIn" aria-label="LinkedIn">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="https://github.com/micaelaalvaradomendez" target="_blank" class="btn-glass-icon" title="GitHub" aria-label="GitHub">
+                            <i class="fab fa-github"></i>
+                        </a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
+    <!-- Hero Section -->
     <header class="hero-section">
-        <div class="container text-center py-5">
-            <img src="icons/logotipo.jpeg" alt="Micaela Alvarado Mendez" class="rounded-circle mb-4" width="200">
-            <h1 class="display-4 fw-bold">Micaela Alvarado Mendez</h1>
-            <p class="lead">Estudiante de Licenciatura en Sistemas | UI/UX | Analista de datos</p>
+        <div class="container">
+            <!-- Avatar con Anillo Cósmico Luminoso -->
+            <div class="avatar-glow-container">
+                <div class="avatar-glow-ring"></div>
+                <img src="icons/logotipo.jpeg" alt="Micaela Alvarado Mendez" class="avatar-img">
+            </div>
+            
+            <h1 class="hero-title">
+                Micaela <span class="highlight">Alvarado Mendez</span>
+            </h1>
+            
+            <p class="hero-subtitle">
+                Analista Universitaria en Sistemas | Full-Stack (Go + Svelte) · Relevamiento Funcional · Modelado Relacional & Arquitectura
+            </p>
+            
+            <div class="hero-badges">
+                <span class="pill-badge badge-blue"><i class="fab fa-golang me-1"></i>Go (Golang)</span>
+                <span class="pill-badge badge-pink"><i class="fas fa-bolt me-1"></i>SvelteKit</span>
+                <span class="pill-badge badge-cyan"><i class="fas fa-database me-1"></i>PostgreSQL 16</span>
+                <span class="pill-badge badge-purple"><i class="fas fa-project-diagram me-1"></i>BPMN / PlantUML</span>
+                <span class="pill-badge badge-emerald"><i class="fas fa-brain me-1"></i>Spec-Driven Dev</span>
+            </div>
         </div>
     </header>
 
     <main class="container">
 
-        <section id="sobre-mi" class="py-5">
-            <div class="section-divider"></div>
-            <h2 class="section-title">Sobre mí</h2>
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <p class="text-center">Estudiante de la Licenciatura en Sistemas en la Universidad Nacional de Tierra del Fuego (UNTDF).</p>
-                    <p class="text-center">Me interesa el diseño de UI/UX, el desarrollo backend y la programacion OO y funcional.</p>
-                    <p class="text-center">Disfruto constantemente adquiriendo nuevas habilidades y enfrentando desafíos.</p>
-                    <p class="text-center">Me caracterizo por mi versatilidad, compromiso y habilidades tecnológicas en constante evolución.</p>
-                    <div class="text-center mt-4">
-                        <a href="https://drive.google.com/file/d/1YLfvrgnmmY_fVXR73etrcBBeu0LFw-1l/view?usp=sharing" class="btn btn-primary">Descargar CV</a>
+        <!-- Sobre mí -->
+        <section id="sobre-mi" class="py-4">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon"><i class="fas fa-id-badge"></i></span>
+                        <span class="fw-bold fs-6 text-light">Perfil Profesional</span>
+                    </div>
+                    <span class="pill-badge badge-purple"><i class="fas fa-graduation-cap me-1"></i>UNTDF</span>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-lg-10">
+                        <p class="fs-5 text-light fw-medium mb-3">
+                            Analista Universitaria en Sistemas y estudiante avanzada de la Licenciatura en Sistemas en la <strong>Universidad Nacional de Tierra del Fuego (UNTDF)</strong>.
+                        </p>
+                        <p class="text-secondary">
+                            Cuento con un perfil mixto que integra el <strong>relevamiento funcional riguroso</strong>, el <strong>modelado relacional de datos normalizado</strong> y el <strong>desarrollo de software full-stack en Go y SvelteKit</strong>.
+                        </p>
+                        <p class="text-secondary mb-4">
+                            Mi enfoque de trabajo prioriza diseñar y diagramar la lógica operativa antes de codificar: traduzco circuitos operativos complejos en bases de datos con reglas directas en motor, backoffices reactivos y arquitecturas desacopladas con auditoría activa e inmutable.
+                        </p>
+                        <div class="text-center pt-2">
+                            <a href="https://drive.google.com/file/d/1YLfvrgnmmY_fVXR73etrcBBeu0LFw-1l/view?usp=sharing" target="_blank" class="btn-primary-glow">
+                                <i class="fas fa-file-arrow-down me-2"></i>Descargar CV Completo
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="habilidades" class="py-5">
-            <div class="section-divider"></div>
-            <h2 class="section-title">Mis habilidades</h2>
+        <!-- Habilidades & Conocimientos -->
+        <section id="habilidades" class="py-4">
+            <h2 class="section-title">Habilidades & Conocimientos</h2>
+            <p class="section-subtitle">Diseño metodológico riguroso, arquitectura de software y desarrollo full-stack con persistencia relacional estricta.</p>
             
-            <div class="row">
+            <div class="row g-4">
+                <!-- Columna 1: Análisis, Modelado & AI Engineering -->
                 <div class="col-md-6">
-                    <h3 class="subsection-title">Habilidades Blandas</h3>
-                    <ul class="skills-list">
-                        <li>Capacidad de adaptarme a distintos roles y entornos</li>
-                        <li>Experiencia en identificar y abordar problemas</li>
-                        <li>Habilidad para evaluar procesos y tomar decisiones informadas</li>
-                        <li>Buena predisposición para enfrentar desafíos profesionales</li>
-                        <li>Organización de múltiples responsabilidades</li>
-                        <li>Trabajo con equipo</li>
-                        <li>Empatía y comunicativa</li>
-                        <li>Proactividad para aprender nuevas habilidades</li>
-                        <li>Autoexigente y responsable</li>
-                        <li>Manejo de conflictos y desempeño bajo presión</li>
-                    </ul>
+                    <div class="glass-card h-100">
+                        <div class="skill-category-title">
+                            <div class="skill-category-icon">
+                                <i class="fas fa-sitemap"></i>
+                            </div>
+                            <span>Análisis Funcional & Modelado</span>
+                        </div>
+                        
+                        <ul class="feature-list mb-4">
+                            <li>Relevamiento de circuitos operativos complejos y formalización de requerimientos (RF / RNF).</li>
+                            <li>Modelado de Procesos con notación <strong>BPMN</strong>, Diagramas de Flujo y Máquinas de Estados Finitos.</li>
+                            <li>Casos de Uso, Historias de Usuario con Criterios de Aceptación y Matrices de Trazabilidad.</li>
+                            <li>Diseño de Modelos Entidad-Relación (DER/MER) en Tercera Forma Normal (3FN).</li>
+                            <li>Redacción de especificaciones de arquitectura y dictámenes técnicos (ADRs).</li>
+                        </ul>
+
+                        <div class="sub-category-title"><i class="fas fa-drafting-compass me-2"></i>Herramientas de Diseño & Modelado</div>
+                        <div class="skills-tags mb-4">
+                            <span class="tech-tag"><i class="fas fa-code-branch"></i>PlantUML (.puml)</span>
+                            <span class="tech-tag"><i class="fas fa-draw-polygon"></i>Draw.io</span>
+                            <span class="tech-tag"><i class="fas fa-database"></i>DER Normalizado</span>
+                            <span class="tech-tag"><i class="fas fa-layer-group"></i>C4 Architecture</span>
+                        </div>
+
+                        <div class="sub-category-title" style="color: var(--color-galaxy-pink);"><i class="fas fa-robot me-2"></i>AI Engineering & Gobernanza</div>
+                        <div class="skills-tags">
+                            <span class="tech-tag"><i class="fas fa-brain"></i>Spec-Driven Dev</span>
+                            <span class="tech-tag"><i class="fas fa-network-wired"></i>Model Context Protocol (MCP)</span>
+                            <span class="tech-tag"><i class="fas fa-shield-halved"></i>AI Guardrails (.cursorrules)</span>
+                        </div>
+                    </div>
                 </div>
                 
+                <!-- Columna 2: Stack Técnico, Backend, Frontend & Datos -->
                 <div class="col-md-6">
-                    <h3 class="subsection-title">Lenguajes de programación</h3>
-                    <div class="skills-tags">
-                        <span class="skill-tag"><i class="fab fa-html5"></i> HTML</span>
-                        <span class="skill-tag"><i class="fab fa-css3-alt"></i> CSS/SCSS</span>
-                        <span class="skill-tag"><i class="fab fa-js-square"></i> JavaScript</span>
-                        <span class="skill-tag"><i class="fas fa-database"></i> SQL</span>
-                        <span class="skill-tag"><i class="fab fa-java"></i> Java</span>
-                        <span class="skill-tag"><i class="fab fa-python"></i> Python</span>
-                    </div>
-                    
-                    <h3 class="subsection-title mt-4">Herramientas</h3>
-                    <div class="skills-tags">
-                        <span class="tool-tag"><i class="fas fa-tools"></i> Microsoft Office</span>
-                        <span class="tool-tag"><i class="fas fa-chart-bar"></i> Tableau</span>
-                        <span class="tool-tag"><i class="fas fa-chart-pie"></i> Power BI</span>
-                        <span class="tool-tag"><i class="fas fa-database"></i> pgAdmin</span>
-                        <span class="tool-tag"><i class="fas fa-database"></i> MySQL</span>
-                        <span class="tool-tag"><i class="fas fa-code"></i> VS Code</span>
-                        <span class="tool-tag"><i class="fab fa-git"></i> Git</span>
-                        <span class="tool-tag"><i class="fab fa-github"></i> GitHub</span>
-                        <span class="tool-tag"><i class="fas fa-code"></i> NetBeans</span>
-                    </div>
-                    
-                    <h3 class="subsection-title mt-4">Certificaciones</h3>
-                    <div class="certification">
-                        <p>Curso Tableau</p>
-                        <a href="https://drive.google.com/file/d/1huGWGv9qwf8YcsI83bfNjTlgc7Aqun1S/view?usp=sharing" class="btn btn-sm btn-outline-primary">Certificado</a>
-                    </div>
-                    <div class="certification">
-                        <p>Curso de Procesamiento de datos en Excel</p>
-                        <a href="https://drive.google.com/file/d/1nTwmP7VN9BgzlI_mLLvqpJPEAaLbZFku/view?usp=sharing" class="btn btn-sm btn-outline-primary">Certificado</a>
-                    </div>
-                    <div class="certification">
-                        <p>Curso Data Analytics</p>
-                        <a href="https://drive.google.com/file/d/1MU_GqqU6c37-zWId8bgbKQ6KNFQclZvL/view?usp=sharing" class="btn btn-sm btn-outline-primary">Certificado</a>
+                    <div class="glass-card h-100">
+                        <div class="skill-category-title">
+                            <div class="skill-category-icon" style="color: var(--color-galaxy-pink); background: rgba(236,72,153,0.15); border-color: rgba(236,72,153,0.25);">
+                                <i class="fas fa-code"></i>
+                            </div>
+                            <span>Desarrollo & Arquitectura</span>
+                        </div>
+                        
+                        <div class="sub-category-title"><i class="fas fa-server me-2"></i>Backend & Persistencia</div>
+                        <div class="skills-tags mb-3">
+                            <span class="tech-tag"><i class="fab fa-golang"></i>Go (Golang)</span>
+                            <span class="tech-tag"><i class="fas fa-database"></i>PostgreSQL 16</span>
+                            <span class="tech-tag"><i class="fas fa-cogs"></i>PL/pgSQL Triggers</span>
+                            <span class="tech-tag"><i class="fas fa-memory"></i>Redis Cache</span>
+                            <span class="tech-tag"><i class="fab fa-docker"></i>Docker / Compose</span>
+                        </div>
+
+                        <div class="sub-category-title" style="color: var(--color-galaxy-purple);"><i class="fas fa-laptop-code me-2"></i>Frontend & Backoffice</div>
+                        <div class="skills-tags mb-3">
+                            <span class="tech-tag"><i class="fas fa-bolt"></i>Svelte / SvelteKit</span>
+                            <span class="tech-tag"><i class="fab fa-js-square"></i>TypeScript / JS</span>
+                            <span class="tech-tag"><i class="fab fa-html5"></i>HTML5 & CSS3</span>
+                            <span class="tech-tag"><i class="fab fa-bootstrap"></i>Bootstrap 5</span>
+                        </div>
+
+                        <div class="sub-category-title" style="color: var(--color-galaxy-emerald);"><i class="fas fa-chart-line me-2"></i>Datos & Business Intelligence</div>
+                        <div class="skills-tags mb-3">
+                            <span class="tech-tag"><i class="fab fa-python"></i>Python (Pandas)</span>
+                            <span class="tech-tag"><i class="fas fa-chart-bar"></i>Tableau Public</span>
+                            <span class="tech-tag"><i class="fas fa-cubes"></i>Esquema Estrella</span>
+                            <span class="tech-tag"><i class="fas fa-shield-alt"></i>OWASP ASVS / RBAC</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="proyectos" class="py-5">
-            <div class="section-divider"></div>
-            <h2 class="section-title">Proyectos</h2>
+        <!-- Proyectos & Casos de Estudio -->
+        <section id="proyectos" class="py-4">
+            <h2 class="section-title">Proyectos & Casos de Estudio</h2>
+            <p class="section-subtitle">Soluciones de ingeniería que articulan análisis de procesos, integridad relacional en motor, desarrollo web y gobernanza técnica.</p>
             
-            <div class="row">
-                <div class="col-md-6 col-lg-4 mb-4">
+            <div class="row g-4">
+                
+                <!-- 1. Backoffice & Auditoría Operativa -->
+                <div class="col-md-6">
                     <div class="project-card">
-                        <img src="icons/Tableau.png" class="card-img-top" alt="Proyecto Tableau">
+                        <div class="project-top-bar">
+                            <span class="pill-badge badge-purple">Full-Stack & Análisis</span>
+                            <span class="pill-badge badge-blue">Go + Svelte</span>
+                        </div>
                         <div class="project-body">
-                            <h5>Proyecto de Tableau</h5>
-                            <div class="project-links">
-                                <a href="https://public.tableau.com/views/EntregaFinal-AlvaradoMendezMicaela-Tableau-Coderhouse/Portada?:language=es-ES&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link" class="btn btn-sm btn-primary">Ver en Tableau</a>
-                                <a href="https://drive.google.com/drive/folders/1s7ZKRIAn9h8DeEKs5qUFKMXae9w8zrla?usp=sharing" class="btn btn-sm btn-outline-primary">Documentación</a>
+                            <h3 class="project-title">Plataforma Backoffice de Gestión & Auditoría de Eventos</h3>
+                            <div class="tech-stack-label">Go · SvelteKit · PostgreSQL · Draw.io · BPMN · RBAC · Outbox</div>
+                            <p class="project-description">
+                                Digitalización integral de circuitos operativos complejos y trazabilidad institucional. Comprende relevamiento funcional, máquina de estados finitos, arquitectura desacoplada en Go y subsistema de auditoría inmutable para registro de anomalías.
+                            </p>
+                            <div class="mt-auto pt-2">
+                                <a href="proyectos/backoffice-gestion.html" class="btn-primary-glow w-100">
+                                    <i class="fas fa-sitemap me-2"></i>Ver Caso Funcional & Diagramas
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 col-lg-4 mb-4">
+
+                <!-- 2. PostgreSQL Avanzado -->
+                <div class="col-md-6">
                     <div class="project-card">
-                        <img src="icons/Excel.png" class="card-img-top" alt="Proyecto Excel">
+                        <div class="project-top-bar">
+                            <span class="pill-badge badge-cyan">Database Engineering</span>
+                            <span class="pill-badge badge-emerald">PostgreSQL 16</span>
+                        </div>
                         <div class="project-body">
-                            <h5>Proyecto de Excel</h5>
-                            <a href="https://github.com/micaelaalvaradomendez/Excel.git" class="btn btn-sm btn-primary">Ver en GitHub</a>
+                            <h3 class="project-title">Automatización e Integridad Transaccional en PostgreSQL</h3>
+                            <div class="tech-stack-label">PostgreSQL 16 · PL/pgSQL · 3FN · GiST · Docker · Tests SQL</div>
+                            <p class="project-description">
+                                Modelo relacional normalizado en 3FN con resolución de reglas de negocio críticas a nivel motor. Implementación de restricciones de exclusión temporal (GiST) para mitigar condiciones de carrera bajo concurrencia, triggers y tests negativos automatizados.
+                            </p>
+                            <div class="mt-auto pt-2">
+                                <a href="https://github.com/micaelaalvaradomendez/diseno-reglas-negocio-postgresql" target="_blank" class="btn-primary-glow w-100">
+                                    <i class="fab fa-github me-2"></i>Repositorio & Scripts DDL
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 col-lg-4 mb-4">
+
+                <!-- 3. Pipeline de BI & Visualización -->
+                <div class="col-md-6">
                     <div class="project-card">
-                        <img src="icons/Data.png" class="card-img-top" alt="Proyecto Data Analytics">
+                        <div class="project-top-bar">
+                            <span class="pill-badge badge-blue">Data & Analytics</span>
+                            <span class="pill-badge badge-pink">Tableau + SQL</span>
+                        </div>
                         <div class="project-body">
-                            <h5>Proyecto de Data Analytics</h5>
-                            <a href="https://github.com/micaelaalvaradomendez/Data-Analytics.git" class="btn btn-sm btn-primary">Ver en GitHub</a>
+                            <h3 class="project-title">Pipeline Integral de BI & Modelado Dimensional</h3>
+                            <div class="tech-stack-label">Python (Pandas) · SQL · Tableau Public · Esquema Estrella</div>
+                            <p class="project-description">
+                                Ciclo end-to-end del dato: saneamiento de datasets brutos con Python, estructuración dimensional en esquema estrella (hechos y dimensiones) y tablero ejecutivo interactivo publicado para la toma de decisiones estratégicas.
+                            </p>
+                            <div class="mt-auto pt-2 d-flex flex-wrap gap-2">
+                                <a href="https://public.tableau.com/app/profile/micaela.alvarado.mendez" target="_blank" class="btn-primary-glow flex-grow-1">
+                                    <i class="fas fa-chart-line me-2"></i>Tablero Tableau
+                                </a>
+                                <a href="https://github.com/micaelaalvaradomendez/pipeline-bi-modelado-dimensional" target="_blank" class="btn-secondary-glass flex-grow-1">
+                                    <i class="fab fa-github me-2"></i>Pipeline ETL
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 col-lg-4 mb-4">
+
+                <!-- 4. Metodología SDD / AI Engineering -->
+                <div class="col-md-6">
                     <div class="project-card">
-                        <img src="icons/PDOO.png" class="card-img-top" alt="Proyecto PDOO">
+                        <div class="project-top-bar">
+                            <span class="pill-badge badge-pink">AI Engineering</span>
+                            <span class="pill-badge badge-emerald">Publicado</span>
+                        </div>
                         <div class="project-body">
-                            <h5>Proyecto de Programación Orientada a Objetos</h5>
-                            <a href="https://github.com/micaelaalvaradomendez/Java.git" class="btn btn-sm btn-primary">Ver en GitHub</a>
+                            <h3 class="project-title">Framework SDD para Agentes de IA Supervisados</h3>
+                            <div class="tech-stack-label">Spec-Driven Development · MCP · Context Engineering · ADRs</div>
+                            <p class="project-description">
+                                Protocolo formal y repositorio template para desarrollo asistido por IA gobernada. Estandariza la elicitación de requerimientos (RF/RNF), aislamiento de contexto (.cursorrules), contratos MCP y trazabilidad de decisiones técnicas.
+                            </p>
+                            <div class="mt-auto pt-2">
+                                <a href="https://github.com/micaelaalvaradomendez/sdd-agents-protocol" target="_blank" class="btn-primary-glow w-100">
+                                    <i class="fab fa-github me-2"></i>Ver Repositorio Template
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 col-lg-4 mb-4">
-                    <div class="project-card">
-                        <img src="icons/BD1.png" class="card-img-top" alt="Proyecto BD1">
-                        <div class="project-body">
-                            <h5>Proyecto de Base de Datos I</h5>
-                            <a href="https://drive.google.com/drive/folders/1vl5_hAM63wXVS_fIcV1CyRYZ4JQMs3Lb?usp=sharing" class="btn btn-sm btn-primary">Ver en Drive</a>
-                        </div>
-                    </div>
+
+            </div>
+        </section>
+
+        <!-- Contacto -->
+        <section id="contacto" class="py-4">
+            <div class="glass-card text-center py-5">
+                <div class="d-inline-flex align-items-center gap-2 mb-3">
+                    <span class="brand-icon"><i class="fas fa-envelope-open-text"></i></span>
+                    <span class="fw-bold fs-5 text-light">Contacto Profesional</span>
                 </div>
-                <div class="col-md-6 col-lg-4 mb-4">
-                    <div class="project-card">
-                        <img src="https://github.com/micaelaalvaradomendez/lpl.ntegracion_python_html/blob/main/imagenes/index.png?raw=true" class="card-img-top" alt="Integración Python con HTML">
-                        <div class="project-body">
-                            <h5>Integración Python con HTML y CSS</h5>
-                            <a href="https://github.com/micaelaalvaradomendez/lpl.ntegracion_python_html.git" class="btn btn-sm btn-primary">Ver en GitHub</a>
-                        </div>
-                    </div>
+                
+                <p class="fs-5 text-light mb-2">¿Querés conversar sobre una oportunidad técnica o un proyecto?</p>
+                
+                <div class="my-4">
+                    <span class="px-4 py-2 rounded-3 d-inline-block" style="background: rgba(139, 92, 246, 0.14); border: 1px solid rgba(139, 92, 246, 0.35); font-family: var(--font-mono); font-size: 1.15rem; color: #f5f3ff;">
+                        micaelaalvaradomendez@gmail.com
+                    </span>
+                </div>
+                
+                <p class="text-secondary small mb-4">Ushuaia, Tierra del Fuego, Argentina · Disponible para posiciones remotas o híbridas</p>
+                
+                <div class="d-flex justify-content-center flex-wrap gap-3">
+                    <button id="copyEmail" class="btn-primary-glow">
+                        <i class="fas fa-copy me-2"></i>Copiar Correo
+                    </button>
+                    <a href="https://www.linkedin.com/in/micaelaalvaradomendez/" class="btn-secondary-glass" target="_blank">
+                        <i class="fab fa-linkedin-in me-2"></i>LinkedIn
+                    </a>
+                    <a href="https://github.com/micaelaalvaradomendez" class="btn-secondary-glass" target="_blank">
+                        <i class="fab fa-github me-2"></i>GitHub
+                    </a>
                 </div>
             </div>
         </section>
-        <section id="contacto" class="py-5">
-            <div class="section-divider"></div>
-            <h2 class="section-title">Contacto</h2>
-            
-            <div class="text-center">
-                <p class="contact-email">micaelaalvaradomendez@gmail.com</p>
-                <button id="copyEmail" class="btn btn-primary me-2">
-                    <i class="fas fa-copy me-1"></i>Copiar correo
-                </button>
-                <a href="https://www.linkedin.com/in/micaelaalvaradomendez/" class="btn btn-outline-primary me-2" target="_blank">
-                    <i class="fab fa-linkedin me-1"></i>LinkedIn
-                </a>
-                <a href="https://github.com/micaelaalvaradomendez" class="btn btn-outline-primary" target="_blank">
-                    <i class="fab fa-github me-1"></i>GitHub
-                </a>
-            </div>
-        </section>
+
     </main>
-    <footer class="py-4 text-center">
-        <p class="mb-0">Micaela Alvarado Mendez</p>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p class="mb-0">
+                <i class="fas fa-shield-halved me-2" style="color: var(--color-galaxy-purple);"></i>
+                Micaela Alvarado Mendez · Analista Universitaria en Sistemas · 2026
+            </p>
+        </div>
     </footer>
+
+    <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Galaxy Stars Animation Script -->
+    <script src="galaxy.js"></script>
+    <!-- Script copiar email -->
     <script>
         document.getElementById('copyEmail').addEventListener('click', async function() {
             const email = 'micaelaalvaradomendez@gmail.com';
             try {
                 await navigator.clipboard.writeText(email);
-                const originalText = this.innerHTML;
-                this.innerHTML = '<i class="fas fa-check me-1"></i>Copiado!';
-                setTimeout(() => {
-                    this.innerHTML = originalText;
-                }, 2000);
+                const original = this.innerHTML;
+                this.innerHTML = '<i class="fas fa-check me-2"></i>¡Copiado!';
+                setTimeout(() => { this.innerHTML = original; }, 2000);
             } catch (err) {
-                console.error('Error al copiar: ', err);
                 const textarea = document.createElement('textarea');
                 textarea.value = email;
                 document.body.appendChild(textarea);
                 textarea.select();
                 document.execCommand('copy');
                 document.body.removeChild(textarea);
-                
-                const originalText = this.innerHTML;
-                this.innerHTML = '<i class="fas fa-check me-1"></i>Copiado!';
-                setTimeout(() => {
-                    this.innerHTML = originalText;
-                }, 2000);
+                const original = this.innerHTML;
+                this.innerHTML = '<i class="fas fa-check me-2"></i>¡Copiado!';
+                setTimeout(() => { this.innerHTML = original; }, 2000);
             }
         });
     </script>

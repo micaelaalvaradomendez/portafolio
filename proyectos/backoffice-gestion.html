@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caso de Estudio: Backoffice de Gestión & Auditoría | Micaela Alvarado Mendez</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome 6.4.0 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts: Inter, Space Grotesk & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Cosmic Glassmorphism Stylesheet (Ruta relativa) -->
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+    <!-- Fondo Cósmico Procedural -->
+    <div id="galaxy-bg" class="galaxy-bg"></div>
+
+    <!-- Navegación Flotante Glassmorphism -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <span class="brand-icon"><i class="fas fa-terminal"></i></span>
+                <span>Micaela Alvarado Mendez</span>
+            </a>
+            <div class="ms-auto">
+                <a href="../index.html" class="btn-secondary-glass py-2 px-3">
+                    <i class="fas fa-arrow-left me-2"></i>Volver al Portafolio
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header del Caso de Estudio -->
+    <header class="case-study-hero">
+        <div class="container">
+            <div class="mb-3">
+                <a href="../index.html" class="btn-secondary-glass py-1 px-3" style="font-size: 0.85rem;">
+                    <i class="fas fa-chevron-left me-2"></i>Portada / Proyectos
+                </a>
+            </div>
+            <div class="d-flex flex-wrap gap-2 mb-3">
+                <span class="pill-badge badge-purple">Full-Stack & Análisis</span>
+                <span class="pill-badge badge-blue">Go + SvelteKit</span>
+                <span class="pill-badge badge-cyan">PostgreSQL 16</span>
+                <span class="pill-badge badge-pink">Auditoría Activa</span>
+            </div>
+            <h1 class="hero-title text-start mb-3" style="font-size: clamp(1.8rem, 4vw, 2.6rem);">
+                Plataforma Backoffice de Gestión Operativa & Auditoría de Eventos
+            </h1>
+            <p class="hero-subtitle text-start m-0" style="max-width: 900px;">
+                Digitalización de circuitos de tramitación compleja, máquina de estados finitos, arquitectura desacoplada en Go y observabilidad inmutable.
+            </p>
+        </div>
+    </header>
+
+    <main class="container my-4">
+
+        <!-- 1. El Problema & Contexto Operativo -->
+        <section class="mb-5">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon" style="color: var(--color-galaxy-pink);"><i class="fas fa-triangle-exclamation"></i></span>
+                        <span class="fw-bold fs-6 text-light">1. Contexto & Diagnóstico del Problema</span>
+                    </div>
+                </div>
+                <h4 class="text-light mb-3">Ineficiencia en Circuitos Analógicos y Ausencia de Trazabilidad</h4>
+                <p class="text-secondary">
+                    En organizaciones con alta carga administrativa e institucional, los circuitos tradicionales de gestión de solicitudes y dictámenes suelen depender de trámites manuales, planillas fragmentadas o sistemas legacy rígidos. Esto introduce cuellos de botella críticos:
+                </p>
+                <ul class="feature-list text-secondary mb-4">
+                    <li><strong class="text-light">Ambigüedad de Estado:</strong> Dificultad para auditar en tiempo real quién tiene la responsabilidad sobre un expediente o en qué etapa exacta de revisión se encuentra.</li>
+                    <li><strong class="text-light">Riesgo de Inconsistencia Formal:</strong> Posibilidad de emitir resoluciones o dictámenes sin haber cumplido los pasos de validación técnica o legal precedentes.</li>
+                    <li><strong class="text-light">Vulnerabilidad de Trazabilidad:</strong> Falta de un registro inmutable que impida el repudio de acciones u omisiones por parte de operadores o usuarios con privilegios.</li>
+                </ul>
+                <div class="p-3 rounded-3" style="background: rgba(6, 182, 212, 0.1); border: 1px solid rgba(6, 182, 212, 0.25);">
+                    <p class="m-0 text-light small">
+                        <strong style="color: var(--color-galaxy-cyan);"><i class="fas fa-bullseye me-2"></i>Objetivo de Ingeniería:</strong> Diseñar y construir una solución integral que combine el relevamiento de procesos formales (BPMN), la garantía de reglas en una máquina de estados estricta y una arquitectura desacoplada en Go y SvelteKit con auditoría transaccional.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Modelado de Negocio & Máquina de Estados -->
+        <section class="mb-5">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon" style="color: var(--color-galaxy-cyan);"><i class="fas fa-diagram-project"></i></span>
+                        <span class="fw-bold fs-6 text-light">2. Modelado de Procesos & Máquina de Estados Finitos (FSM)</span>
+                    </div>
+                </div>
+                <h4 class="text-light mb-3">Ciclo de Vida de la Tramitación y Segregación de Funciones (SoD)</h4>
+                <p class="text-secondary">
+                    Para eliminar la ambigüedad operativa, se especificó una máquina de estados finitos donde ninguna transición puede ocurrir sin una validación previa de condiciones y roles autorizados:
+                </p>
+
+                <!-- Representación visual en ventana de código -->
+                <div class="code-window my-4">
+                    <div class="code-window-header">
+                        <div class="window-dots">
+                            <span class="window-dot dot-red"></span>
+                            <span class="window-dot dot-yellow"></span>
+                            <span class="window-dot dot-green"></span>
+                        </div>
+                        <span class="code-window-title">fsm_state_machine.txt</span>
+                        <span></span>
+                    </div>
+                    <div class="code-window-body">
+<div class="fsm-comment">// Flujo Transaccional de la FSM (Representación Formal de Estados)</div>
+<div><span class="fsm-state">[01. BORRADOR]</span>      ──(Firma y Elevación)──> <span class="fsm-state">[02. INGRESADO]</span></div>
+<div>                                                 │</div>
+<div>                                        (Asignación a Área)</div>
+<div>                                                 ▼</div>
+<div><span class="fsm-state">[04. OBSERVADO]</span>     <──(Subsanación Req.)─── <span class="fsm-state">[03. EN REVISIÓN]</span></div>
+<div>        │                                        │</div>
+<div>        └───(Reingreso con Correcciones)─────────┤ (Validación Técnica OK)</div>
+<div>                                                 ▼</div>
+<div><span class="fsm-state">[06. RECHAZADO]</span>    <──(Dictamen Negativo)─── <span class="fsm-state">[05. EN DICTAMEN]</span> ──(Resolución Favorable)──> <span class="fsm-state">[07. APROBADO]</span></div>
+<div>        │                                                                                     │</div>
+<div>        └───────────────────> <span class="fsm-state">[08. NOTIFICADO]</span> ──(Cierre y Archivo)──> <span class="fsm-state">[09. ARCHIVADO]</span> <──────┘</div>
+                    </div>
+                </div>
+
+                <div class="row g-3 mt-2">
+                    <div class="col-md-6">
+                        <div class="mockup-preview-card">
+                            <h6><i class="fas fa-shield-check me-2"></i>Invarianza de Estados</h6>
+                            <p class="small text-secondary mb-0">
+                                Un expediente marcado como <code>Observado</code> no puede saltar a <code>En Dictamen</code> sin una versión de subsanación formal firmada digitalmente en el sistema.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mockup-preview-card">
+                            <h6><i class="fas fa-user-lock me-2"></i>Segregación de Roles (SoD)</h6>
+                            <p class="small text-secondary mb-0">
+                                El usuario que inicia o tramita la solicitud tiene restricción estricta de permisos (RBAC) para emitir el dictamen o firmar la resolución final.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Arquitectura del Sistema Desacoplado -->
+        <section class="mb-5">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon" style="color: var(--color-galaxy-purple);"><i class="fas fa-network-wired"></i></span>
+                        <span class="fw-bold fs-6 text-light">3. Arquitectura de Software & Subsistema de Auditoría</span>
+                    </div>
+                </div>
+                <h4 class="text-light mb-3">Backend Concurrente en Go y UI Reactiva en SvelteKit</h4>
+                <p class="text-secondary">
+                    El sistema está estructurado bajo principios de separación de responsabilidades y mínima superficie de ataque:
+                </p>
+
+                <div class="code-window my-4">
+                    <div class="code-window-header">
+                        <div class="window-dots">
+                            <span class="window-dot dot-red"></span>
+                            <span class="window-dot dot-yellow"></span>
+                            <span class="window-dot dot-green"></span>
+                        </div>
+                        <span class="code-window-title">system_topology.txt</span>
+                        <span></span>
+                    </div>
+                    <div class="code-window-body">
+<div class="fsm-comment">// Topología Lógica del Sistema Desacoplado</div>
+<div>[Operador / UI] ──(Fetch + JWT)──> [Traefik Gateway (Rate Limit / SSL)]</div>
+<div>                                                 │</div>
+<div>                                                 ▼</div>
+<div>                                    [Backend Core en Go]</div>
+<div>                                      ├── Father Router & Middlewares</div>
+<div>                                      ├── Child: Auth & RBAC (Tokens / Sesiones)</div>
+<div>                                      ├── Child: Trámites & FSM Engine</div>
+<div>                                      └── Outbox Worker (Goroutines Asíncronas)</div>
+<div>                                                 │</div>
+<div>                    ┌────────────────────────────┴────────────────────────────┐</div>
+<div>                    ▼                                                         ▼</div>
+<div>         [(PostgreSQL 16 Engine)]                                     [(Redis Cache)]</div>
+<div>           ├── Tablas Transaccionales (3FN)                              └── Rate Limiting / Brute-force</div>
+<div>           └── Outbox & Eventos Append-Only</div>
+                    </div>
+                </div>
+
+                <div class="row g-4 mt-2">
+                    <div class="col-md-6">
+                        <h6 class="text-light fw-bold mb-2" style="color: var(--color-galaxy-pink) !important;">
+                            <i class="fab fa-golang me-2"></i>Backend Go (Patrón Father/Child & Outbox)
+                        </h6>
+                        <p class="text-secondary small">
+                            Un controlador padre gestiona las dependencias comunes (pool de PostgreSQL, Redis, logging estructurado) e inyecta el contexto a controladores hijos aislados. Para garantizar atomicidad, la inserción del trámite y el evento de auditoría ocurren en la <strong>misma transacción relacional</strong>; un Outbox Worker en segundo plano emite telemetría sin bloquear al usuario.
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-light fw-bold mb-2" style="color: var(--color-galaxy-cyan) !important;">
+                            <i class="fas fa-bolt me-2"></i>Frontend Reactivo en SvelteKit
+                        </h6>
+                        <p class="text-secondary small">
+                            Single Page Application modular compilada sin la sobrecarga de un Virtual DOM. Ofrece actualización reactiva instantánea para tablas de alta densidad de datos, filtros combinados por estado y sector, y manejo seguro de tokens en memoria y cookies HTTP-Only.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Persistencia Relacional -->
+        <section class="mb-5">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon" style="color: var(--color-galaxy-emerald);"><i class="fas fa-database"></i></span>
+                        <span class="fw-bold fs-6 text-light">4. Modelo Relacional & Trazabilidad (DER)</span>
+                    </div>
+                </div>
+                <h4 class="text-light mb-3">Normalización 3FN y Registro Inmutable Append-Only</h4>
+                <p class="text-secondary">
+                    El esquema relacional fue normalizado en Tercera Forma Normal (3FN), desacoplando los perfiles de usuario, las solicitudes transaccionales y el registro histórico:
+                </p>
+
+                <div class="code-window my-4">
+                    <div class="code-window-header">
+                        <div class="window-dots">
+                            <span class="window-dot dot-red"></span>
+                            <span class="window-dot dot-yellow"></span>
+                            <span class="window-dot dot-green"></span>
+                        </div>
+                        <span class="code-window-title">der_entities_3fn.sql</span>
+                        <span></span>
+                    </div>
+                    <div class="code-window-body">
+<div class="fsm-comment">// Entidades Principales del Esquema Normalizado</div>
+<div>• <span class="fsm-state">USUARIO</span>           : id (PK UUID), email, password_hash, estado, created_at</div>
+<div>• <span class="fsm-state">ROL / PERMISO</span>     : Control de Acceso Basado en Roles (RBAC granular)</div>
+<div>• <span class="fsm-state">SOLICITUD</span>         : id (PK), numero_expediente (UK), caratula, estado, usuario_iniciador_id (FK)</div>
+<div>• <span class="fsm-state">HISTORIAL_ESTADO</span>  : id (PK), solicitud_id (FK), estado_anterior, estado_nuevo, actor_id (FK), timestamp</div>
+<div>• <span class="fsm-state">EVENTO_AUDITORIA</span>  : id (BigSerial PK), actor_id (FK), accion, entidad, ip_origen, metadata JSONB, timestamp</div>
+                    </div>
+                </div>
+
+                <div class="p-3 rounded-3" style="background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.25);">
+                    <p class="m-0 text-light small">
+                        <strong style="color: var(--color-galaxy-purple);"><i class="fas fa-lock me-2"></i>Principio de No Repudio:</strong> En PostgreSQL, el rol de base de datos utilizado por la API cuenta con permisos restringidos: <code>REVOKE UPDATE, DELETE ON evento_auditoria</code>, asegurando que los registros históricos nunca puedan ser alterados retrospectivamente.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Prototipo de Interfaz & Vistas Operativas -->
+        <section class="mb-5">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon" style="color: var(--color-galaxy-blue);"><i class="fas fa-desktop"></i></span>
+                        <span class="fw-bold fs-6 text-light">5. Prototipado de Interfaz en SvelteKit (Dark Mode)</span>
+                    </div>
+                </div>
+                <h4 class="text-light mb-3">Diseño de Alta Densidad para Operadores Administrativos</h4>
+                <p class="text-secondary">
+                    La interfaz gráfica fue diseñada para optimizar la velocidad de lectura y carga en entornos de trabajo intensivo:
+                </p>
+
+                <div class="row g-4 mt-2">
+                    <div class="col-md-4">
+                        <div class="mockup-preview-card">
+                            <h6><i class="fas fa-table-list"></i>Panel Central de Trámites</h6>
+                            <p class="small text-secondary mb-0">
+                                Tablas reactivas paginadas con ordenamiento multi-columna, búsqueda por carátula o número y badges cromáticos según estado de la FSM.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mockup-preview-card">
+                            <h6><i class="fas fa-clock-rotate-left"></i>Línea de Tiempo de Auditoría</h6>
+                            <p class="small text-secondary mb-0">
+                                Visualizador cronológico que muestra cada dictamen, archivo adjunto con hash SHA-256 e intervención firmada por el operador.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mockup-preview-card">
+                            <h6><i class="fas fa-shield-halved"></i>Monitor de Anomalías</h6>
+                            <p class="small text-secondary mb-0">
+                                Detección temprana de ráfagas inusuales, bloqueos por fuerza bruta en Redis y alertas operativas fuera de la jornada habitual.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Criterio de Confidencialidad -->
+        <section class="mb-5">
+            <div class="confidential-callout">
+                <h6><i class="fas fa-user-shield me-2"></i>Criterio Editorial & Confidencialidad Profesional</h6>
+                <p class="small text-secondary mb-0">
+                    Por motivos de secreto profesional y confidencialidad institucional, las entidades, carátulas, flujos específicos y nombres exhibidos en este caso de estudio corresponden a una <strong>versión anonimizada y sintetizada</strong>. No se divulgan números de causas judiciales, datos personales de funcionarios ni configuraciones productivas de red. El valor expuesto radica en el criterio de análisis, la robustez arquitectónica y la ingeniería de software implementada.
+                </p>
+            </div>
+        </section>
+
+        <!-- Botón de retorno al pie -->
+        <div class="text-center my-5">
+            <a href="../index.html" class="btn-primary-glow">
+                <i class="fas fa-arrow-left me-2"></i>Volver a la Portada del Portafolio
+            </a>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p class="mb-0">
+                <i class="fas fa-shield-halved me-2" style="color: var(--color-galaxy-purple);"></i>
+                Micaela Alvarado Mendez · Analista Universitaria en Sistemas · 2026
+            </p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Galaxy Stars Animation Script (Ruta relativa) -->
+    <script src="../galaxy.js"></script>
+</body>
+</html>

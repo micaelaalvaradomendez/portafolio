@@ -606,6 +606,19 @@ a:hover {
   box-shadow: 0 0 16px rgba(139, 92, 246, 0.3);
 }
 
+.btn-secondary-glass.btn-disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  border-style: dashed;
+}
+
+.btn-secondary-glass.btn-disabled:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--glass-border);
+  transform: none;
+  box-shadow: none;
+}
+
 .btn-glass-icon {
   width: 40px;
   height: 40px;

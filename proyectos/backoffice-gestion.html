@@ -254,13 +254,65 @@
             </div>
         </section>
 
-        <!-- 5. Prototipo de Interfaz & Vistas Operativas -->
+        <!-- 5. Seguridad & Defensa en Profundidad -->
+        <section class="mb-5">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon" style="color: var(--color-galaxy-pink);"><i class="fas fa-shield-halved"></i></span>
+                        <span class="fw-bold fs-6 text-light">5. Seguridad & Defensa en Profundidad</span>
+                    </div>
+                    <span class="pill-badge badge-cyan">OWASP ASVS · NIST CSF</span>
+                </div>
+                <h4 class="text-light mb-3">Controles por Capas y Principio de Mínimo Privilegio</h4>
+                <p class="text-secondary">
+                    La seguridad no se delega a una única barrera: cada capa del sistema aplica sus propios controles, de modo que el compromiso de una no expone al resto:
+                </p>
+
+                <div class="row g-3 mt-2">
+                    <div class="col-md-6 col-lg-3">
+                        <div class="mockup-preview-card">
+                            <h6><i class="fas fa-globe"></i>Borde / Red</h6>
+                            <p class="small text-secondary mb-0">
+                                Reverse proxy con TLS estricto, rate limiting, mitigación de ráfagas anómalas y sanitización de cabeceras HTTP.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="mockup-preview-card">
+                            <h6><i class="fas fa-id-card"></i>Identidad</h6>
+                            <p class="small text-secondary mb-0">
+                                Flujo OIDC / JWT con cookies <code>HttpOnly</code>, <code>Secure</code> y <code>SameSite=Strict</code>, control de acceso RBAC y bloqueo temporal exponencial ante fuerza bruta en Redis.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="mockup-preview-card">
+                            <h6><i class="fab fa-golang"></i>Aplicación</h6>
+                            <p class="small text-secondary mb-0">
+                                Validación defensiva en handlers de Go, consultas parametrizadas contra inyección SQL, doble token submit anti-CSRF y headers CSP, <code>nosniff</code> y <code>X-Frame-Options: DENY</code>.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="mockup-preview-card">
+                            <h6><i class="fas fa-database"></i>Persistencia</h6>
+                            <p class="small text-secondary mb-0">
+                                Segregación de privilegios del rol de base de datos de la API y registro de auditoría append-only sin permisos de <code>UPDATE</code> ni <code>DELETE</code>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Prototipo de Interfaz & Vistas Operativas -->
         <section class="mb-5">
             <div class="glass-card">
                 <div class="glass-card-header">
                     <div class="d-flex align-items-center gap-2">
                         <span class="brand-icon" style="color: var(--color-galaxy-blue);"><i class="fas fa-desktop"></i></span>
-                        <span class="fw-bold fs-6 text-light">5. Prototipado de Interfaz en SvelteKit (Dark Mode)</span>
+                        <span class="fw-bold fs-6 text-light">6. Prototipado de Interfaz en SvelteKit (Dark Mode)</span>
                     </div>
                 </div>
                 <h4 class="text-light mb-3">Diseño de Alta Densidad para Operadores Administrativos</h4>
@@ -297,12 +349,12 @@
             </div>
         </section>
 
-        <!-- 6. Criterio de Confidencialidad -->
+        <!-- 7. Criterio de Confidencialidad -->
         <section class="mb-5">
             <div class="confidential-callout">
                 <h6><i class="fas fa-user-shield me-2"></i>Criterio Editorial & Confidencialidad Profesional</h6>
                 <p class="small text-secondary mb-0">
-                    Por motivos de secreto profesional y confidencialidad institucional, las entidades, carátulas, flujos específicos y nombres exhibidos en este caso de estudio corresponden a una <strong>versión anonimizada y sintetizada</strong>. No se divulgan números de causas judiciales, datos personales de funcionarios ni configuraciones productivas de red. El valor expuesto radica en el criterio de análisis, la robustez arquitectónica y la ingeniería de software implementada.
+                    Por motivos de secreto profesional y confidencialidad institucional, las entidades, carátulas, flujos específicos y nombres exhibidos en este caso de estudio corresponden a una <strong>versión anonimizada y sintetizada</strong>. No se divulgan números reales de expedientes, datos personales ni configuraciones productivas de red. El valor expuesto radica en el criterio de análisis, la robustez arquitectónica y la ingeniería de software implementada.
                 </p>
             </div>
         </section>

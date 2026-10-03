@@ -44,7 +44,7 @@
                 </a>
             </div>
             <div class="d-flex flex-wrap gap-2 mb-3">
-                <span class="pill-badge badge-purple">Full-Stack & Análisis</span>
+                <span class="pill-badge badge-purple">Análisis Funcional</span>
                 <span class="pill-badge badge-blue">Go + SvelteKit</span>
                 <span class="pill-badge badge-cyan">PostgreSQL 16</span>
                 <span class="pill-badge badge-pink">Auditoría Activa</span>
@@ -74,7 +74,7 @@
                     En organizaciones con alta carga administrativa e institucional, los circuitos tradicionales de gestión de solicitudes y dictámenes suelen depender de trámites manuales, planillas fragmentadas o sistemas legacy rígidos. Esto introduce cuellos de botella críticos:
                 </p>
                 <ul class="feature-list text-secondary mb-4">
-                    <li><strong class="text-light">Ambigüedad de Estado:</strong> Dificultad para auditar en tiempo real quién tiene la responsabilidad sobre un expediente o en qué etapa exacta de revisión se encuentra.</li>
+                    <li><strong class="text-light">Ambigüedad de Estado:</strong> Dificultad para auditar en tiempo real quién tiene la responsabilidad sobre un trámite o en qué etapa exacta de revisión se encuentra.</li>
                     <li><strong class="text-light">Riesgo de Inconsistencia Formal:</strong> Posibilidad de emitir resoluciones o dictámenes sin haber cumplido los pasos de validación técnica o legal precedentes.</li>
                     <li><strong class="text-light">Vulnerabilidad de Trazabilidad:</strong> Falta de un registro inmutable que impida el repudio de acciones u omisiones por parte de operadores o usuarios con privilegios.</li>
                 </ul>
@@ -132,7 +132,7 @@
                         <div class="mockup-preview-card">
                             <h6><i class="fas fa-shield-check me-2"></i>Invarianza de Estados</h6>
                             <p class="small text-secondary mb-0">
-                                Un expediente marcado como <code>Observado</code> no puede saltar a <code>En Dictamen</code> sin una versión de subsanación formal firmada digitalmente en el sistema.
+                                Un trámite marcado como <code>Observado</code> no puede saltar a <code>En Dictamen</code> sin una versión de subsanación formal firmada digitalmente en el sistema.
                             </p>
                         </div>
                     </div>
@@ -148,13 +148,211 @@
             </div>
         </section>
 
-        <!-- 3. Arquitectura del Sistema Desacoplado -->
+        <!-- 3. Proceso BPMN -->
+        <section class="mb-5">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon" style="color: var(--color-galaxy-blue);"><i class="fas fa-route"></i></span>
+                        <span class="fw-bold fs-6 text-light">3. Proceso por Actor (BPMN simplificado)</span>
+                    </div>
+                </div>
+                <h4 class="text-light mb-3">Quién hace qué, y dónde el sistema bloquea</h4>
+                <p class="text-secondary">
+                    Cada carril es un actor. Los rombos son decisiones con regla explícita; las devoluciones al operador son el camino que el proceso original no dejaba registrado.
+                </p>
+                <div class="diagram-box">
+<pre class="mermaid">
+flowchart TB
+    subgraph OP["Operador"]
+        A([Inicio]) --> B[Cargar solicitud y adjuntos] --> C[Firmar y elevar]
+    end
+    subgraph SIS["Sistema"]
+        D{¿Adjuntos obligatorios completos?}
+        N[Notificar al solicitante]
+        Z([Archivar])
+    end
+    subgraph REV["Revisor técnico"]
+        E[Revisar solicitud] --> F{¿Cumple requisitos?}
+        G[Emitir observación con motivo]
+    end
+    subgraph FIR["Firmante distinto del operador"]
+        H[Elaborar dictamen] --> I{¿Favorable?}
+        J[Firmar aprobación con 2FA]
+        K[Firmar rechazo fundado con 2FA]
+    end
+    C --> D
+    D -- No --> B
+    D -- Sí --> E
+    F -- No --> G --> B
+    F -- Sí --> H
+    I -- Sí --> J --> N
+    I -- No --> K --> N
+    N --> Z
+</pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Historias de Usuario -->
+        <section class="mb-5">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon" style="color: var(--color-galaxy-emerald);"><i class="fas fa-list-check"></i></span>
+                        <span class="fw-bold fs-6 text-light">4. Historias de Usuario & Criterios de Aceptación</span>
+                    </div>
+                    <span class="pill-badge badge-emerald">Dado / Cuando / Entonces</span>
+                </div>
+                <h4 class="text-light mb-3">Criterios verificables, incluidos los caminos que fallan</h4>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="mockup-preview-card">
+                            <h6><i class="fas fa-paper-plane"></i>HU-01 · Elevar una solicitud</h6>
+                            <p class="small text-secondary"><em>Como operador, quiero elevar una solicitud completa para que entre a revisión sin idas y vueltas.</em></p>
+                            <ul class="small text-secondary mb-0 ps-3">
+                                <li><strong class="text-light">CA-1:</strong> Dado un borrador con todos los adjuntos obligatorios, cuando lo firmo y elevo, entonces pasa a <code>Ingresado</code> y se registra el evento con actor, fecha UTC y estado previo/posterior.</li>
+                                <li><strong class="text-light">CA-2:</strong> Dado que falta un adjunto obligatorio, cuando intento elevar, entonces el sistema bloquea la transición e indica qué falta.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mockup-preview-card">
+                            <h6><i class="fas fa-comment-dots"></i>HU-02 · Observar una solicitud</h6>
+                            <p class="small text-secondary"><em>Como revisor, quiero devolver una solicitud con un motivo para que el operador la corrija.</em></p>
+                            <ul class="small text-secondary mb-0 ps-3">
+                                <li><strong class="text-light">CA-1:</strong> Dado una solicitud <code>En Revisión</code>, cuando registro una observación con motivo, entonces pasa a <code>Observado</code> y se notifica al operador.</li>
+                                <li><strong class="text-light">CA-2:</strong> Dado una solicitud <code>Observado</code>, cuando se intenta pasar a <code>En Dictamen</code> sin una nueva versión, entonces se rechaza (RN-01).</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mockup-preview-card">
+                            <h6><i class="fas fa-signature"></i>HU-03 · Dictaminar con segregación de funciones</h6>
+                            <p class="small text-secondary"><em>Como firmante, quiero emitir el dictamen con la garantía de que nadie firma lo que inició.</em></p>
+                            <ul class="small text-secondary mb-0 ps-3">
+                                <li><strong class="text-light">CA-1:</strong> Dado que inicié la solicitud, cuando intento firmar el dictamen, entonces se rechaza aunque tenga el rol de firmante (RN-02).</li>
+                                <li><strong class="text-light">CA-2:</strong> Dado un firmante distinto del operador, cuando firma con segundo factor, entonces la solicitud pasa a <code>Aprobado</code> o <code>Rechazado</code>.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mockup-preview-card">
+                            <h6><i class="fas fa-clock-rotate-left"></i>HU-04 · Consultar la trazabilidad</h6>
+                            <p class="small text-secondary"><em>Como auditor, quiero ver la historia completa de una solicitud para reconstruir quién hizo qué.</em></p>
+                            <ul class="small text-secondary mb-0 ps-3">
+                                <li><strong class="text-light">CA-1:</strong> Dado cualquier solicitud, cuando consulto su historial, entonces veo cada transición con actor, fecha y estados.</li>
+                                <li><strong class="text-light">CA-2:</strong> Dado cualquier rol, cuando intenta modificar o borrar un evento del historial, entonces la base de datos lo rechaza (RN-03).</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Trazabilidad & Permisos -->
+        <section class="mb-5">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon" style="color: var(--color-galaxy-cyan);"><i class="fas fa-table-cells"></i></span>
+                        <span class="fw-bold fs-6 text-light">5. Matriz de Trazabilidad & Matriz de Permisos</span>
+                    </div>
+                </div>
+                <h4 class="text-light mb-3">Del requisito a la prueba, sin huecos</h4>
+                <div class="table-responsive">
+                    <table class="table analysis-table mb-4">
+                        <thead>
+                            <tr><th>Requisito</th><th>Regla</th><th>Transición</th><th>Pantalla</th><th>Criterio</th><th>Caso de prueba</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>RF-01 Elevar solicitud</td><td>RN-04 Adjuntos obligatorios</td><td><code>Borrador → Ingresado</code></td><td>Formulario de solicitud</td><td>HU-01 CA-1, CA-2</td><td>T-01, T-02</td></tr>
+                            <tr><td>RF-02 Observar</td><td>RN-01 Invarianza de estados</td><td><code>En Revisión → Observado</code></td><td>Bandeja de revisión</td><td>HU-02 CA-1, CA-2</td><td>T-03, T-04</td></tr>
+                            <tr><td>RF-03 Dictaminar</td><td>RN-02 Segregación de funciones</td><td><code>En Dictamen → Aprobado | Rechazado</code></td><td>Panel de firma</td><td>HU-03 CA-1, CA-2</td><td>T-05, T-06</td></tr>
+                            <tr><td>RF-04 Auditar</td><td>RN-03 Historial append-only</td><td>Todas</td><td>Línea de tiempo</td><td>HU-04 CA-1, CA-2</td><td>T-07, T-08</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h6 class="text-light fw-bold mb-2"><i class="fas fa-user-lock me-2" style="color: var(--color-galaxy-pink);"></i>Permisos por rol (✔ permitido · 🔐 requiere segundo factor)</h6>
+                <div class="table-responsive">
+                    <table class="table analysis-table mb-3 text-center">
+                        <thead>
+                            <tr><th class="text-start">Acción</th><th>Operador</th><th>Revisor</th><th>Firmante</th><th>Supervisor</th><th>Auditor</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td class="text-start">Crear y elevar</td><td>✔</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+                            <tr><td class="text-start">Observar</td><td>—</td><td>✔</td><td>—</td><td>—</td><td>—</td></tr>
+                            <tr><td class="text-start">Firmar dictamen</td><td>—</td><td>—</td><td>✔ 🔐</td><td>—</td><td>—</td></tr>
+                            <tr><td class="text-start">Reasignar revisor</td><td>—</td><td>—</td><td>—</td><td>✔ 🔐</td><td>—</td></tr>
+                            <tr><td class="text-start">Ver historial y auditoría</td><td>propias</td><td>asignadas</td><td>asignadas</td><td>✔</td><td>✔</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="small text-secondary mb-0">
+                    <strong class="text-light">Excepciones con vencimiento:</strong> un revisor suplente puede recibir el permiso de firma por un período acotado. La excepción vence sola, queda auditada y no anula la segregación de funciones.
+                </p>
+            </div>
+        </section>
+
+        <!-- 6. Restricciones & Decisiones -->
+        <section class="mb-5">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon" style="color: var(--color-galaxy-pink);"><i class="fas fa-scale-balanced"></i></span>
+                        <span class="fw-bold fs-6 text-light">6. Restricciones Reales & Decisiones de Diseño</span>
+                    </div>
+                </div>
+                <h4 class="text-light mb-3">Lo que el contexto imponía y cómo se resolvió</h4>
+                <div class="row g-3">
+                    <div class="col-md-6 col-lg-4">
+                        <div class="mockup-preview-card">
+                            <h6><i class="fas fa-id-badge"></i>Identidad híbrida</h6>
+                            <p class="small text-secondary mb-0">Un proveedor de identidad central gestiona usuarios y roles; los permisos finos por módulo se administran localmente. El IdP no necesita conocer el negocio y el sistema no administra contraseñas.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="mockup-preview-card">
+                            <h6><i class="fas fa-mobile-screen"></i>Segundo factor por riesgo</h6>
+                            <p class="small text-secondary mb-0">TOTP exigido por rol o por permiso (firmas, reasignaciones, operaciones destructivas), con enrolamiento obligatorio y cambios administrativos auditados.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="mockup-preview-card">
+                            <h6><i class="fas fa-database"></i>Varias bases, sin transacciones distribuidas</h6>
+                            <p class="small text-secondary mb-0">Bases separadas por dominio. Las operaciones que cruzan dominios usan consistencia eventual con outbox; el bloqueo pesimista se reserva para donde hay competencia real, como reservas de agenda.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="mockup-preview-card">
+                            <h6><i class="fas fa-hourglass-half"></i>Sistema externo lento</h6>
+                            <p class="small text-secondary mb-0">La fuente de catálogos es un sistema externo con latencia variable. Caché local y tolerancia a fallas: la lectura no depende de su disponibilidad.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="mockup-preview-card">
+                            <h6><i class="fab fa-firefox-browser"></i>Navegadores legados</h6>
+                            <p class="small text-secondary mb-0">Parte de los puestos solo soportaba JavaScript ES5. El frontend heredado se mantiene compatible mientras la separación por APIs permite modernizar módulo a módulo.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="mockup-preview-card">
+                            <h6><i class="fas fa-code-branch"></i>Migración progresiva</h6>
+                            <p class="small text-secondary mb-0">Alternativas evaluadas: reescritura total o patrón <em>Strangler</em>; microservicios o monolito modular. Decisión: reemplazo módulo a módulo hacia un monolito modular en Go con puertos y adaptadores.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. Arquitectura del Sistema Desacoplado -->
         <section class="mb-5">
             <div class="glass-card">
                 <div class="glass-card-header">
                     <div class="d-flex align-items-center gap-2">
                         <span class="brand-icon" style="color: var(--color-galaxy-purple);"><i class="fas fa-network-wired"></i></span>
-                        <span class="fw-bold fs-6 text-light">3. Arquitectura de Software & Subsistema de Auditoría</span>
+                        <span class="fw-bold fs-6 text-light">7. Arquitectura de Software & Subsistema de Auditoría</span>
                     </div>
                 </div>
                 <h4 class="text-light mb-3">Backend Concurrente en Go y UI Reactiva en SvelteKit</h4>
@@ -209,6 +407,84 @@
                         </p>
                     </div>
                 </div>
+
+                <h5 class="text-light mt-5 mb-2"><i class="fas fa-sitemap me-2" style="color: var(--color-galaxy-pink);"></i>Mapa de módulos</h5>
+                <p class="text-secondary small">
+                    El orquestador (padre) es la única raíz de dependencias: los módulos hijos no se llaman entre sí, se comunican por eventos del outbox. La línea punteada marca el módulo que todavía está en desarrollo.
+                </p>
+                <div class="diagram-box">
+<pre class="mermaid">
+flowchart LR
+    U1(["Usuarios internos: operador, revisor, firmante, supervisor, auditor"])
+    U4(["Sistemas consumidores"])
+    ORQ{{"Orquestador (padre)"}}
+    subgraph HIJOS["Módulos hijos"]
+        M1[Identidad y RBAC]
+        M2[Segundo factor]
+        M3[Trámites y FSM]
+        M4[Agenda]
+        M5[Notificaciones]
+        M6[Integración externa con caché]
+        M7[Alertas operativas]
+        M8[Auditoría append-only]
+        M9[Configuración]
+        M10[Reportes]
+    end
+    IDP[(Proveedor de identidad)]
+    SRC[(Sistema externo de catálogos)]
+    U1 --> ORQ
+    U4 -->|"token de API, solo lectura"| ORQ
+    ORQ --> M1 & M2 & M3 & M4 & M5 & M6 & M7 & M8 & M9
+    ORQ -.-> M10
+    M1 --> IDP
+    M6 --> SRC
+</pre>
+                </div>
+
+                <h5 class="text-light mt-5 mb-2"><i class="fas fa-arrows-rotate me-2" style="color: var(--color-galaxy-cyan);"></i>Consistencia entre bases sin transacciones distribuidas</h5>
+                <p class="text-secondary small">
+                    Cada dominio tiene su base. Una aprobación confirma la decisión de negocio en una sola transacción local y delega la notificación al outbox: la decisión nunca se revierte porque falle un efecto secundario. Si se agotan los reintentos, el supervisor ve la alerta y reprocesa desde la DLQ, con auditoría.
+                </p>
+                <div class="diagram-box">
+<pre class="mermaid">
+sequenceDiagram
+    autonumber
+    actor F as Firmante
+    participant API as API Go
+    participant OP as Base operación
+    participant W as Worker
+    participant NT as Base notificaciones
+    F->>API: Firma con 2FA
+    API->>OP: Tx local: estado + historial + outbox
+    API-->>F: Aprobado
+    loop Cada ciclo
+        W->>OP: Eventos pendientes (SKIP LOCKED)
+        W->>NT: Notificación idempotente
+        alt Entrega OK
+            W->>OP: Marca procesado
+        else Falla transitoria
+            W->>OP: Backoff + jitter
+        else Reintentos agotados
+            W->>OP: DLQ + alerta
+        end
+    end
+    Note over API,W: La decisión no se revierte si falla la notificación
+</pre>
+                </div>
+
+                <div class="table-responsive mt-3">
+                    <table class="table analysis-table mb-0">
+                        <thead>
+                            <tr><th>Operación</th><th>Dominios</th><th>Estrategia</th><th>Qué ve el usuario mientras tanto</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Aprobar o rechazar un trámite</td><td>Operación → Notificaciones</td><td>Transacción local + outbox, entrega al menos una vez e idempotente</td><td>Estado final inmediato; notificación <code>pendiente → enviada</code></td></tr>
+                            <tr><td>Reservar un turno de agenda</td><td>Agenda (una sola base)</td><td>Bloqueo pesimista con <code>SELECT … FOR UPDATE</code></td><td>Confirmación o rechazo inmediato, sin doble reserva</td></tr>
+                            <tr><td>Consultar catálogos externos</td><td>Sistema externo → Espejo local</td><td>Sincronización periódica con caché; lectura desde el espejo</td><td>Datos con la fecha de la última sincronización</td></tr>
+                            <tr><td>Registrar auditoría</td><td>Todos → Auditoría</td><td>Evento en la misma transacción que el cambio; tabla append-only</td><td>Historial completo al instante</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </section>
 
@@ -218,7 +494,7 @@
                 <div class="glass-card-header">
                     <div class="d-flex align-items-center gap-2">
                         <span class="brand-icon" style="color: var(--color-galaxy-emerald);"><i class="fas fa-database"></i></span>
-                        <span class="fw-bold fs-6 text-light">4. Modelo Relacional & Trazabilidad (DER)</span>
+                        <span class="fw-bold fs-6 text-light">8. Modelo Relacional & Trazabilidad (DER)</span>
                     </div>
                 </div>
                 <h4 class="text-light mb-3">Normalización 3FN y Registro Inmutable Append-Only</h4>
@@ -240,9 +516,9 @@
 <div class="fsm-comment">// Entidades Principales del Esquema Normalizado</div>
 <div>• <span class="fsm-state">USUARIO</span>           : id (PK UUID), email, password_hash, estado, created_at</div>
 <div>• <span class="fsm-state">ROL / PERMISO</span>     : Control de Acceso Basado en Roles (RBAC granular)</div>
-<div>• <span class="fsm-state">SOLICITUD</span>         : id (PK), numero_expediente (UK), caratula, estado, usuario_iniciador_id (FK)</div>
+<div>• <span class="fsm-state">SOLICITUD</span>         : id (PK UUID), numero_tramite (UK), asunto, estado, usuario_iniciador_id (FK)</div>
 <div>• <span class="fsm-state">HISTORIAL_ESTADO</span>  : id (PK), solicitud_id (FK), estado_anterior, estado_nuevo, actor_id (FK), timestamp</div>
-<div>• <span class="fsm-state">EVENTO_AUDITORIA</span>  : id (BigSerial PK), actor_id (FK), accion, entidad, ip_origen, metadata JSONB, timestamp</div>
+<div>• <span class="fsm-state">EVENTO_AUDITORIA</span>  : id (PK UUIDv7), actor_id (FK), accion, entidad, ip_origen, metadata JSONB, timestamp</div>
                     </div>
                 </div>
 
@@ -260,7 +536,7 @@
                 <div class="glass-card-header">
                     <div class="d-flex align-items-center gap-2">
                         <span class="brand-icon" style="color: var(--color-galaxy-pink);"><i class="fas fa-shield-halved"></i></span>
-                        <span class="fw-bold fs-6 text-light">5. Seguridad & Defensa en Profundidad</span>
+                        <span class="fw-bold fs-6 text-light">9. Seguridad & Defensa en Profundidad</span>
                     </div>
                     <span class="pill-badge badge-cyan">OWASP ASVS · NIST CSF</span>
                 </div>
@@ -306,46 +582,72 @@
             </div>
         </section>
 
-        <!-- 6. Prototipo de Interfaz & Vistas Operativas -->
+        <!-- 10. Pantallas de ejemplo -->
         <section class="mb-5">
             <div class="glass-card">
                 <div class="glass-card-header">
                     <div class="d-flex align-items-center gap-2">
                         <span class="brand-icon" style="color: var(--color-galaxy-blue);"><i class="fas fa-desktop"></i></span>
-                        <span class="fw-bold fs-6 text-light">6. Prototipado de Interfaz en SvelteKit (Dark Mode)</span>
+                        <span class="fw-bold fs-6 text-light">10. Pantallas de Ejemplo (datos ficticios)</span>
                     </div>
                 </div>
-                <h4 class="text-light mb-3">Diseño de Alta Densidad para Operadores Administrativos</h4>
+                <h4 class="text-light mb-3">Diseño de alta densidad para operadores</h4>
                 <p class="text-secondary">
-                    La interfaz gráfica fue diseñada para optimizar la velocidad de lectura y carga en entornos de trabajo intensivo:
+                    Reconstrucciones con datos inventados que muestran cómo la máquina de estados, la trazabilidad y la auditoría llegan a la interfaz.
                 </p>
 
                 <div class="row g-4 mt-2">
-                    <div class="col-md-4">
-                        <div class="mockup-preview-card">
-                            <h6><i class="fas fa-table-list"></i>Panel Central de Trámites</h6>
-                            <p class="small text-secondary mb-0">
-                                Tablas reactivas paginadas con ordenamiento multi-columna, búsqueda por carátula o número y badges cromáticos según estado de la FSM.
-                            </p>
+                    <!-- Panel de trámites -->
+                    <div class="col-lg-4">
+                        <div class="mock-screen">
+                            <div class="mock-screen-bar"><i class="fas fa-table-list"></i>Panel de trámites</div>
+                            <div class="mock-screen-body">
+                                <div class="row g-2 mb-3">
+                                    <div class="col-4"><div class="mock-kpi"><strong>18</strong>En revisión</div></div>
+                                    <div class="col-4"><div class="mock-kpi"><strong>5</strong>Observados</div></div>
+                                    <div class="col-4"><div class="mock-kpi"><strong>42</strong>Aprobados</div></div>
+                                </div>
+                                <div class="mock-row"><span>TR-2026-0141 · Habilitación</span><span class="mock-state mock-state-review">En revisión</span></div>
+                                <div class="mock-row"><span>TR-2026-0138 · Renovación</span><span class="mock-state mock-state-observed">Observado</span></div>
+                                <div class="mock-row"><span>TR-2026-0135 · Alta de servicio</span><span class="mock-state mock-state-ok">Aprobado</span></div>
+                                <div class="mock-row"><span>TR-2026-0133 · Habilitación</span><span class="mock-state mock-state-review">En dictamen</span></div>
+                                <div class="mock-row"><span>TR-2026-0129 · Baja</span><span class="mock-state mock-state-draft">Borrador</span></div>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="mockup-preview-card">
-                            <h6><i class="fas fa-clock-rotate-left"></i>Línea de Tiempo de Auditoría</h6>
-                            <p class="small text-secondary mb-0">
-                                Visualizador cronológico que muestra cada dictamen, archivo adjunto con hash SHA-256 e intervención firmada por el operador.
-                            </p>
+
+                    <!-- Línea de tiempo -->
+                    <div class="col-lg-4">
+                        <div class="mock-screen">
+                            <div class="mock-screen-bar"><i class="fas fa-clock-rotate-left"></i>TR-2026-0138 · Historial</div>
+                            <div class="mock-screen-body">
+                                <ul class="mock-timeline">
+                                    <li><span class="text-light">Observado</span> · Revisor Demo<br><small>Falta constancia actualizada</small><br><span class="mock-hash">2026-09-14 13:02 UTC · sha256:4f1c…9a2e</span></li>
+                                    <li><span class="text-light">En revisión</span> · Supervisor Demo<br><small>Asignado a Revisor Demo</small><br><span class="mock-hash">2026-09-12 10:47 UTC · sha256:b83d…1f07</span></li>
+                                    <li><span class="text-light">Ingresado</span> · Operador Demo<br><small>Firmado y elevado · 3 adjuntos</small><br><span class="mock-hash">2026-09-11 16:20 UTC · sha256:0c7a…e514</span></li>
+                                    <li><span class="text-light">Borrador</span> · Operador Demo<br><span class="mock-hash">2026-09-11 15:58 UTC · sha256:91e2…3bd0</span></li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="mockup-preview-card">
-                            <h6><i class="fas fa-shield-halved"></i>Monitor de Anomalías</h6>
-                            <p class="small text-secondary mb-0">
-                                Detección temprana de ráfagas inusuales, bloqueos por fuerza bruta en Redis y alertas operativas fuera de la jornada habitual.
-                            </p>
+
+                    <!-- Monitor de anomalías -->
+                    <div class="col-lg-4">
+                        <div class="mock-screen">
+                            <div class="mock-screen-bar"><i class="fas fa-shield-halved"></i>Monitor de anomalías</div>
+                            <div class="mock-screen-body">
+                                <div class="mock-row"><span><i class="fas fa-user-lock me-1"></i>Intentos fallidos repetidos · cuenta <code>revisor.demo</code></span><span class="mock-state mock-state-observed">Bloqueo temporal</span></div>
+                                <div class="mock-row"><span><i class="fas fa-moon me-1"></i>Firma fuera de horario · <code>firmante.demo</code></span><span class="mock-state mock-state-review">A revisar</span></div>
+                                <div class="mock-row"><span><i class="fas fa-bolt me-1"></i>Ráfaga de consultas · origen 203.0.113.7</span><span class="mock-state mock-state-observed">Limitado</span></div>
+                                <div class="mock-row"><span><i class="fas fa-key me-1"></i>Excepción de firma por vencer · <code>suplente.demo</code></span><span class="mock-state mock-state-draft">Vence en 2 d</span></div>
+                                <div class="mock-row"><span><i class="fas fa-circle-check me-1"></i>Rotación de huella de sesión</span><span class="mock-state mock-state-ok">OK</span></div>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <p class="small text-secondary mt-3 mb-0">
+                    Todos los números, nombres, hashes y la dirección IP (rango de documentación RFC 5737) son ficticios.
+                </p>
             </div>
         </section>
 
@@ -354,7 +656,7 @@
             <div class="confidential-callout">
                 <h6><i class="fas fa-user-shield me-2"></i>Criterio Editorial & Confidencialidad Profesional</h6>
                 <p class="small text-secondary mb-0">
-                    Por motivos de secreto profesional y confidencialidad institucional, las entidades, carátulas, flujos específicos y nombres exhibidos en este caso de estudio corresponden a una <strong>versión anonimizada y sintetizada</strong>. No se divulgan números reales de expedientes, datos personales ni configuraciones productivas de red. El valor expuesto radica en el criterio de análisis, la robustez arquitectónica y la ingeniería de software implementada.
+                    Por motivos de secreto profesional y confidencialidad institucional, las entidades, flujos específicos y nombres exhibidos en este caso de estudio corresponden a una <strong>versión anonimizada y sintetizada</strong>. No se divulgan números reales de trámites, datos personales ni configuraciones productivas de red. El valor expuesto radica en el criterio de análisis, la robustez arquitectónica y la ingeniería de software implementada.
                 </p>
             </div>
         </section>
@@ -382,5 +684,33 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Galaxy Stars Animation Script (Ruta relativa) -->
     <script src="../galaxy.js"></script>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({
+            startOnLoad: true,
+            securityLevel: 'strict',
+            theme: 'base',
+            themeVariables: {
+                background: 'transparent',
+                primaryColor: '#1e1b4b',
+                primaryTextColor: '#e2e8f0',
+                primaryBorderColor: '#8b5cf6',
+                lineColor: '#06b6d4',
+                clusterBkg: 'rgba(139, 92, 246, 0.08)',
+                clusterBorder: '#ec4899',
+                fontFamily: 'Inter, sans-serif',
+                textColor: '#e2e8f0',
+                actorTextColor: '#e2e8f0',
+                signalColor: '#06b6d4',
+                signalTextColor: '#e2e8f0',
+                labelBoxBkgColor: '#1e1b4b',
+                labelTextColor: '#e2e8f0',
+                loopTextColor: '#e2e8f0',
+                noteBkgColor: '#312e81',
+                noteTextColor: '#e2e8f0',
+                noteBorderColor: '#8b5cf6'
+            }
+        });
+    </script>
 </body>
 </html>

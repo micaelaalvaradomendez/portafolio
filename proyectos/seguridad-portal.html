@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caso de Estudio: Evolución de Seguridad de un Portal Público | Micaela Alvarado Mendez</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+    <div id="galaxy-bg" class="galaxy-bg"></div>
+
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <span class="brand-icon"><i class="fas fa-terminal"></i></span>
+                <span>Micaela Alvarado Mendez</span>
+            </a>
+            <div class="ms-auto">
+                <a href="../index.html#perfil-seguridad" class="btn-secondary-glass py-2 px-3">
+                    <i class="fas fa-arrow-left me-2"></i>Volver al Portafolio
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="case-study-hero">
+        <div class="container">
+            <div class="mb-3">
+                <a href="../index.html#perfil-seguridad" class="btn-secondary-glass py-1 px-3" style="font-size: 0.85rem;">
+                    <i class="fas fa-chevron-left me-2"></i>Portada / Seguridad
+                </a>
+            </div>
+            <div class="d-flex flex-wrap gap-2 mb-3">
+                <span class="pill-badge badge-cyan">Seguridad</span>
+                <span class="pill-badge badge-purple">Gobernanza & Estándares</span>
+                <span class="pill-badge badge-blue">Svelte · Go · PostgreSQL · k3s</span>
+                <span class="pill-badge badge-pink">Laboratorio verificado</span>
+            </div>
+            <h1 class="hero-title text-start mb-3" style="font-size: clamp(1.8rem, 4vw, 2.6rem);">
+                Evolución de Seguridad de un Portal Público con Backoffice
+            </h1>
+            <p class="hero-subtitle text-start m-0" style="max-width: 900px;">
+                De un diagnóstico de brechas a un estándar de seguridad gobernable y verificable: perfiles de sistema, evaluación fail-closed, controles por capas y pruebas adversariales.
+            </p>
+        </div>
+    </header>
+
+    <main class="container my-4">
+
+        <!-- 1. Contexto -->
+        <section class="mb-5">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon" style="color: var(--color-galaxy-pink);"><i class="fas fa-triangle-exclamation"></i></span>
+                        <span class="fw-bold fs-6 text-light">1. Contexto & Diagnóstico Inicial</span>
+                    </div>
+                </div>
+                <h4 class="text-light mb-3">Un portal de consulta pública sin controles verificables</h4>
+                <p class="text-secondary">
+                    El punto de partida era un portal institucional de consulta pública compuesto por <strong class="text-light">ocho micro-frontends</strong>, más un backoffice para administrar contenido. El análisis de brechas contra un estándar de seguridad mostró:
+                </p>
+                <ul class="feature-list text-secondary mb-4">
+                    <li><strong class="text-light">Sin Content-Security-Policy:</strong> ninguna barrera del lado del navegador ante inyección de scripts.</li>
+                    <li><strong class="text-light">Contenido enriquecido como HTML dinámico:</strong> superficie directa para XSS.</li>
+                    <li><strong class="text-light">Sin aislamiento de red ni hardening de contenedores:</strong> cualquier workload podía alcanzar a cualquier otro.</li>
+                    <li><strong class="text-light">Sin pruebas:</strong> ningún control podía demostrarse.</li>
+                </ul>
+                <div class="p-3 rounded-3" style="background: rgba(6, 182, 212, 0.1); border: 1px solid rgba(6, 182, 212, 0.25);">
+                    <p class="m-0 text-light small">
+                        <strong style="color: var(--color-galaxy-cyan);"><i class="fas fa-user-pen me-2"></i>Mi rol:</strong> autora del análisis de brechas, del estándar de seguridad y de su modelo de gobernanza. La implementación de los controles en el laboratorio fue trabajo en equipo.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Gobernanza -->
+        <section class="mb-5">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon" style="color: var(--color-galaxy-purple);"><i class="fas fa-scale-balanced"></i></span>
+                        <span class="fw-bold fs-6 text-light">2. Modelo de Gobernanza</span>
+                    </div>
+                </div>
+                <h4 class="text-light mb-3">Un estándar que puede decir "no cumple"</h4>
+                <p class="text-secondary">
+                    Un estándar que solo enumera buenas prácticas termina en checklists que siempre dan verde. El diseño apunta a lo contrario: cada sistema se clasifica, cada control exige evidencia ejecutada y cada desvío queda registrado.
+                </p>
+
+                <div class="row g-3 mt-2">
+                    <div class="col-md-6">
+                        <div class="mockup-preview-card h-100">
+                            <h6><i class="fas fa-layer-group"></i>Perfiles de sistema</h6>
+                            <p class="small text-secondary mb-2">
+                                Cada sistema se clasifica por exposición, identidad y propiedad de datos. El perfil define qué capas aplican: evita omitir controles y también exigir componentes sin sentido.
+                            </p>
+                            <ul class="small text-secondary mb-0 ps-3">
+                                <li><strong class="text-light">A-F1</strong> · consulta pública sin login ni mutaciones (el portal)</li>
+                                <li><strong class="text-light">A-F2</strong> · consulta pública con autenticación federada</li>
+                                <li><strong class="text-light">B</strong> · backoffice transaccional dueño de sus datos</li>
+                                <li><strong class="text-light">C</strong> · aplicación interna que consume datos ajenos</li>
+                                <li><strong class="text-light">D</strong> · servicio de comunicación entre sistemas</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mockup-preview-card h-100">
+                            <h6><i class="fas fa-circle-xmark"></i>Evaluación fail-closed</h6>
+                            <p class="small text-secondary mb-2">
+                                Vocabulario canónico para cada control. <strong class="text-light">Sin evidencia ejecutada no hay "cumple".</strong>
+                            </p>
+                            <div class="d-flex flex-wrap gap-2">
+                                <span class="pill-badge badge-emerald">cumple</span>
+                                <span class="pill-badge badge-pink">no-cumple</span>
+                                <span class="pill-badge badge-blue">pendiente</span>
+                                <span class="pill-badge badge-purple">requiere-adr</span>
+                                <span class="pill-badge badge-cyan">requiere-decisión-institucional</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="code-window my-4">
+                    <div class="code-window-header">
+                        <div class="window-dots">
+                            <span class="window-dot dot-red"></span>
+                            <span class="window-dot dot-yellow"></span>
+                            <span class="window-dot dot-green"></span>
+                        </div>
+                        <span class="code-window-title">ciclo_root_gating.txt</span>
+                        <span></span>
+                    </div>
+                    <div class="code-window-body">
+<div class="fsm-comment">// Ciclo de evaluación: nada se declara listo sin pasar el gate final</div>
+<div><span class="fsm-state">[1. PERFIL]</span>  ──> clasificar el sistema (A-F1 · A-F2 · B · C · D)</div>
+<div>      │</div>
+<div><span class="fsm-state">[2. COBERTURA]</span> ──> fijar la matriz de capas obligatorias</div>
+<div>      │</div>
+<div><span class="fsm-state">[3. DOMINIOS]</span>  ──> aplicar los controles de cada capa a los archivos tocados</div>
+<div>      │</div>
+<div><span class="fsm-state">[4. GATE]</span>      ──> ejecutar verificadores deterministas y agregar evidencia</div>
+<div>      │</div>
+<div>      ├── capa obligatoria en <span class="fsm-state">no-cumple</span> o sin evidencia ──> NO LISTO</div>
+<div>      └── desvío aceptado ──> excepción formal (motivo · alcance · riesgo · compensación · revisión)</div>
+                    </div>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="mockup-preview-card h-100">
+                            <h6><i class="fas fa-robot"></i>Estándar ejecutable por agentes de IA</h6>
+                            <p class="small text-secondary mb-0">
+                                El estándar se tradujo a un árbol de skills: una raíz, un dominio por capa y un skill por control, más un catálogo de verificadores con salida estructurada. Así, un agente que trabaja sobre el código aplica y verifica los controles en lugar de solo leerlos.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mockup-preview-card h-100">
+                            <h6><i class="fas fa-file-signature"></i>Registro formal de excepciones</h6>
+                            <p class="small text-secondary mb-0">
+                                Ninguna excepción verbal. Cada desvío del laboratorio se registra con motivo, alcance, riesgo, control compensatorio y condición de revisión, y se declara explícitamente no heredable a producción.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Capas -->
+        <section class="mb-5">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon" style="color: var(--color-galaxy-cyan);"><i class="fas fa-shield-halved"></i></span>
+                        <span class="fw-bold fs-6 text-light">3. Estándar por Capas</span>
+                    </div>
+                    <span class="pill-badge badge-cyan">OWASP ASVS · OWASP Top 10 · CVSS 3.1</span>
+                </div>
+                <h4 class="text-light mb-3">Ocho capas, de la plataforma a la operación</h4>
+                <div class="row g-3 mt-2">
+                    <div class="col-md-6 col-lg-3">
+                        <div class="mockup-preview-card h-100">
+                            <h6><i class="fas fa-globe"></i>1 · Borde</h6>
+                            <p class="small text-secondary mb-0">Gateway con TLS 1.2/1.3, cabeceras, allowlist de métodos, rate limiting y límites de cuerpo.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="mockup-preview-card h-100">
+                            <h6><i class="fas fa-id-card"></i>2 · Identidad</h6>
+                            <p class="small text-secondary mb-0">Autenticación, sesiones y autorización por roles y por relación con el recurso.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="mockup-preview-card h-100">
+                            <h6><i class="fas fa-network-wired"></i>3 · Comunicación</h6>
+                            <p class="small text-secondary mb-0">BFF, aislamiento de red entre workloads, prevención de SSRF y servicio a servicio.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="mockup-preview-card h-100">
+                            <h6><i class="fas fa-code"></i>4 · Aplicación</h6>
+                            <p class="small text-secondary mb-0">Go defensivo (timeouts, límites de cuerpo, DTOs) y Svelte sin sinks de HTML con CSP por hashes.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="mockup-preview-card h-100">
+                            <h6><i class="fas fa-cubes"></i>5 · Infraestructura</h6>
+                            <p class="small text-secondary mb-0">Pod Security Standards Restricted, no-root, rootfs de solo lectura, imágenes por digest.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="mockup-preview-card h-100">
+                            <h6><i class="fas fa-key"></i>6 · Secretos & Datos</h6>
+                            <p class="small text-secondary mb-0">Secretos montados como archivos, roles SQL separados, auditoría append-only, cifrado y respaldo.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="mockup-preview-card h-100">
+                            <h6><i class="fas fa-link"></i>7 · Cadena de suministro</h6>
+                            <p class="small text-secondary mb-0">SCA/SAST, gate adversarial obligatorio, despliegue manual con imágenes fijadas.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="mockup-preview-card h-100">
+                            <h6><i class="fas fa-eye"></i>8 · Observabilidad</h6>
+                            <p class="small text-secondary mb-0">Eventos estructurados, correlación, almacenamiento inmutable y playbooks de respuesta.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Controles verificados -->
+        <section class="mb-5">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon" style="color: var(--color-galaxy-emerald);"><i class="fas fa-flask"></i></span>
+                        <span class="fw-bold fs-6 text-light">4. Remediación Verificada en Laboratorio</span>
+                    </div>
+                </div>
+                <h4 class="text-light mb-3">Probar el control, no leer la configuración</h4>
+                <p class="text-secondary">
+                    El criterio fue verificar cada control con su efecto observable. Un YAML de NetworkPolicy no prueba aislamiento; una conexión rechazada desde un pod real, sí.
+                </p>
+                <ul class="feature-list text-secondary mb-4">
+                    <li><strong class="text-light">CSP por hashes en los ocho módulos:</strong> calculados en build desde una política común. Los módulos son estáticos, así que los hashes no requieren un servidor que emita nonces por request.</li>
+                    <li><strong class="text-light">Contenido tipado en lugar de HTML crudo:</strong> el backoffice modela el contenido como bloques tipados y lo publica por una API de solo lectura, con pruebas contra markup y URLs hostiles.</li>
+                    <li><strong class="text-light">Red verificada desde workloads:</strong> bloqueo pod a pod, al API Server y de egress, comprobando que el DNS interno siga funcionando.</li>
+                    <li><strong class="text-light">Contenedores:</strong> admisión Restricted, ejecución no-root, rootfs de solo lectura, capabilities eliminadas y comparación del digest construido contra el desplegado.</li>
+                    <li><strong class="text-light">Mínimo privilegio en PostgreSQL:</strong> roles separados para DDL, runtime y lectura, con pruebas negativas que confirman que la aplicación no puede alterar la auditoría ni el esquema.</li>
+                    <li><strong class="text-light">Borde:</strong> redirección a HTTPS, rechazo de protocolos y suites débiles, CORS sin comodín y respuesta 429 ante ráfagas.</li>
+                </ul>
+
+                <div class="p-3 rounded-3" style="background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.25);">
+                    <p class="m-0 text-light small">
+                        <strong style="color: var(--color-galaxy-purple);"><i class="fas fa-magnifying-glass me-2"></i>Hallazgo durante la verificación:</strong> al restringir el egress apareció una vía indirecta de exfiltración a través del DNS del clúster. Un parche a la configuración del DNS se revertía al reiniciar el orquestador, así que la solución definitiva fue una política de egress declarativa y persistente para el propio servicio de DNS.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Verificación -->
+        <section class="mb-5">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon" style="color: var(--color-galaxy-blue);"><i class="fas fa-vial-circle-check"></i></span>
+                        <span class="fw-bold fs-6 text-light">5. Verificación & Métricas</span>
+                    </div>
+                </div>
+                <h4 class="text-light mb-3">Gate adversarial trazado</h4>
+                <p class="text-secondary">
+                    Cada funcionalidad declara entre 2 y 10 pruebas adversariales en un manifiesto. El gate no suma entradas: verifica que cada prueba declarada exista, que no haya pruebas sin declarar y ejecuta las suites.
+                </p>
+
+                <div class="row g-3 my-3 text-center">
+                    <div class="col-6 col-lg-3">
+                        <div class="mockup-preview-card h-100">
+                            <div class="hero-title m-0" style="font-size: 2rem;">80</div>
+                            <p class="small text-secondary mb-0">pruebas adversariales en 19 funcionalidades</p>
+                        </div>
+                    </div>
+                    <div class="col-6 col-lg-3">
+                        <div class="mockup-preview-card h-100">
+                            <div class="hero-title m-0" style="font-size: 2rem;">30</div>
+                            <p class="small text-secondary mb-0">verificadores deterministas con salida estructurada</p>
+                        </div>
+                    </div>
+                    <div class="col-6 col-lg-3">
+                        <div class="mockup-preview-card h-100">
+                            <div class="hero-title m-0" style="font-size: 2rem;">8</div>
+                            <p class="small text-secondary mb-0">capas con dominios y controles trazables</p>
+                        </div>
+                    </div>
+                    <div class="col-6 col-lg-3">
+                        <div class="mockup-preview-card h-100">
+                            <div class="hero-title m-0" style="font-size: 2rem;">12</div>
+                            <p class="small text-secondary mb-0">excepciones formales acotadas al laboratorio</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="code-window my-4">
+                    <div class="code-window-header">
+                        <div class="window-dots">
+                            <span class="window-dot dot-red"></span>
+                            <span class="window-dot dot-yellow"></span>
+                            <span class="window-dot dot-green"></span>
+                        </div>
+                        <span class="code-window-title">verify-red.log (ejemplo ilustrativo)</span>
+                        <span></span>
+                    </div>
+                    <div class="code-window-body">
+<div class="fsm-comment">// Formato de salida de un verificador de red (nombres ficticios)</div>
+<div>[capa-3] pod frontend-a  → frontend-b:8080      <span class="fsm-state">cumple</span>      (conexión rechazada)</div>
+<div>[capa-3] pod frontend-a  → api-server:6443      <span class="fsm-state">cumple</span>      (conexión rechazada)</div>
+<div>[capa-3] pod backoffice  → egress externo       <span class="fsm-state">cumple</span>      (timeout esperado)</div>
+<div>[capa-3] pod backoffice  → dns interno          <span class="fsm-state">cumple</span>      (resolución OK)</div>
+<div>[capa-5] host            → fim baseline         <span class="fsm-state">pendiente</span>   (requiere VM, omitido)</div>
+<div>resultado: NO LISTO — 1 control obligatorio sin evidencia</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Antes / después -->
+        <section class="mb-5">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon" style="color: var(--color-galaxy-pink);"><i class="fas fa-right-left"></i></span>
+                        <span class="fw-bold fs-6 text-light">6. Antes & Después</span>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-borderless small mb-0" style="--bs-table-bg: transparent; --bs-table-color: var(--text-secondary);">
+                        <thead>
+                            <tr class="text-light">
+                                <th>Área</th>
+                                <th>Antes</th>
+                                <th>Después (laboratorio)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td class="text-light">Navegador</td><td>Sin CSP</td><td>CSP por hashes en los 8 módulos</td></tr>
+                            <tr><td class="text-light">Contenido</td><td>HTML dinámico</td><td>Bloques tipados vía API de solo lectura</td></tr>
+                            <tr><td class="text-light">Red</td><td>Sin aislamiento</td><td>NetworkPolicies verificadas desde pods</td></tr>
+                            <tr><td class="text-light">Contenedores</td><td>Sin hardening</td><td>PSS Restricted, no-root, digest verificado</td></tr>
+                            <tr><td class="text-light">Base de datos</td><td>Rol único</td><td>Roles DDL / runtime / lectura con pruebas negativas</td></tr>
+                            <tr><td class="text-light">Pruebas</td><td>Ninguna</td><td>80 pruebas adversariales con gate</td></tr>
+                            <tr><td class="text-light">Gobierno</td><td>Buenas prácticas sueltas</td><td>Perfiles, evaluación fail-closed y excepciones formales</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. Próximos pasos -->
+        <section class="mb-5">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon" style="color: var(--color-galaxy-cyan);"><i class="fas fa-route"></i></span>
+                        <span class="fw-bold fs-6 text-light">7. Lo que el estándar todavía marca como pendiente</span>
+                    </div>
+                </div>
+                <p class="text-secondary mb-3">
+                    El mismo modelo fail-closed que valida lo hecho deja visible lo que falta. Las brechas abiertas se documentan en la hoja de ruta, no se ocultan:
+                </p>
+                <ul class="feature-list text-secondary mb-0">
+                    <li>Controles de datos: cifrado en tránsito hacia la base, cifrado de datos personales y simulacros de restauración de respaldos.</li>
+                    <li>Observabilidad: auditoría de base de datos, correlación de eventos y almacenamiento inmutable.</li>
+                    <li>Cadena de suministro: escaneo de dependencias e imágenes ejecutado en cada build.</li>
+                    <li>Pruebas en navegador de CSP y DOM-XSS en todos los módulos.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 8. Confidencialidad -->
+        <section class="mb-5">
+            <div class="confidential-callout">
+                <h6><i class="fas fa-user-shield me-2"></i>Criterio Editorial & Confidencialidad Profesional</h6>
+                <p class="small text-secondary mb-0">
+                    Este caso describe un sistema real en una <strong>versión anonimizada</strong>: no se identifican el organismo, los dominios, la infraestructura ni el estado de controles del entorno productivo. Los nombres y salidas mostrados son ilustrativos. Todo lo descrito corresponde a un escenario de laboratorio, no a una certificación de producción.
+                </p>
+            </div>
+        </section>
+
+        <div class="text-center my-5">
+            <a href="../index.html#perfil-seguridad" class="btn-primary-glow">
+                <i class="fas fa-arrow-left me-2"></i>Volver a la Portada del Portafolio
+            </a>
+        </div>
+
+    </main>
+
+    <footer>
+        <div class="container">
+            <p class="mb-0">
+                <i class="fas fa-shield-halved me-2" style="color: var(--color-galaxy-purple);"></i>
+                Micaela Alvarado Mendez · Analista Universitaria en Sistemas · 2026
+            </p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../galaxy.js"></script>
+</body>
+</html>

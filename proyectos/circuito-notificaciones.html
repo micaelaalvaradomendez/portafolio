@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caso de Estudio: Circuito de Intimación Fehaciente | Micaela Alvarado Mendez</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+    <div id="galaxy-bg" class="galaxy-bg"></div>
+
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <span class="brand-icon"><i class="fas fa-terminal"></i></span>
+                <span>Micaela Alvarado Mendez</span>
+            </a>
+            <div class="ms-auto">
+                <a href="../index.html#perfil-analisis" class="btn-secondary-glass py-2 px-3">
+                    <i class="fas fa-arrow-left me-2"></i>Volver al Portafolio
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="case-study-hero">
+        <div class="container">
+            <div class="mb-3">
+                <a href="../index.html#perfil-analisis" class="btn-secondary-glass py-1 px-3" style="font-size: 0.85rem;">
+                    <i class="fas fa-chevron-left me-2"></i>Portada / Análisis Funcional
+                </a>
+            </div>
+            <div class="d-flex flex-wrap gap-2 mb-3">
+                <span class="pill-badge badge-purple">Análisis Funcional</span>
+                <span class="pill-badge badge-blue">BPMN · Máquina de Estados</span>
+                <span class="pill-badge badge-cyan">Reglas de Negocio</span>
+                <span class="pill-badge badge-pink">Especificación</span>
+            </div>
+            <h1 class="hero-title text-start mb-3" style="font-size: clamp(1.8rem, 4vw, 2.6rem);">
+                Circuito de Intimación Fehaciente con Agotamiento de Diligencias
+            </h1>
+            <p class="hero-subtitle text-start m-0" style="max-width: 900px;">
+                Cómo convertir un procedimiento administrativo con plazos, evidencia obligatoria y varios actores en una especificación sin huecos: proceso, estados con guardas, reglas trazables y criterios de aceptación.
+            </p>
+        </div>
+    </header>
+
+    <main class="container my-4">
+
+        <!-- 1. Contexto -->
+        <section class="mb-5">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon" style="color: var(--color-galaxy-pink);"><i class="fas fa-triangle-exclamation"></i></span>
+                        <span class="fw-bold fs-6 text-light">1. Contexto & Problema</span>
+                    </div>
+                </div>
+                <h4 class="text-light mb-3">Notificar no es enviar: es poder demostrar que se intentó todo</h4>
+                <p class="text-secondary">
+                    Antes de aplicar una medida por una deuda impaga, el organismo debe intimar al titular de forma fehaciente. Si la entrega directa fracasa, solo puede recurrir a una publicación oficial después de <strong class="text-light">demostrar que agotó las diligencias</strong> para encontrarlo. El circuito manual tenía tres riesgos:
+                </p>
+                <ul class="feature-list text-secondary mb-4">
+                    <li><strong class="text-light">Publicar sin haber agotado diligencias:</strong> la intimación queda impugnable y todo el trámite se cae.</li>
+                    <li><strong class="text-light">Plazos calculados a mano:</strong> errores de cómputo en días hábiles y medidas aplicadas antes de tiempo.</li>
+                    <li><strong class="text-light">Evidencia dispersa:</strong> constancias de visita y respuestas de registros en papel o correo, imposibles de reconstruir ante un reclamo.</li>
+                </ul>
+                <div class="p-3 rounded-3" style="background: rgba(6, 182, 212, 0.1); border: 1px solid rgba(6, 182, 212, 0.25);">
+                    <p class="m-0 text-light small">
+                        <strong style="color: var(--color-galaxy-cyan);"><i class="fas fa-bullseye me-2"></i>Objetivo del análisis:</strong> una especificación que un equipo de desarrollo pueda implementar y probar sin volver a preguntar, donde el sistema <strong>impida</strong> avanzar sin la evidencia exigida en cada etapa.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Norma vs sistema -->
+        <section class="mb-5">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon" style="color: var(--color-galaxy-purple);"><i class="fas fa-scale-balanced"></i></span>
+                        <span class="fw-bold fs-6 text-light">2. Qué dice la norma y qué decide el sistema</span>
+                    </div>
+                </div>
+                <h4 class="text-light mb-3">Separar la regla de origen de la decisión de diseño</h4>
+                <p class="text-secondary">
+                    El primer entregable del relevamiento fue esta separación. Lo que viene de la norma no se discute; lo que decide el sistema se puede cambiar sin tocar el procedimiento.
+                </p>
+                <div class="table-responsive">
+                    <table class="table analysis-table mb-0">
+                        <thead>
+                            <tr><th>Exigencia del procedimiento</th><th>Decisión de sistema</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>La intimación debe ser fehaciente.</td><td>Cada intento de entrega exige una constancia adjunta (foto, firma o acta) con fecha y responsable.</td></tr>
+                            <tr><td>La publicación procede solo si se agotaron las diligencias.</td><td>El estado <code>Agotada</code> solo se alcanza con los intentos y consultas mínimos cumplidos; el sistema calcula si se cumplen.</td></tr>
+                            <tr><td>La publicación requiere autorización.</td><td>Solo el rol <em>Autoridad</em> autoriza, y nunca quien redactó el informe de agotamiento.</td></tr>
+                            <tr><td>El plazo se cuenta en días hábiles desde la notificación.</td><td>Cómputo automático con calendario de días hábiles parametrizable; el operador no ingresa fechas de vencimiento.</td></tr>
+                            <tr><td>Cantidades y plazos pueden variar por tipo de trámite.</td><td>Parámetros versionados por tipo de trámite; cada intimación guarda la versión con la que se inició.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. BPMN -->
+        <section class="mb-5">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon" style="color: var(--color-galaxy-blue);"><i class="fas fa-route"></i></span>
+                        <span class="fw-bold fs-6 text-light">3. Proceso por Actor (BPMN simplificado)</span>
+                    </div>
+                </div>
+                <h4 class="text-light mb-3">El camino feliz es corto; el valor está en las ramas</h4>
+                <div class="diagram-box mx-auto" style="max-width: 860px;">
+<pre class="mermaid">
+flowchart TB
+    subgraph GES["Área de gestión"]
+        A([Deuda vencida]) --> B[Generar intimación]
+        R[Buscar domicilio en registros]
+        INF[Redactar informe de agotamiento]
+    end
+    subgraph NOT["Notificador"]
+        C[Intento de entrega con constancia]
+    end
+    subgraph SIS["Sistema"]
+        D{¿Entregada?}
+        E{¿Intentos mínimos cumplidos?}
+        F{¿Domicilio nuevo?}
+        P[Computar plazo en días hábiles]
+        V{¿Regularizó en plazo?}
+    end
+    subgraph AUT["Autoridad"]
+        G{¿Autoriza publicación?}
+    end
+    subgraph PUB["Medio oficial"]
+        H[Publicar los días requeridos]
+    end
+    B --> C --> D
+    D -- Sí --> P
+    D -- No --> E
+    E -- No --> C
+    E -- Sí --> R --> F
+    F -- Sí --> C
+    F -- No --> INF --> G
+    G -->|"No: faltan diligencias"| R
+    G -- Sí --> H --> P
+    P --> V
+    V -- Sí --> X([Cierre regularizado])
+    V -- No --> Y([Derivación a la siguiente instancia])
+</pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. FSM -->
+        <section class="mb-5">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon" style="color: var(--color-galaxy-cyan);"><i class="fas fa-diagram-project"></i></span>
+                        <span class="fw-bold fs-6 text-light">4. Máquina de Estados de la Intimación</span>
+                    </div>
+                </div>
+                <h4 class="text-light mb-3">Cada transición tiene una guarda verificable</h4>
+                <div class="diagram-box">
+<pre class="mermaid">
+stateDiagram-v2
+    state "Emitida" as Emitida
+    state "En entrega" as EnEntrega
+    state "Entrega fallida" as Fallida
+    state "Búsqueda de domicilio" as Busqueda
+    state "Diligencias agotadas" as Agotada
+    state "Pendiente de autorización" as Pendiente
+    state "Publicada" as Publicada
+    state "Notificada, plazo corriendo" as Plazo
+    state "Regularizada" as Regularizada
+    state "Vencida" as Vencida
+    [*] --> Emitida
+    Emitida --> EnEntrega
+    EnEntrega --> Plazo: entrega con constancia
+    EnEntrega --> Fallida: intento sin éxito
+    Fallida --> EnEntrega: faltan intentos mínimos
+    Fallida --> Busqueda: intentos cumplidos
+    Busqueda --> EnEntrega: domicilio nuevo
+    Busqueda --> Agotada: registros mínimos sin resultado
+    Agotada --> Pendiente: informe con evidencia completa
+    Pendiente --> Busqueda: observada
+    Pendiente --> Publicada: autorizada por otro actor
+    Publicada --> Plazo: última publicación
+    Plazo --> Regularizada: pago o descargo
+    Plazo --> Vencida: vence sin respuesta
+    Regularizada --> [*]
+    Vencida --> [*]
+</pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Reglas -->
+        <section class="mb-5">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon" style="color: var(--color-galaxy-emerald);"><i class="fas fa-list-ol"></i></span>
+                        <span class="fw-bold fs-6 text-light">5. Matriz de Reglas de Negocio</span>
+                    </div>
+                    <span class="pill-badge badge-emerald">Parámetros de ejemplo</span>
+                </div>
+                <h4 class="text-light mb-3">Reglas que bloquean, con el mensaje que ve el usuario</h4>
+                <div class="table-responsive">
+                    <table class="table analysis-table mb-0">
+                        <thead>
+                            <tr><th>ID</th><th>Regla</th><th>Transición afectada</th><th>Mensaje al usuario si se incumple</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><code>RN-01</code></td><td>Al menos 2 intentos de entrega en días y franjas horarias distintas.</td><td><code>Fallida → Búsqueda</code></td><td>"Falta un intento en otro día u horario."</td></tr>
+                            <tr><td><code>RN-02</code></td><td>Consulta en al menos 2 registros de domicilio antes de declarar agotadas las diligencias.</td><td><code>Búsqueda → Agotada</code></td><td>"Faltan consultas a registros (1 de 2)."</td></tr>
+                            <tr><td><code>RN-03</code></td><td>El informe de agotamiento solo se presenta si cada intento y consulta tiene constancia adjunta.</td><td><code>Agotada → Pendiente</code></td><td>"El intento del 14/09 no tiene constancia."</td></tr>
+                            <tr><td><code>RN-04</code></td><td>Autoriza solo el rol Autoridad, y nunca quien redactó el informe.</td><td><code>Pendiente → Publicada</code></td><td>"No podés autorizar un informe que redactaste."</td></tr>
+                            <tr><td><code>RN-05</code></td><td>Publicación por 2 días hábiles consecutivos; el plazo corre desde la última.</td><td><code>Publicada → Plazo</code></td><td>"Falta la constancia del segundo día de publicación."</td></tr>
+                            <tr><td><code>RN-06</code></td><td>Plazo de 10 días hábiles calculado con el calendario vigente; no editable a mano.</td><td><code>Plazo → Vencida</code></td><td>Vencimiento visible, sin campo editable.</td></tr>
+                            <tr><td><code>RN-07</code></td><td>Si aparece un domicilio nuevo antes de publicar, la publicación se suspende y vuelve a entrega.</td><td><code>Pendiente → Búsqueda</code></td><td>"Hay un domicilio nuevo: se requiere un nuevo intento."</td></tr>
+                            <tr><td><code>RN-08</code></td><td>Todo cambio de estado registra actor, fecha, evidencia y versión de parámetros.</td><td>Todas</td><td>Registro automático, sin intervención del usuario.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Casos de uso & RACI -->
+        <section class="mb-5">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon" style="color: var(--color-galaxy-pink);"><i class="fas fa-users-gear"></i></span>
+                        <span class="fw-bold fs-6 text-light">6. Casos de Uso & Responsabilidades (RACI)</span>
+                    </div>
+                </div>
+                <div class="row g-4">
+                    <div class="col-lg-6">
+                        <h6 class="text-light fw-bold mb-2">Casos de uso principales</h6>
+                        <div class="table-responsive">
+                            <table class="table analysis-table mb-0">
+                                <thead>
+                                    <tr><th>CU</th><th>Actor</th><th>Flujo alternativo clave</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>CU-01 Registrar intento</td><td>Notificador</td><td>Sin constancia, el intento no cuenta para RN-01.</td></tr>
+                                    <tr><td>CU-02 Consultar registro</td><td>Gestión</td><td>Domicilio nuevo, vuelve a entrega.</td></tr>
+                                    <tr><td>CU-03 Presentar informe</td><td>Gestión</td><td>Evidencia incompleta, se bloquea (RN-03).</td></tr>
+                                    <tr><td>CU-04 Resolver publicación</td><td>Autoridad</td><td>Observa, vuelve a búsqueda con motivo.</td></tr>
+                                    <tr><td>CU-05 Registrar publicación</td><td>Gestión</td><td>Falta un día, el plazo no arranca.</td></tr>
+                                    <tr><td>CU-06 Registrar regularización</td><td>Gestión</td><td>Pago parcial, queda con observación.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <h6 class="text-light fw-bold mb-2">RACI por etapa</h6>
+                        <div class="table-responsive">
+                            <table class="table analysis-table mb-0 text-center">
+                                <thead>
+                                    <tr><th class="text-start">Etapa</th><th>Gestión</th><th>Notificador</th><th>Autoridad</th><th>Supervisión</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td class="text-start">Emisión</td><td>R/A</td><td>I</td><td>—</td><td>I</td></tr>
+                                    <tr><td class="text-start">Entrega</td><td>A</td><td>R</td><td>—</td><td>I</td></tr>
+                                    <tr><td class="text-start">Búsqueda</td><td>R/A</td><td>C</td><td>—</td><td>I</td></tr>
+                                    <tr><td class="text-start">Informe</td><td>R</td><td>C</td><td>I</td><td>A</td></tr>
+                                    <tr><td class="text-start">Autorización</td><td>I</td><td>—</td><td>R/A</td><td>C</td></tr>
+                                    <tr><td class="text-start">Publicación y plazo</td><td>R</td><td>—</td><td>I</td><td>A</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="small text-secondary mt-2 mb-0">R: responsable · A: aprueba · C: consultado · I: informado</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. Historias -->
+        <section class="mb-5">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon" style="color: var(--color-galaxy-emerald);"><i class="fas fa-list-check"></i></span>
+                        <span class="fw-bold fs-6 text-light">7. Historias de Usuario & Criterios de Aceptación</span>
+                    </div>
+                    <span class="pill-badge badge-emerald">Dado / Cuando / Entonces</span>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="mockup-preview-card">
+                            <h6><i class="fas fa-door-closed"></i>HU-01 · Registrar un intento fallido</h6>
+                            <p class="small text-secondary"><em>Como notificador, quiero registrar un intento sin éxito con su constancia para que cuente como diligencia.</em></p>
+                            <ul class="small text-secondary mb-0 ps-3">
+                                <li><strong class="text-light">CA-1:</strong> Dado un intento con foto y franja horaria, cuando lo registro, entonces cuenta para RN-01 y la intimación pasa a <code>Entrega fallida</code>.</li>
+                                <li><strong class="text-light">CA-2:</strong> Dado un segundo intento en el mismo día y franja que el primero, cuando lo registro, entonces se guarda pero no cuenta como intento distinto.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mockup-preview-card">
+                            <h6><i class="fas fa-file-circle-check"></i>HU-02 · Presentar informe de agotamiento</h6>
+                            <p class="small text-secondary"><em>Como responsable de gestión, quiero presentar el informe solo cuando la evidencia esté completa.</em></p>
+                            <ul class="small text-secondary mb-0 ps-3">
+                                <li><strong class="text-light">CA-1:</strong> Dado que todos los intentos y consultas tienen constancia, cuando presento el informe, entonces pasa a <code>Pendiente de autorización</code>.</li>
+                                <li><strong class="text-light">CA-2:</strong> Dado que una consulta no tiene constancia, cuando intento presentar, entonces el sistema bloquea y señala cuál falta (RN-03).</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mockup-preview-card">
+                            <h6><i class="fas fa-stamp"></i>HU-03 · Autorizar la publicación</h6>
+                            <p class="small text-secondary"><em>Como autoridad, quiero autorizar la publicación con la seguridad de que el informe es de otra persona.</em></p>
+                            <ul class="small text-secondary mb-0 ps-3">
+                                <li><strong class="text-light">CA-1:</strong> Dado un informe redactado por otro usuario, cuando autorizo, entonces pasa a <code>Publicada</code> al registrarse la publicación.</li>
+                                <li><strong class="text-light">CA-2:</strong> Dado un informe que redacté, cuando intento autorizar, entonces se rechaza (RN-04).</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mockup-preview-card">
+                            <h6><i class="fas fa-calendar-days"></i>HU-04 · Calcular el vencimiento</h6>
+                            <p class="small text-secondary"><em>Como supervisión, quiero que el vencimiento se calcule solo para no aplicar medidas antes de tiempo.</em></p>
+                            <ul class="small text-secondary mb-0 ps-3">
+                                <li><strong class="text-light">CA-1:</strong> Dado una notificación con un feriado dentro del plazo, cuando se calcula el vencimiento, entonces el feriado no se cuenta.</li>
+                                <li><strong class="text-light">CA-2:</strong> Dado que cambian los parámetros del tipo de trámite, cuando consulto una intimación iniciada antes, entonces conserva la versión con la que empezó.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. Trazabilidad -->
+        <section class="mb-5">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon" style="color: var(--color-galaxy-cyan);"><i class="fas fa-table-cells"></i></span>
+                        <span class="fw-bold fs-6 text-light">8. Matriz de Trazabilidad</span>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table analysis-table mb-0">
+                        <thead>
+                            <tr><th>Requisito</th><th>Reglas</th><th>Caso de uso</th><th>Pantalla</th><th>Criterios</th><th>Casos de prueba</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>RF-01 Registrar diligencias</td><td>RN-01, RN-02, RN-08</td><td>CU-01, CU-02</td><td>Ficha de diligencias</td><td>HU-01</td><td>T-01 a T-04</td></tr>
+                            <tr><td>RF-02 Declarar agotamiento</td><td>RN-03</td><td>CU-03</td><td>Checklist de evidencia</td><td>HU-02</td><td>T-05, T-06</td></tr>
+                            <tr><td>RF-03 Autorizar publicación</td><td>RN-04, RN-07</td><td>CU-04</td><td>Bandeja de autorización</td><td>HU-03</td><td>T-07 a T-09</td></tr>
+                            <tr><td>RF-04 Controlar plazos</td><td>RN-05, RN-06</td><td>CU-05, CU-06</td><td>Panel de vencimientos</td><td>HU-04</td><td>T-10 a T-12</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 9. Pantalla de ejemplo -->
+        <section class="mb-5">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon" style="color: var(--color-galaxy-blue);"><i class="fas fa-desktop"></i></span>
+                        <span class="fw-bold fs-6 text-light">9. Pantallas de Ejemplo (datos ficticios)</span>
+                    </div>
+                </div>
+                <h4 class="text-light mb-3">El sistema dice por qué no se puede avanzar</h4>
+                <div class="row g-4">
+                    <div class="col-lg-6">
+                        <div class="mock-screen">
+                            <div class="mock-screen-bar"><i class="fas fa-clipboard-check"></i>INT-2026-0087 · Checklist para presentar informe</div>
+                            <div class="mock-screen-body">
+                                <div class="mock-row"><span><i class="fas fa-circle-check me-1" style="color:#6ee7b7"></i>Intento 1 · 09/09 · mañana · constancia adjunta</span><span class="mock-state mock-state-ok">RN-01</span></div>
+                                <div class="mock-row"><span><i class="fas fa-circle-check me-1" style="color:#6ee7b7"></i>Intento 2 · 11/09 · tarde · constancia adjunta</span><span class="mock-state mock-state-ok">RN-01</span></div>
+                                <div class="mock-row"><span><i class="fas fa-circle-check me-1" style="color:#6ee7b7"></i>Registro A · sin domicilio nuevo · respuesta adjunta</span><span class="mock-state mock-state-ok">RN-02</span></div>
+                                <div class="mock-row"><span><i class="fas fa-circle-xmark me-1" style="color:#f9a8d4"></i>Registro B · consulta enviada · sin respuesta adjunta</span><span class="mock-state mock-state-observed">RN-03</span></div>
+                                <div class="mt-3">
+                                    <span class="btn-secondary-glass w-100 btn-disabled py-2" aria-disabled="true"><i class="fas fa-lock me-2"></i>Presentar informe · falta 1 constancia</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="mock-screen">
+                            <div class="mock-screen-bar"><i class="fas fa-calendar-days"></i>Panel de vencimientos</div>
+                            <div class="mock-screen-body">
+                                <div class="row g-2 mb-3">
+                                    <div class="col-4"><div class="mock-kpi"><strong>12</strong>Plazo corriendo</div></div>
+                                    <div class="col-4"><div class="mock-kpi"><strong>3</strong>Vencen esta semana</div></div>
+                                    <div class="col-4"><div class="mock-kpi"><strong>4</strong>Pend. autorización</div></div>
+                                </div>
+                                <div class="mock-row"><span>INT-2026-0071 · vence 06/10</span><span class="mock-state mock-state-observed">2 días hábiles</span></div>
+                                <div class="mock-row"><span>INT-2026-0074 · vence 08/10</span><span class="mock-state mock-state-review">4 días hábiles</span></div>
+                                <div class="mock-row"><span>INT-2026-0080 · publicada 2/2</span><span class="mock-state mock-state-review">Plazo corriendo</span></div>
+                                <div class="mock-row"><span>INT-2026-0066 · pago registrado</span><span class="mock-state mock-state-ok">Regularizada</span></div>
+                                <div class="mock-row"><span>INT-2026-0087 · evidencia incompleta</span><span class="mock-state mock-state-draft">Diligencias</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 10. Confidencialidad -->
+        <section class="mb-5">
+            <div class="confidential-callout">
+                <h6><i class="fas fa-user-shield me-2"></i>Criterio Editorial</h6>
+                <p class="small text-secondary mb-0">
+                    El caso se presenta sobre un <strong>dominio administrativo genérico</strong> inspirado en relevamientos reales de procedimientos con notificación fehaciente. Cantidades, plazos y nombres son parámetros de ejemplo y no representan una normativa específica. El foco está en el método de análisis: separar norma y sistema, modelar estados con guardas y dejar criterios verificables.
+                </p>
+            </div>
+        </section>
+
+        <div class="text-center my-5">
+            <a href="../index.html#perfil-analisis" class="btn-primary-glow">
+                <i class="fas fa-arrow-left me-2"></i>Volver a la Portada del Portafolio
+            </a>
+        </div>
+
+    </main>
+
+    <footer>
+        <div class="container">
+            <p class="mb-0">
+                <i class="fas fa-shield-halved me-2" style="color: var(--color-galaxy-purple);"></i>
+                Micaela Alvarado Mendez · Analista Universitaria en Sistemas · 2026
+            </p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../galaxy.js"></script>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({
+            startOnLoad: true,
+            securityLevel: 'strict',
+            theme: 'base',
+            themeVariables: {
+                background: 'transparent',
+                primaryColor: '#1e1b4b',
+                primaryTextColor: '#e2e8f0',
+                primaryBorderColor: '#8b5cf6',
+                lineColor: '#06b6d4',
+                clusterBkg: 'rgba(139, 92, 246, 0.08)',
+                clusterBorder: '#ec4899',
+                fontFamily: 'Inter, sans-serif',
+                textColor: '#e2e8f0',
+                labelBackgroundColor: '#1e1b4b',
+                edgeLabelBackground: '#1e1b4b'
+            }
+        });
+    </script>
+</body>
+</html>

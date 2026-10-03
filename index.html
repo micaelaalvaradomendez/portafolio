@@ -311,23 +311,23 @@
                     </div>
                 </div>
 
-                <!-- 2. Circuito de Notificación -->
+                <!-- 2. Circuito de Intimación -->
                 <div class="col-lg-4 col-md-6">
                     <div class="project-card">
                         <div class="project-top-bar">
                             <span class="pill-badge badge-purple">Modelado de Procesos</span>
-                            <span class="pill-badge badge-pink"><i class="fas fa-hourglass-half"></i>En preparación</span>
+                            <span class="pill-badge badge-emerald">Caso publicado</span>
                         </div>
                         <div class="project-body">
-                            <h3 class="project-title">Circuito de Notificación con Agotamiento de Diligencias</h3>
-                            <div class="tech-stack-label">BPMN · Máquina de Estados · Casos de Uso · Historias de Usuario · Trazabilidad</div>
+                            <h3 class="project-title">Circuito de Intimación Fehaciente con Agotamiento de Diligencias</h3>
+                            <div class="tech-stack-label">BPMN · Máquina de Estados · Reglas de Negocio · Casos de Uso · RACI · Trazabilidad</div>
                             <p class="project-description">
-                                Modelado de un proceso administrativo-legal con múltiples actores: reglas que bloquean el avance sin evidencia, máquina de estados con guardas, matriz de reglas y criterios de aceptación verificables para cada transición.
+                                Especificación de un procedimiento administrativo con plazos y evidencia obligatoria: separación entre norma y decisión de sistema, estados con guardas, reglas que bloquean el avance y criterios de aceptación verificables.
                             </p>
                             <div class="mt-auto pt-2">
-                                <span class="btn-secondary-glass w-100 btn-disabled" aria-disabled="true">
-                                    <i class="fas fa-diagram-project me-2"></i>Caso en preparación
-                                </span>
+                                <a href="proyectos/circuito-notificaciones.html" class="btn-primary-glow w-100">
+                                    <i class="fas fa-diagram-project me-2"></i>Ver Especificación
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -395,18 +395,18 @@
                     <div class="project-card">
                         <div class="project-top-bar">
                             <span class="pill-badge badge-blue">Sistemas Distribuidos</span>
-                            <span class="pill-badge badge-pink"><i class="fas fa-hourglass-half"></i>En preparación</span>
+                            <span class="pill-badge badge-emerald">Go + PostgreSQL</span>
                         </div>
                         <div class="project-body">
                             <h3 class="project-title">Procesamiento Masivo Confiable contra una API Externa</h3>
-                            <div class="tech-stack-label">Go · PostgreSQL · SKIP LOCKED · Outbox · Reintentos con Backoff · DLQ · Idempotencia</div>
+                            <div class="tech-stack-label">Go · PostgreSQL · SKIP LOCKED · Outbox · Backoff con Jitter · DLQ · Idempotencia · CI</div>
                             <p class="project-description">
-                                Rediseño de un proceso que aplica cientos de cambios contra un sistema externo lento: confirmación transaccional, worker con reintentos, cola de fallidos con reproceso auditado y claves de idempotencia para que un timeout no genere duplicados.
+                                Cola durable sobre PostgreSQL para aplicar cientos de cambios contra un sistema externo inestable: confirmación transaccional, workers concurrentes con lease, reintentos y DLQ auditada. 300 pedidos con 30&nbsp;% de fallas: 0 duplicados.
                             </p>
                             <div class="mt-auto pt-2">
-                                <span class="btn-secondary-glass w-100 btn-disabled" aria-disabled="true">
-                                    <i class="fas fa-code me-2"></i>Repositorio en preparación
-                                </span>
+                                <a href="https://github.com/micaelaalvaradomendez/pg-durable-queue" target="_blank" rel="noopener" class="btn-primary-glow w-100">
+                                    <i class="fab fa-github me-2"></i>Repositorio & Decisiones
+                                </a>
                             </div>
                         </div>
                     </div>

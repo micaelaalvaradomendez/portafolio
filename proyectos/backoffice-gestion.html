@@ -12,22 +12,30 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Cosmic Glassmorphism Stylesheet (Ruta relativa) -->
     <link rel="stylesheet" href="../styles.css">
+    <!-- Script de inicialización inmediata de tema para evitar parpadeos -->
+    <script>
+        (function() {
+            const saved = localStorage.getItem('mam-portfolio-theme');
+            if (saved === 'dark' || (!saved && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
 </head>
 <body>
 
-    <!-- Fondo Cósmico Procedural -->
-    <div id="galaxy-bg" class="galaxy-bg"></div>
-
-    <!-- Navegación Flotante Glassmorphism -->
+    <!-- Navegación Institucional Limpia -->
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
             <a class="navbar-brand" href="../index.html">
                 <span class="brand-icon"><i class="fas fa-terminal"></i></span>
                 <span>Micaela Alvarado Mendez</span>
             </a>
-            <div class="ms-auto">
+            <div class="ms-auto d-flex align-items-center gap-2">
+                <button id="themeToggle" class="btn-theme-toggle" title="Cambiar tema claro / oscuro" aria-label="Cambiar tema">
+                    <i class="fas fa-moon" id="themeIcon"></i>
+                </button>
                 <a href="../index.html" class="btn-secondary-glass py-2 px-3">
                     <i class="fas fa-arrow-left me-2"></i>Volver al Portafolio
                 </a>
@@ -682,33 +690,62 @@ sequenceDiagram
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Galaxy Stars Animation Script (Ruta relativa) -->
-    <script src="../galaxy.js"></script>
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        function updateThemeIcon(isDark) {
+            if (!themeIcon) return;
+            if (isDark) {
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+                if (themeToggle) themeToggle.setAttribute('title', 'Cambiar a modo claro');
+            } else {
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+                if (themeToggle) themeToggle.setAttribute('title', 'Cambiar a modo oscuro');
+            }
+        }
+        updateThemeIcon(document.documentElement.getAttribute('data-theme') === 'dark');
+        if (themeToggle) {
+            themeToggle.addEventListener('click', function() {
+                const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+                if (isDark) {
+                    document.documentElement.removeAttribute('data-theme');
+                    localStorage.setItem('mam-portfolio-theme', 'light');
+                    updateThemeIcon(false);
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    localStorage.setItem('mam-portfolio-theme', 'dark');
+                    updateThemeIcon(true);
+                }
+            });
+        }
+    </script>
     <script type="module">
         import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
         mermaid.initialize({
             startOnLoad: true,
             securityLevel: 'strict',
-            theme: 'base',
+            theme: 'default',
             themeVariables: {
-                background: 'transparent',
-                primaryColor: '#1e1b4b',
-                primaryTextColor: '#e2e8f0',
-                primaryBorderColor: '#8b5cf6',
-                lineColor: '#06b6d4',
-                clusterBkg: 'rgba(139, 92, 246, 0.08)',
-                clusterBorder: '#ec4899',
+                background: '#ffffff',
+                primaryColor: '#f5f3ff',
+                primaryTextColor: '#0f172a',
+                primaryBorderColor: '#7c3aed',
+                lineColor: '#b829ac',
+                clusterBkg: '#f8fafc',
+                clusterBorder: '#cbd5e1',
                 fontFamily: 'Inter, sans-serif',
-                textColor: '#e2e8f0',
-                actorTextColor: '#e2e8f0',
-                signalColor: '#06b6d4',
-                signalTextColor: '#e2e8f0',
-                labelBoxBkgColor: '#1e1b4b',
-                labelTextColor: '#e2e8f0',
-                loopTextColor: '#e2e8f0',
-                noteBkgColor: '#312e81',
-                noteTextColor: '#e2e8f0',
-                noteBorderColor: '#8b5cf6'
+                textColor: '#0f172a',
+                actorTextColor: '#0f172a',
+                signalColor: '#b829ac',
+                signalTextColor: '#0f172a',
+                labelBoxBkgColor: '#ffffff',
+                labelTextColor: '#0f172a',
+                loopTextColor: '#0f172a',
+                noteBkgColor: '#fdf4ff',
+                noteTextColor: '#701a75',
+                noteBorderColor: '#f5d0fe'
             }
         });
     </script>

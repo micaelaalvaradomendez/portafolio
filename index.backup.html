@@ -8,33 +8,27 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- FontAwesome 6.4.0 -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <!-- Google Fonts: Inter, Outfit & JetBrains Mono -->
+    <!-- Google Fonts: Inter, Space Grotesk & JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- GovTech Institutional Stylesheet -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Cosmic Glassmorphism Stylesheet -->
     <link rel="stylesheet" href="styles.css">
-    <!-- Script de inicialización inmediata de tema para evitar parpadeos -->
-    <script>
-        (function() {
-            const saved = localStorage.getItem('mam-portfolio-theme');
-            if (saved === 'dark' || (!saved && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.documentElement.setAttribute('data-theme', 'dark');
-            }
-        })();
-    </script>
 </head>
 <body data-bs-spy="scroll" data-bs-target="#navbar">
 
-    <!-- Navegación Institucional Limpia -->
+    <!-- Fondo Cósmico Procedural (Galaxia + Nebulosas + Estrellas) -->
+    <div id="galaxy-bg" class="galaxy-bg"></div>
+
+    <!-- Navegación Flotante Glassmorphism -->
     <nav id="navbar" class="navbar navbar-expand-lg fixed-top">
         <div class="container">
             <a class="navbar-brand" href="#">
                 <span class="brand-icon"><i class="fas fa-terminal"></i></span>
                 <span>Micaela Alvarado Mendez</span>
             </a>
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <i class="fas fa-bars"></i>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fas fa-bars text-light"></i>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-lg-center">
@@ -43,10 +37,7 @@
                     <li class="nav-item"><a class="nav-link" href="#formacion">Formación</a></li>
                     <li class="nav-item"><a class="nav-link" href="#proyectos">Proyectos</a></li>
                     <li class="nav-item"><a class="nav-link" href="#contacto">Contacto</a></li>
-                    <li class="nav-item ms-lg-3 d-flex gap-2 mt-2 mt-lg-0 align-items-center">
-                        <button id="themeToggle" class="btn-theme-toggle" title="Cambiar tema claro / oscuro" aria-label="Cambiar tema">
-                            <i class="fas fa-moon" id="themeIcon"></i>
-                        </button>
+                    <li class="nav-item ms-lg-3 d-flex gap-2 mt-2 mt-lg-0">
                         <a href="https://www.linkedin.com/in/micaelaalvaradomendez/" target="_blank" class="btn-glass-icon" title="LinkedIn" aria-label="LinkedIn">
                             <i class="fab fa-linkedin-in"></i>
                         </a>
@@ -59,17 +50,12 @@
         </div>
     </nav>
 
-    <!-- Hero Section Institucional -->
+    <!-- Hero Section -->
     <header class="hero-section">
         <div class="container">
-            <!-- Indicador de Disponibilidad -->
-            <div class="status-pill-gov">
-                <span class="status-dot-live"></span>
-                <span>Ushuaia, Tierra del Fuego · Disponible para proyectos técnicos</span>
-            </div>
-
-            <!-- Avatar con Marco Limpio -->
+            <!-- Avatar con Anillo Cósmico Luminoso -->
             <div class="avatar-glow-container">
+                <div class="avatar-glow-ring"></div>
                 <img src="icons/logotipo.jpeg" alt="Micaela Alvarado Mendez" class="avatar-img">
             </div>
             
@@ -78,22 +64,13 @@
             </h1>
             
             <p class="hero-subtitle">
-                Analista Universitaria en Sistemas (UNTDF) | Análisis Funcional · Backend (Go + PostgreSQL 16) · Seguridad Aplicada
+                Analista Universitaria en Sistemas | Análisis Funcional · Backend (Go + PostgreSQL) · Seguridad Aplicada
             </p>
             
             <div class="hero-badges">
                 <a href="#perfil-analisis" class="pill-badge badge-purple"><i class="fas fa-sitemap me-1"></i>Análisis Funcional</a>
                 <a href="#perfil-backend" class="pill-badge badge-blue"><i class="fas fa-server me-1"></i>Backend</a>
-                <a href="#perfil-seguridad" class="pill-badge badge-pink"><i class="fas fa-shield-halved me-1"></i>Seguridad</a>
-            </div>
-
-            <div class="d-flex flex-wrap gap-3 pt-2">
-                <a href="https://drive.google.com/file/d/1S4m_9psv8DeF2Sxl7DHaVu2CqJ0nhsn7/view?usp=drive_link" target="_blank" class="btn-primary-glow">
-                    <i class="fas fa-file-arrow-down me-2"></i>Descargar CV Completo
-                </a>
-                <a href="#proyectos" class="btn-secondary-glass">
-                    <i class="fas fa-folder-open me-2"></i>Ver Casos de Estudio
-                </a>
+                <a href="#perfil-seguridad" class="pill-badge badge-cyan"><i class="fas fa-shield-halved me-1"></i>Seguridad</a>
             </div>
         </div>
     </header>
@@ -106,13 +83,13 @@
                 <div class="glass-card-header">
                     <div class="d-flex align-items-center gap-2">
                         <span class="brand-icon"><i class="fas fa-id-badge"></i></span>
-                        <span class="fw-bold fs-6 text-heading">Perfil Profesional</span>
+                        <span class="fw-bold fs-6 text-light">Perfil Profesional</span>
                     </div>
                     <span class="pill-badge badge-purple"><i class="fas fa-graduation-cap me-1"></i>UNTDF</span>
                 </div>
                 <div class="row justify-content-center">
                     <div class="col-lg-10">
-                        <p class="fs-5 text-heading fw-medium mb-3">
+                        <p class="fs-5 text-light fw-medium mb-3">
                             Analista Universitaria en Sistemas y estudiante avanzada de la Licenciatura en Sistemas en la <strong>Universidad Nacional de Tierra del Fuego (UNTDF)</strong>.
                         </p>
                         <p class="text-secondary">
@@ -121,6 +98,11 @@
                         <p class="text-secondary mb-4">
                             Mi enfoque prioriza entender y modelar la lógica operativa antes de codificar, garantizar las reglas críticas donde no se puedan saltear y verificar cada control con pruebas. Cada caso de este portafolio indica qué perfil demuestra.
                         </p>
+                        <div class="text-center pt-2">
+                            <a href="https://drive.google.com/file/d/1S4m_9psv8DeF2Sxl7DHaVu2CqJ0nhsn7/view?usp=drive_link" target="_blank" class="btn-primary-glow">
+                                <i class="fas fa-file-arrow-down me-2"></i>Descargar CV Completo
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -132,9 +114,9 @@
             <p class="section-subtitle">Organizadas por los tres perfiles que demuestran los casos de estudio.</p>
             
             <div class="row g-4">
-                <!-- Perfil 1: Análisis Funcional & Gestión (Violeta) -->
+                <!-- Perfil 1: Análisis Funcional & Gestión -->
                 <div class="col-lg-4">
-                    <div class="glass-card h-100" style="border-top: 3px solid var(--violet-primary) !important;">
+                    <div class="glass-card h-100">
                         <div class="skill-category-title">
                             <div class="skill-category-icon">
                                 <i class="fas fa-sitemap"></i>
@@ -163,11 +145,11 @@
                     </div>
                 </div>
                 
-                <!-- Perfil 2: Backend & Persistencia (Fucsia Intermedio) -->
+                <!-- Perfil 2: Backend & Persistencia -->
                 <div class="col-lg-4">
-                    <div class="glass-card h-100" style="border-top: 3px solid var(--mid-primary) !important;">
+                    <div class="glass-card h-100">
                         <div class="skill-category-title">
-                            <div class="skill-category-icon" style="color: var(--mid-primary); background: var(--mid-bg); border-color: var(--mid-border);">
+                            <div class="skill-category-icon" style="color: var(--color-galaxy-pink); background: rgba(236,72,153,0.15); border-color: rgba(236,72,153,0.25);">
                                 <i class="fas fa-server"></i>
                             </div>
                             <span>Backend & Persistencia</span>
@@ -185,7 +167,7 @@
                             <span class="tech-tag"><i class="fab fa-docker"></i>Docker / Compose</span>
                         </div>
 
-                        <div class="sub-category-title" style="color: var(--violet-primary);"><i class="fas fa-laptop-code me-2"></i>Frontend & Backoffice</div>
+                        <div class="sub-category-title" style="color: var(--color-galaxy-purple);"><i class="fas fa-laptop-code me-2"></i>Frontend & Backoffice</div>
                         <div class="skills-tags mb-3">
                             <span class="tech-tag"><i class="fas fa-bolt"></i>Svelte / SvelteKit</span>
                             <span class="tech-tag"><i class="fab fa-js-square"></i>TypeScript / JS</span>
@@ -193,7 +175,7 @@
                             <span class="tech-tag"><i class="fab fa-bootstrap"></i>Bootstrap 5</span>
                         </div>
 
-                        <div class="sub-category-title" style="color: var(--rose-primary);"><i class="fas fa-robot me-2"></i>AI Engineering & Gobernanza</div>
+                        <div class="sub-category-title" style="color: var(--color-galaxy-pink);"><i class="fas fa-robot me-2"></i>AI Engineering & Gobernanza</div>
                         <div class="skills-tags">
                             <span class="tech-tag"><i class="fas fa-brain"></i>Spec-Driven Dev</span>
                             <span class="tech-tag"><i class="fas fa-network-wired"></i>Model Context Protocol (MCP)</span>
@@ -202,11 +184,11 @@
                     </div>
                 </div>
 
-                <!-- Perfil 3: Seguridad & Infraestructura (Tu Rosa #e64c99) -->
+                <!-- Perfil 3: Seguridad & Infraestructura -->
                 <div class="col-lg-4">
-                    <div class="glass-card h-100 mb-0" style="border-top: 3px solid var(--rose-primary) !important;">
+                    <div class="glass-card h-100 mb-0">
                         <div class="skill-category-title">
-                            <div class="skill-category-icon" style="color: var(--rose-primary); background: var(--rose-bg); border-color: var(--rose-border);">
+                            <div class="skill-category-icon" style="color: var(--color-galaxy-cyan); background: rgba(6,182,212,0.15); border-color: rgba(6,182,212,0.25);">
                                 <i class="fas fa-shield-halved"></i>
                             </div>
                             <span>Seguridad & Infraestructura</span>
@@ -245,7 +227,7 @@
                         <h6><i class="fas fa-user-graduate"></i>Diplomado Universitario</h6>
                         <p class="small text-secondary">Administrador de Redes Linux con Orientación en Ciberseguridad y Hacking Ético.</p>
                         <div class="mt-auto">
-                            <span class="pill-badge badge-pink"><i class="fas fa-hourglass-half me-1"></i>En curso</span>
+                            <span class="pill-badge badge-pink"><i class="fas fa-hourglass-half"></i>En curso</span>
                         </div>
                     </div>
                 </div>
@@ -291,9 +273,9 @@
             <p class="section-subtitle">Casos organizados por perfil. Elegí el rol que estás buscando.</p>
 
             <div class="profile-nav">
-                <a href="#perfil-analisis" class="pill-badge badge-purple"><i class="fas fa-sitemap me-1"></i>Análisis Funcional</a>
-                <a href="#perfil-backend" class="pill-badge badge-blue"><i class="fas fa-server me-1"></i>Backend</a>
-                <a href="#perfil-seguridad" class="pill-badge badge-pink"><i class="fas fa-shield-halved me-1"></i>Seguridad</a>
+                <a href="#perfil-analisis" class="pill-badge badge-purple"><i class="fas fa-sitemap"></i>Análisis Funcional</a>
+                <a href="#perfil-backend" class="pill-badge badge-blue"><i class="fas fa-server"></i>Backend</a>
+                <a href="#perfil-seguridad" class="pill-badge badge-cyan"><i class="fas fa-shield-halved"></i>Seguridad</a>
             </div>
 
             <!-- Perfil: Análisis Funcional -->
@@ -334,7 +316,7 @@
                     <div class="project-card">
                         <div class="project-top-bar">
                             <span class="pill-badge badge-purple">Modelado de Procesos</span>
-                            <span class="pill-badge badge-pink">Caso publicado</span>
+                            <span class="pill-badge badge-emerald">Caso publicado</span>
                         </div>
                         <div class="project-body">
                             <h3 class="project-title">Circuito de Intimación Fehaciente con Agotamiento de Diligencias</h3>
@@ -356,7 +338,7 @@
                     <div class="project-card">
                         <div class="project-top-bar">
                             <span class="pill-badge badge-purple">PM & QA</span>
-                            <span class="pill-badge badge-pink"><i class="fas fa-hourglass-half me-1"></i>En curso</span>
+                            <span class="pill-badge badge-pink"><i class="fas fa-hourglass-half"></i>En curso</span>
                         </div>
                         <div class="project-body">
                             <h3 class="project-title">Gestión de un Panel de Operación de Infraestructura Virtualizada</h3>
@@ -378,7 +360,7 @@
             <!-- Perfil: Backend -->
             <div id="perfil-backend" class="profile-segment">
                 <div class="profile-header">
-                    <span class="profile-icon" style="color: var(--mid-primary); background: var(--mid-bg); border-color: var(--mid-border);"><i class="fas fa-server"></i></span>
+                    <span class="profile-icon" style="color: var(--color-galaxy-pink); background: rgba(236,72,153,0.15); border-color: rgba(236,72,153,0.25);"><i class="fas fa-server"></i></span>
                     <div>
                         <h3 class="profile-title">Backend</h3>
                         <p class="profile-tagline">Reglas en el motor, transacciones, concurrencia, procesamiento confiable y pruebas.</p>
@@ -390,8 +372,8 @@
                 <div class="col-lg-4 col-md-6">
                     <div class="project-card">
                         <div class="project-top-bar">
-                            <span class="pill-badge badge-blue">Database Engineering</span>
-                            <span class="pill-badge badge-pink">PostgreSQL 16</span>
+                            <span class="pill-badge badge-cyan">Database Engineering</span>
+                            <span class="pill-badge badge-emerald">PostgreSQL 16</span>
                         </div>
                         <div class="project-body">
                             <h3 class="project-title">Automatización e Integridad Transaccional en PostgreSQL</h3>
@@ -413,7 +395,7 @@
                     <div class="project-card">
                         <div class="project-top-bar">
                             <span class="pill-badge badge-blue">Sistemas Distribuidos</span>
-                            <span class="pill-badge badge-pink">Go + PostgreSQL</span>
+                            <span class="pill-badge badge-emerald">Go + PostgreSQL</span>
                         </div>
                         <div class="project-body">
                             <h3 class="project-title">Procesamiento Masivo Confiable contra una API Externa</h3>
@@ -435,7 +417,7 @@
                     <div class="project-card">
                         <div class="project-top-bar">
                             <span class="pill-badge badge-pink">AI Engineering</span>
-                            <span class="pill-badge badge-blue">Publicado</span>
+                            <span class="pill-badge badge-emerald">Publicado</span>
                         </div>
                         <div class="project-body">
                             <h3 class="project-title">Framework SDD para Agentes de IA Supervisados</h3>
@@ -458,7 +440,7 @@
             <!-- Perfil: Seguridad -->
             <div id="perfil-seguridad" class="profile-segment">
                 <div class="profile-header">
-                    <span class="profile-icon" style="color: var(--rose-primary); background: var(--rose-bg); border-color: var(--rose-border);"><i class="fas fa-shield-halved"></i></span>
+                    <span class="profile-icon" style="color: var(--color-galaxy-cyan); background: rgba(6,182,212,0.15); border-color: rgba(6,182,212,0.25);"><i class="fas fa-shield-halved"></i></span>
                     <div>
                         <h3 class="profile-title">Seguridad</h3>
                         <p class="profile-tagline">Diagnóstico de brechas, controles verificables, triage de alertas y bastionado.</p>
@@ -470,8 +452,8 @@
                 <div class="col-lg-4 col-md-6">
                     <div class="project-card">
                         <div class="project-top-bar">
-                            <span class="pill-badge badge-pink">AppSec & Gobernanza</span>
-                            <span class="pill-badge badge-blue">Caso publicado</span>
+                            <span class="pill-badge badge-cyan">AppSec & Gobernanza</span>
+                            <span class="pill-badge badge-emerald">Caso publicado</span>
                         </div>
                         <div class="project-body">
                             <h3 class="project-title">Evolución de Seguridad de un Portal Público con Backoffice</h3>
@@ -492,8 +474,8 @@
                 <div class="col-lg-4 col-md-6">
                     <div class="project-card">
                         <div class="project-top-bar">
-                            <span class="pill-badge badge-pink">Detección & Respuesta</span>
-                            <span class="pill-badge badge-blue"><i class="fas fa-hourglass-half me-1"></i>En preparación</span>
+                            <span class="pill-badge badge-cyan">Detección & Respuesta</span>
+                            <span class="pill-badge badge-pink"><i class="fas fa-hourglass-half"></i>En preparación</span>
                         </div>
                         <div class="project-body">
                             <h3 class="project-title">Triage de Alertas y Reducción de Falsos Positivos</h3>
@@ -510,12 +492,12 @@
                     </div>
                 </div>
 
-                <!-- 9. Laboratorio de Hardening Linux & Redes -->
+                <!-- 9. Laboratorio de Hardening Linux & Redes (En desarrollo) -->
                 <div class="col-lg-4 col-md-6">
                     <div class="project-card">
                         <div class="project-top-bar">
-                            <span class="pill-badge badge-pink">Ciberseguridad Defensiva</span>
-                            <span class="pill-badge badge-blue"><i class="fas fa-hourglass-half me-1"></i>En desarrollo</span>
+                            <span class="pill-badge badge-cyan">Ciberseguridad Defensiva</span>
+                            <span class="pill-badge badge-pink"><i class="fas fa-hourglass-half"></i>En desarrollo</span>
                         </div>
                         <div class="project-body">
                             <h3 class="project-title">Laboratorio Reproducible de Hardening Linux & Seguridad de Redes</h3>
@@ -541,14 +523,14 @@
             <div class="glass-card text-center py-5">
                 <div class="d-inline-flex align-items-center gap-2 mb-3">
                     <span class="brand-icon"><i class="fas fa-envelope-open-text"></i></span>
-                    <span class="fw-bold fs-5 text-heading">Contacto Profesional</span>
+                    <span class="fw-bold fs-5 text-light">Contacto Profesional</span>
                 </div>
                 
-                <p class="fs-5 text-heading mb-2">¿Querés conversar sobre una oportunidad técnica o un proyecto?</p>
+                <p class="fs-5 text-light mb-2">¿Querés conversar sobre una oportunidad técnica o un proyecto?</p>
                 
                 <div class="my-4">
-                    <span class="px-4 py-2 rounded-3 d-inline-block" style="background: var(--bg-surface); border: 1px solid var(--border-medium); font-family: var(--font-mono); font-size: 1.1rem; color: var(--text-heading); box-shadow: var(--shadow-sm);">
-                        <i class="fas fa-envelope me-2" style="color: var(--mid-primary);"></i>micaelaalvaradomendez@gmail.com
+                    <span class="px-4 py-2 rounded-3 d-inline-block" style="background: rgba(139, 92, 246, 0.14); border: 1px solid rgba(139, 92, 246, 0.35); font-family: var(--font-mono); font-size: 1.15rem; color: #f5f3ff;">
+                        micaelaalvaradomendez@gmail.com
                     </span>
                 </div>
                 
@@ -559,7 +541,7 @@
                         <i class="fas fa-copy me-2"></i>Copiar Correo
                     </button>
                     <a href="https://www.linkedin.com/in/micaelaalvaradomendez/" class="btn-secondary-glass" target="_blank">
-                        <i class="fab fa-linkedin-in me-2" style="color: var(--violet-primary);"></i>LinkedIn
+                        <i class="fab fa-linkedin-in me-2"></i>LinkedIn
                     </a>
                     <a href="https://github.com/micaelaalvaradomendez" class="btn-secondary-glass" target="_blank">
                         <i class="fab fa-github me-2"></i>GitHub
@@ -570,20 +552,20 @@
 
     </main>
 
-    <!-- Footer Institucional -->
+    <!-- Footer -->
     <footer>
-        <div class="container d-flex flex-wrap justify-content-between align-items-center gap-2">
-            <div>
-                <strong>Micaela Alvarado Mendez</strong> · Analista Universitaria en Sistemas (UNTDF)
-            </div>
-            <div>
-                Ushuaia, Tierra del Fuego, Argentina · 2026
-            </div>
+        <div class="container">
+            <p class="mb-0">
+                <i class="fas fa-shield-halved me-2" style="color: var(--color-galaxy-purple);"></i>
+                Micaela Alvarado Mendez · Analista Universitaria en Sistemas · 2026
+            </p>
         </div>
     </footer>
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Galaxy Stars Animation Script -->
+    <script src="galaxy.js"></script>
     <!-- Script copiar email -->
     <script>
         document.getElementById('copyEmail').addEventListener('click', async function() {
@@ -605,41 +587,6 @@
                 setTimeout(() => { this.innerHTML = original; }, 2000);
             }
         });
-
-        // Script cambio de tema claro / oscuro
-        const themeToggle = document.getElementById('themeToggle');
-        const themeIcon = document.getElementById('themeIcon');
-
-        function updateThemeIcon(isDark) {
-            if (!themeIcon) return;
-            if (isDark) {
-                themeIcon.classList.remove('fa-moon');
-                themeIcon.classList.add('fa-sun');
-                themeToggle.setAttribute('title', 'Cambiar a modo claro');
-            } else {
-                themeIcon.classList.remove('fa-sun');
-                themeIcon.classList.add('fa-moon');
-                themeToggle.setAttribute('title', 'Cambiar a modo oscuro');
-            }
-        }
-
-        // Sincronizar estado inicial del icono
-        updateThemeIcon(document.documentElement.getAttribute('data-theme') === 'dark');
-
-        if (themeToggle) {
-            themeToggle.addEventListener('click', function() {
-                const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-                if (isDark) {
-                    document.documentElement.removeAttribute('data-theme');
-                    localStorage.setItem('mam-portfolio-theme', 'light');
-                    updateThemeIcon(false);
-                } else {
-                    document.documentElement.setAttribute('data-theme', 'dark');
-                    localStorage.setItem('mam-portfolio-theme', 'dark');
-                    updateThemeIcon(true);
-                }
-            });
-        }
     </script>
 </body>
 </html>

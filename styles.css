@@ -5,7 +5,6 @@
    Cero Azul · Cero Verde | Paleta Armónica: Violeta (#7c3aed) + Fucsia (#b829ac) + Rosa (#e64c99)
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Outfit:wght@400;500;600;700;800&display=swap');
 
 :root {
   /* Tipografías del Sistema */
@@ -73,53 +72,6 @@
   --transition-smooth: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ==========================================================================
-   MODO OSCURO INSTITUCIONAL (PRE-IA / GITHUB DARK / ZED)
-   Cero Galaxia · Cero Neón · Superficies Carbón Sólidas + Acentos Suaves
-   ========================================================================== */
-[data-theme="dark"] {
-  /* Superficies Oscuras y Neutras */
-  --bg-page: #0d1117;        /* Carbón mate profundo */
-  --bg-surface: #161b22;     /* Tarjetas y paneles carbón sólido */
-  --bg-subtle: #21262d;      /* Paneles secundarios y tags */
-  --bg-alt: #1c2128;
-
-  /* Bordes Limpios y Nítidos (1px institucional oscuro) */
-  --border-light: #30363d;   /* Borde estándar */
-  --border-medium: #484f58;  /* Borde de botones e inputs */
-  --border-strong: #6e7681;  /* Borde de énfasis */
-
-  /* Tipografía de Alto Contraste en Fondo Oscuro */
-  --text-heading: #f0f6fc;   /* Blanco puro nítido */
-  --text-body: #c9d1d9;      /* Gris claro de lectura descansada */
-  --text-muted: #8b949e;     /* Metadatos */
-
-  /* 1. Violeta Amatista en Modo Oscuro */
-  --violet-primary: #a855f7;  /* Violeta luminoso */
-  --violet-hover: #c084fc;
-  --violet-bg: rgba(168, 85, 247, 0.15);
-  --violet-border: rgba(168, 85, 247, 0.35);
-  --violet-text: #e9d5ff;
-
-  /* 2. Fucsia Intermedio en Modo Oscuro */
-  --mid-primary: #d946ef;     /* Fucsia luminoso */
-  --mid-hover: #e879f9;
-  --mid-bg: rgba(217, 70, 239, 0.15);
-  --mid-border: rgba(217, 70, 239, 0.35);
-  --mid-text: #fae8ff;
-
-  /* 3. Rosa en Modo Oscuro */
-  --rose-primary: #f43f5e;    /* Rosa luminoso */
-  --rose-hover: #fb7185;
-  --rose-bg: rgba(244, 63, 94, 0.15);
-  --rose-border: rgba(244, 63, 94, 0.35);
-  --rose-text: #ffe4e6;
-
-  /* Sombras Suaves en Fondo Oscuro */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
-  --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.6), 0 1px 2px -1px rgba(0, 0, 0, 0.5);
-  --shadow-hover: 0 8px 24px -4px rgba(0, 0, 0, 0.7);
-}
 
 /* ==========================================================================
    Reset & Estilos Base
@@ -187,6 +139,7 @@ a:hover {
    Navegación Institucional Limpia
    ========================================================================== */
 .navbar {
+  background-color: #ffffff;
   background-color: var(--bg-surface);
   border-bottom: 1px solid var(--border-light);
   padding: 0.75rem 0;
@@ -235,7 +188,7 @@ a:hover {
   color: var(--text-heading) !important;
 }
 
-.btn-glass-icon, .btn-theme-toggle {
+.btn-glass-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -250,9 +203,9 @@ a:hover {
   transition: all var(--transition-base);
 }
 
-.btn-glass-icon:hover, .btn-theme-toggle:hover {
+.btn-glass-icon:hover {
   background-color: var(--bg-subtle);
-  color: var(--text-heading);
+  color: var(--violet-primary);
   border-color: var(--border-strong);
   transform: translateY(-1px);
 }
@@ -313,9 +266,11 @@ a:hover {
   width: 100px;
   height: 100px;
   border-radius: 16px;
+  border: 3px solid #ffffff;
   border: 3px solid var(--bg-surface);
   box-shadow: var(--shadow-card);
   object-fit: cover;
+  background: #ffffff;
   background: var(--bg-surface);
 }
 
@@ -483,6 +438,7 @@ a:hover {
   align-items: center;
   justify-content: center;
   padding: 0.6rem 1.3rem;
+  background-color: #ffffff !important;
   background-color: var(--bg-surface) !important;
   color: var(--text-body) !important;
   border: 1px solid var(--border-medium) !important;
@@ -556,7 +512,7 @@ a:hover {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-weight: 700;
-  color: var(--text-muted);
+  color: #475569;
   margin: 1.1rem 0 0.65rem;
   display: flex;
   align-items: center;
@@ -606,6 +562,7 @@ a:hover {
 }
 
 .tech-tag:hover, .tech-tag-gov:hover {
+  background-color: #ffffff !important;
   background-color: var(--bg-surface) !important;
   border-color: var(--border-medium) !important;
   color: var(--text-heading) !important;
@@ -661,6 +618,7 @@ a:hover {
 }
 
 .project-card {
+  background: #ffffff;
   background: var(--bg-surface);
   border: 1px solid var(--border-light);
   border-radius: 12px;
@@ -728,11 +686,13 @@ a:hover {
 
 .evidence-box-violet {
   border-left-color: var(--violet-primary);
+  background-color: #faf7ff;
   background-color: var(--violet-bg);
 }
 
 .evidence-box-rose {
   border-left-color: var(--rose-primary);
+  background-color: #fdf5f9;
   background-color: var(--rose-bg);
 }
 
@@ -740,6 +700,7 @@ a:hover {
    Formación & Certificaciones
    ========================================================================== */
 .mockup-preview-card {
+  background: #ffffff;
   background: var(--bg-surface);
   border: 1px solid var(--border-light);
   border-radius: 12px;
@@ -755,6 +716,7 @@ a:hover {
   transform: translateY(-2px);
 }
 
+.mockup-preview-card h3,
 .mockup-preview-card h6 {
   font-size: 0.95rem;
   font-weight: 700;
@@ -765,6 +727,7 @@ a:hover {
   gap: 0.5rem;
 }
 
+.mockup-preview-card h3 i,
 .mockup-preview-card h6 i {
   color: var(--violet-primary);
 }
@@ -776,6 +739,7 @@ a:hover {
   position: relative;
   padding: 40px 0 30px;
   margin-bottom: 35px;
+  background: linear-gradient(180deg, #ffffff 0%, var(--bg-page) 100%);
   background: linear-gradient(180deg, var(--bg-surface) 0%, var(--bg-page) 100%);
   border-bottom: 1px solid var(--border-light);
 }
@@ -839,6 +803,7 @@ a:hover {
 }
 
 .confidential-callout {
+  background: #fdf5f9;
   background: var(--rose-bg);
   border-left: 4px solid var(--rose-primary);
   border-radius: 0 12px 12px 0;
@@ -861,6 +826,7 @@ a:hover {
 }
 
 .diagram-box {
+  background: #ffffff;
   background: var(--bg-surface);
   border: 1px solid var(--border-light);
   border-radius: 12px;
@@ -878,6 +844,7 @@ a:hover {
 }
 
 .analysis-table {
+  --bs-table-bg: #ffffff;
   --bs-table-bg: var(--bg-surface);
   --bs-table-color: var(--text-body);
   --bs-table-border-color: var(--border-light);
@@ -903,6 +870,7 @@ a:hover {
    Footer Institucional
    ========================================================================== */
 footer {
+  background-color: #ffffff;
   background-color: var(--bg-surface);
   border-top: 1px solid var(--border-light);
   padding: 2rem 0;

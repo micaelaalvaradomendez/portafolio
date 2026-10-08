@@ -4,6 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Micaela Alvarado Mendez | Análisis Funcional · Backend · Seguridad</title>
+    <meta name="description" content="Portafolio profesional de Micaela Alvarado Mendez. Analista Universitaria en Sistemas (UNTDF) especializada en Análisis Funcional, Backend confiable con Go y PostgreSQL 16, y Seguridad Aplicada.">
+    <meta name="author" content="Micaela Alvarado Mendez">
+    
+    <!-- Open Graph / Redes Sociales -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Micaela Alvarado Mendez | Análisis Funcional · Backend · Seguridad">
+    <meta property="og:description" content="Analista Universitaria en Sistemas (UNTDF). Relevamiento BPMN, Backend en Go + PostgreSQL 16 y Seguridad por capas.">
+    <meta property="og:image" content="icons/logotipo.jpeg">
+
+    <!-- Preload del recurso crítico LCP -->
+    <link rel="preload" as="image" href="icons/logotipo.webp" type="image/webp">
+
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- FontAwesome 6.4.0 -->
@@ -14,15 +26,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- GovTech Institutional Stylesheet -->
     <link rel="stylesheet" href="styles.css">
-    <!-- Script de inicialización inmediata de tema para evitar parpadeos -->
-    <script>
-        (function() {
-            const saved = localStorage.getItem('mam-portfolio-theme');
-            if (saved === 'dark' || (!saved && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.documentElement.setAttribute('data-theme', 'dark');
-            }
-        })();
-    </script>
 </head>
 <body data-bs-spy="scroll" data-bs-target="#navbar">
 
@@ -33,7 +36,7 @@
                 <span class="brand-icon"><i class="fas fa-terminal"></i></span>
                 <span>Micaela Alvarado Mendez</span>
             </a>
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Abrir navegación">
                 <i class="fas fa-bars"></i>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
@@ -44,13 +47,10 @@
                     <li class="nav-item"><a class="nav-link" href="#proyectos">Proyectos</a></li>
                     <li class="nav-item"><a class="nav-link" href="#contacto">Contacto</a></li>
                     <li class="nav-item ms-lg-3 d-flex gap-2 mt-2 mt-lg-0 align-items-center">
-                        <button id="themeToggle" class="btn-theme-toggle" title="Cambiar tema claro / oscuro" aria-label="Cambiar tema">
-                            <i class="fas fa-moon" id="themeIcon"></i>
-                        </button>
-                        <a href="https://www.linkedin.com/in/micaelaalvaradomendez/" target="_blank" class="btn-glass-icon" title="LinkedIn" aria-label="LinkedIn">
+                        <a href="https://www.linkedin.com/in/micaelaalvaradomendez/" target="_blank" rel="noopener noreferrer" class="btn-glass-icon" title="LinkedIn" aria-label="LinkedIn">
                             <i class="fab fa-linkedin-in"></i>
                         </a>
-                        <a href="https://github.com/micaelaalvaradomendez" target="_blank" class="btn-glass-icon" title="GitHub" aria-label="GitHub">
+                        <a href="https://github.com/micaelaalvaradomendez" target="_blank" rel="noopener noreferrer" class="btn-glass-icon" title="GitHub" aria-label="GitHub">
                             <i class="fab fa-github"></i>
                         </a>
                     </li>
@@ -70,7 +70,10 @@
 
             <!-- Avatar con Marco Limpio -->
             <div class="avatar-glow-container">
-                <img src="icons/logotipo.jpeg" alt="Micaela Alvarado Mendez" class="avatar-img">
+                <picture>
+                    <source srcset="icons/logotipo.webp" type="image/webp">
+                    <img src="icons/logotipo.jpeg" alt="Fotografía de Micaela Alvarado Mendez" class="avatar-img" width="120" height="120" fetchpriority="high">
+                </picture>
             </div>
             
             <h1 class="hero-title">
@@ -88,7 +91,7 @@
             </div>
 
             <div class="d-flex flex-wrap gap-3 pt-2">
-                <a href="https://drive.google.com/file/d/1S4m_9psv8DeF2Sxl7DHaVu2CqJ0nhsn7/view?usp=drive_link" target="_blank" class="btn-primary-glow">
+                <a href="https://drive.google.com/file/d/1S4m_9psv8DeF2Sxl7DHaVu2CqJ0nhsn7/view?usp=drive_link" target="_blank" rel="noopener noreferrer" class="btn-primary-glow">
                     <i class="fas fa-file-arrow-down me-2"></i>Descargar CV Completo
                 </a>
                 <a href="#proyectos" class="btn-secondary-glass">
@@ -185,7 +188,7 @@
                             <span class="tech-tag"><i class="fab fa-docker"></i>Docker / Compose</span>
                         </div>
 
-                        <div class="sub-category-title" style="color: var(--violet-primary);"><i class="fas fa-laptop-code me-2"></i>Frontend & Backoffice</div>
+                        <div class="sub-category-title" style="color: var(--violet-text);"><i class="fas fa-laptop-code me-2"></i>Frontend & Backoffice</div>
                         <div class="skills-tags mb-3">
                             <span class="tech-tag"><i class="fas fa-bolt"></i>Svelte / SvelteKit</span>
                             <span class="tech-tag"><i class="fab fa-js-square"></i>TypeScript / JS</span>
@@ -193,7 +196,7 @@
                             <span class="tech-tag"><i class="fab fa-bootstrap"></i>Bootstrap 5</span>
                         </div>
 
-                        <div class="sub-category-title" style="color: var(--rose-primary);"><i class="fas fa-robot me-2"></i>AI Engineering & Gobernanza</div>
+                        <div class="sub-category-title" style="color: var(--rose-text);"><i class="fas fa-robot me-2"></i>AI Engineering & Gobernanza</div>
                         <div class="skills-tags">
                             <span class="tech-tag"><i class="fas fa-brain"></i>Spec-Driven Dev</span>
                             <span class="tech-tag"><i class="fas fa-network-wired"></i>Model Context Protocol (MCP)</span>
@@ -242,7 +245,7 @@
             <div class="row g-4">
                 <div class="col-md-6 col-lg-3">
                     <div class="mockup-preview-card d-flex flex-column">
-                        <h6><i class="fas fa-user-graduate"></i>Diplomado Universitario</h6>
+                        <h3><i class="fas fa-user-graduate"></i>Diplomado Universitario</h3>
                         <p class="small text-secondary">Administrador de Redes Linux con Orientación en Ciberseguridad y Hacking Ético.</p>
                         <div class="mt-auto">
                             <span class="pill-badge badge-pink"><i class="fas fa-hourglass-half me-1"></i>En curso</span>
@@ -251,10 +254,10 @@
                 </div>
                 <div class="col-md-6 col-lg-3">
                     <div class="mockup-preview-card d-flex flex-column">
-                        <h6><i class="fas fa-chart-pie"></i>Data Analytics & Data Science</h6>
+                        <h3><i class="fas fa-chart-pie"></i>Data Analytics & Data Science</h3>
                         <p class="small text-secondary">Coderhouse</p>
                         <div class="mt-auto">
-                            <a href="https://drive.google.com/file/d/1MU_GqqU6c37-zWId8bgbKQ6KNFQclZvL/view?usp=sharing" target="_blank" class="btn-secondary-glass py-1 px-3 small">
+                            <a href="https://drive.google.com/file/d/1MU_GqqU6c37-zWId8bgbKQ6KNFQclZvL/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="btn-secondary-glass py-1 px-3 small">
                                 <i class="fas fa-certificate me-2"></i>Certificado
                             </a>
                         </div>
@@ -262,10 +265,10 @@
                 </div>
                 <div class="col-md-6 col-lg-3">
                     <div class="mockup-preview-card d-flex flex-column">
-                        <h6><i class="fas fa-chart-bar"></i>Visualización de Datos con Tableau</h6>
+                        <h3><i class="fas fa-chart-bar"></i>Visualización de Datos con Tableau</h3>
                         <p class="small text-secondary">Coderhouse</p>
                         <div class="mt-auto">
-                            <a href="https://drive.google.com/file/d/1huGWGv9qwf8YcsI83bfNjTlgc7Aqun1S/view?usp=sharing" target="_blank" class="btn-secondary-glass py-1 px-3 small">
+                            <a href="https://drive.google.com/file/d/1huGWGv9qwf8YcsI83bfNjTlgc7Aqun1S/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="btn-secondary-glass py-1 px-3 small">
                                 <i class="fas fa-certificate me-2"></i>Certificado
                             </a>
                         </div>
@@ -273,10 +276,10 @@
                 </div>
                 <div class="col-md-6 col-lg-3">
                     <div class="mockup-preview-card d-flex flex-column">
-                        <h6><i class="fas fa-table"></i>Procesamiento y Análisis en Excel</h6>
+                        <h3><i class="fas fa-table"></i>Procesamiento y Análisis en Excel</h3>
                         <p class="small text-secondary">Coderhouse</p>
                         <div class="mt-auto">
-                            <a href="https://drive.google.com/file/d/1nTwmP7VN9BgzlI_mLLvqpJPEAaLbZFku/view?usp=sharing" target="_blank" class="btn-secondary-glass py-1 px-3 small">
+                            <a href="https://drive.google.com/file/d/1nTwmP7VN9BgzlI_mLLvqpJPEAaLbZFku/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="btn-secondary-glass py-1 px-3 small">
                                 <i class="fas fa-certificate me-2"></i>Certificado
                             </a>
                         </div>
@@ -315,7 +318,7 @@
                             <span class="pill-badge badge-blue">Go + Svelte</span>
                         </div>
                         <div class="project-body">
-                            <h3 class="project-title">Plataforma Backoffice de Gestión & Auditoría de Eventos</h3>
+                            <h4 class="project-title">Plataforma Backoffice de Gestión & Auditoría de Eventos</h4>
                             <div class="tech-stack-label">Go · SvelteKit · PostgreSQL · Draw.io · BPMN · RBAC · Outbox</div>
                             <p class="project-description">
                                 Relevamiento y modelado de un circuito de tramitación con múltiples actores: proceso BPMN, máquina de estados con segregación de funciones, historias con criterios de aceptación, matrices de trazabilidad y permisos, y arquitectura en Go con auditoría inmutable.
@@ -337,7 +340,7 @@
                             <span class="pill-badge badge-pink">Caso publicado</span>
                         </div>
                         <div class="project-body">
-                            <h3 class="project-title">Circuito de Intimación Fehaciente con Agotamiento de Diligencias</h3>
+                            <h4 class="project-title">Circuito de Intimación Fehaciente con Agotamiento de Diligencias</h4>
                             <div class="tech-stack-label">BPMN · Máquina de Estados · Reglas de Negocio · Casos de Uso · RACI · Trazabilidad</div>
                             <p class="project-description">
                                 Especificación de un procedimiento administrativo con plazos y evidencia obligatoria: separación entre norma y decisión de sistema, estados con guardas, reglas que bloquean el avance y criterios de aceptación verificables.
@@ -359,7 +362,7 @@
                             <span class="pill-badge badge-pink"><i class="fas fa-hourglass-half me-1"></i>En curso</span>
                         </div>
                         <div class="project-body">
-                            <h3 class="project-title">Gestión de un Panel de Operación de Infraestructura Virtualizada</h3>
+                            <h4 class="project-title">Gestión de un Panel de Operación de Infraestructura Virtualizada</h4>
                             <div class="tech-stack-label">ClickUp · Backlog · Criterios de Aceptación · Pruebas de Contrato · Verificación de Avance · UAT</div>
                             <p class="project-description">
                                 Project Manager de un equipo de backend, frontend e infraestructura. Gestión basada en evidencia: cada tarea se contrasta con suites de prueba en un repositorio de integración, lo que permitió detectar tareas reportadas como completas que no lo estaban y brechas de contrato entre componentes.
@@ -394,13 +397,13 @@
                             <span class="pill-badge badge-pink">PostgreSQL 16</span>
                         </div>
                         <div class="project-body">
-                            <h3 class="project-title">Automatización e Integridad Transaccional en PostgreSQL</h3>
+                            <h4 class="project-title">Automatización e Integridad Transaccional en PostgreSQL</h4>
                             <div class="tech-stack-label">PostgreSQL 16 · PL/pgSQL · 3FN · EXCLUDE GiST · Docker · Makefile</div>
                             <p class="project-description">
                                 Modelo relacional en 3FN (22 tablas) que garantiza 16 reglas de negocio directamente en el motor. Restricciones de exclusión temporal (GiST) contra solapamientos y overbooking bajo concurrencia, triggers PL/pgSQL con atributos derivados y una suite de 74 aserciones positivas, negativas y de concurrencia real.
                             </p>
                             <div class="mt-auto pt-2">
-                                <a href="https://github.com/micaelaalvaradomendez/postgresql-business-rules" target="_blank" class="btn-primary-glow w-100">
+                                <a href="https://github.com/micaelaalvaradomendez/postgresql-business-rules" target="_blank" rel="noopener noreferrer" class="btn-primary-glow w-100">
                                     <i class="fab fa-github me-2"></i>Esquema & Triggers
                                 </a>
                             </div>
@@ -416,13 +419,13 @@
                             <span class="pill-badge badge-pink">Go + PostgreSQL</span>
                         </div>
                         <div class="project-body">
-                            <h3 class="project-title">Procesamiento Masivo Confiable contra una API Externa</h3>
+                            <h4 class="project-title">Procesamiento Masivo Confiable contra una API Externa</h4>
                             <div class="tech-stack-label">Go · PostgreSQL · SKIP LOCKED · Outbox · Backoff con Jitter · DLQ · Idempotencia · CI</div>
                             <p class="project-description">
                                 Cola durable sobre PostgreSQL para aplicar cientos de cambios contra un sistema externo inestable: confirmación transaccional, workers concurrentes con lease, reintentos y DLQ auditada. 300 pedidos con 30&nbsp;% de fallas: 0 duplicados.
                             </p>
                             <div class="mt-auto pt-2">
-                                <a href="https://github.com/micaelaalvaradomendez/pg-durable-queue" target="_blank" rel="noopener" class="btn-primary-glow w-100">
+                                <a href="https://github.com/micaelaalvaradomendez/pg-durable-queue" target="_blank" rel="noopener noreferrer" class="btn-primary-glow w-100">
                                     <i class="fab fa-github me-2"></i>Repositorio & Decisiones
                                 </a>
                             </div>
@@ -438,13 +441,13 @@
                             <span class="pill-badge badge-blue">Publicado</span>
                         </div>
                         <div class="project-body">
-                            <h3 class="project-title">Framework SDD para Agentes de IA Supervisados</h3>
+                            <h4 class="project-title">Framework SDD para Agentes de IA Supervisados</h4>
                             <div class="tech-stack-label">CLI sdd · Spec-Driven Dev · Gobernanza en 3 Capas · Quality Gates · ADRs · CI</div>
                             <p class="project-description">
                                 Framework auditable para desarrollo asistido por IA supervisada. Arquitectura en 3 capas (Constitución, Skills y Agentes), aislamiento de contexto, control de concurrencia de sesiones (locks), registro de decisiones técnicas (ADRs) y validación continua con CI.
                             </p>
                             <div class="mt-auto pt-2">
-                                <a href="https://github.com/micaelaalvaradomendez/sdd-agents-protocol" target="_blank" class="btn-primary-glow w-100">
+                                <a href="https://github.com/micaelaalvaradomendez/sdd-agents-protocol" target="_blank" rel="noopener noreferrer" class="btn-primary-glow w-100">
                                     <i class="fab fa-github me-2"></i>Repositorio & Protocolo
                                 </a>
                             </div>
@@ -474,7 +477,7 @@
                             <span class="pill-badge badge-blue">Caso publicado</span>
                         </div>
                         <div class="project-body">
-                            <h3 class="project-title">Evolución de Seguridad de un Portal Público con Backoffice</h3>
+                            <h4 class="project-title">Evolución de Seguridad de un Portal Público con Backoffice</h4>
                             <div class="tech-stack-label">OWASP ASVS · CSP por Hashes · Svelte · Go · PostgreSQL · Traefik · k3s</div>
                             <p class="project-description">
                                 Diagnóstico de brechas y estándar de seguridad gobernable: perfiles de sistema, evaluación fail-closed, controles por capas verificados en laboratorio y 80 pruebas adversariales con gate.
@@ -496,7 +499,7 @@
                             <span class="pill-badge badge-blue"><i class="fas fa-hourglass-half me-1"></i>En preparación</span>
                         </div>
                         <div class="project-body">
-                            <h3 class="project-title">Triage de Alertas y Reducción de Falsos Positivos</h3>
+                            <h4 class="project-title">Triage de Alertas y Reducción de Falsos Positivos</h4>
                             <div class="tech-stack-label">Análisis Forense · Ingeniería de Detección · MITRE ATT&CK · Go · Auditoría Append-Only</div>
                             <p class="project-description">
                                 Clasificación de un pico de alertas de ocho tipos: separación de ataques reales y ruido, corrección de detectores que generaban falsos positivos y umbrales diferenciados para orígenes internos y externos.
@@ -518,7 +521,7 @@
                             <span class="pill-badge badge-blue"><i class="fas fa-hourglass-half me-1"></i>En desarrollo</span>
                         </div>
                         <div class="project-body">
-                            <h3 class="project-title">Laboratorio Reproducible de Hardening Linux & Seguridad de Redes</h3>
+                            <h4 class="project-title">Laboratorio Reproducible de Hardening Linux & Seguridad de Redes</h4>
                             <div class="tech-stack-label">Debian · Bash · nftables · auditd · fail2ban · Nmap · CIS Benchmarks · Docker</div>
                             <p class="project-description">
                                 Laboratorio aislado surgido del Diplomado Universitario en Redes Linux y Hacking Ético: scripts idempotentes de bastionado bajo lineamientos CIS, filtrado stateful con políticas DROP por defecto, auditoría de eventos críticos con auditd e informe de pentesting ético que mide la reducción de la superficie de ataque antes y después de la remediación.
@@ -548,7 +551,7 @@
                 
                 <div class="my-4">
                     <span class="px-4 py-2 rounded-3 d-inline-block" style="background: var(--bg-surface); border: 1px solid var(--border-medium); font-family: var(--font-mono); font-size: 1.1rem; color: var(--text-heading); box-shadow: var(--shadow-sm);">
-                        <i class="fas fa-envelope me-2" style="color: var(--mid-primary);"></i>micaelaalvaradomendez@gmail.com
+                        <i class="fas fa-envelope me-2" style="color: var(--mid-text);"></i>micaelaalvaradomendez@gmail.com
                     </span>
                 </div>
                 
@@ -558,11 +561,11 @@
                     <button id="copyEmail" class="btn-primary-glow">
                         <i class="fas fa-copy me-2"></i>Copiar Correo
                     </button>
-                    <a href="https://www.linkedin.com/in/micaelaalvaradomendez/" class="btn-secondary-glass" target="_blank">
-                        <i class="fab fa-linkedin-in me-2" style="color: var(--violet-primary);"></i>LinkedIn
+                    <a href="https://www.linkedin.com/in/micaelaalvaradomendez/" class="btn-secondary-glass" target="_blank" rel="noopener noreferrer">
+                        <i class="fab fa-linkedin-in me-2" style="color: var(--violet-text);"></i>LinkedIn
                     </a>
-                    <a href="https://github.com/micaelaalvaradomendez" class="btn-secondary-glass" target="_blank">
-                        <i class="fab fa-github me-2"></i>GitHub
+                    <a href="https://github.com/micaelaalvaradomendez" class="btn-secondary-glass" target="_blank" rel="noopener noreferrer">
+                        <i class="fab fa-github me-2" style="color: var(--mid-text);"></i>GitHub
                     </a>
                 </div>
             </div>
@@ -605,41 +608,6 @@
                 setTimeout(() => { this.innerHTML = original; }, 2000);
             }
         });
-
-        // Script cambio de tema claro / oscuro
-        const themeToggle = document.getElementById('themeToggle');
-        const themeIcon = document.getElementById('themeIcon');
-
-        function updateThemeIcon(isDark) {
-            if (!themeIcon) return;
-            if (isDark) {
-                themeIcon.classList.remove('fa-moon');
-                themeIcon.classList.add('fa-sun');
-                themeToggle.setAttribute('title', 'Cambiar a modo claro');
-            } else {
-                themeIcon.classList.remove('fa-sun');
-                themeIcon.classList.add('fa-moon');
-                themeToggle.setAttribute('title', 'Cambiar a modo oscuro');
-            }
-        }
-
-        // Sincronizar estado inicial del icono
-        updateThemeIcon(document.documentElement.getAttribute('data-theme') === 'dark');
-
-        if (themeToggle) {
-            themeToggle.addEventListener('click', function() {
-                const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-                if (isDark) {
-                    document.documentElement.removeAttribute('data-theme');
-                    localStorage.setItem('mam-portfolio-theme', 'light');
-                    updateThemeIcon(false);
-                } else {
-                    document.documentElement.setAttribute('data-theme', 'dark');
-                    localStorage.setItem('mam-portfolio-theme', 'dark');
-                    updateThemeIcon(true);
-                }
-            });
-        }
     </script>
 </body>
 </html>

@@ -44,6 +44,8 @@
                 <span class="pill-badge badge-pink">Ciberseguridad Defensiva</span>
                 <span class="pill-badge badge-blue">Debian 13 (Trixie)</span>
                 <span class="pill-badge badge-cyan">Netfilter & nftables</span>
+                <span class="pill-badge badge-purple">Suricata NIDS</span>
+                <span class="pill-badge badge-blue">AIDE FIM</span>
                 <span class="pill-badge badge-purple">CIS Benchmark</span>
                 <span class="pill-badge badge-pink">Hacking Ético (PTES)</span>
             </div>
@@ -51,7 +53,7 @@
                 Laboratorio Reproducible de Hardening Linux, Filtrado (nftables) & Pentesting Ético
             </h1>
             <p class="hero-subtitle text-start m-0" style="max-width: 900px;">
-                Sysadmin avanzado en Linux, bastionado integral de sistemas bajo lineamientos CIS, segmentación por zonas macvlan, mitigación de escaneos sigilosos, defensa activa con fail2ban y reporte cuantitativo antes/después con CVSS 3.1.
+                Sysadmin avanzado en Linux, bastionado integral bajo lineamientos CIS, segmentación por zonas macvlan, mitigación de escaneos sigilosos, defensa activa con fail2ban, detección de intrusiones con Suricata (NIDS), monitoreo de integridad con AIDE (FIM) y reporte cuantitativo antes/después con CVSS 3.1.
             </p>
         </div>
     </header>
@@ -127,11 +129,11 @@ flowchart LR
     end
 
     subgraph FW ["Router Perimetral"]
-        fw["<b>fw</b> (Router multi-homed)<br/>• 10.66.0.2 / 10.66.10.2 / 10.66.20.2<br/>• nftables (DROP policy por defecto)<br/>• scan_filter (prerouting raw)<br/>• Conntrack stateful"]
+        fw["<b>fw</b> (Router multi-homed)<br/>• 10.66.0.2 / 10.66.10.2 / 10.66.20.2<br/>• nftables (DROP policy por defecto)<br/>• scan_filter (prerouting raw)<br/>• Suricata 7 IDS (AF_PACKET)<br/>• Conntrack stateful"]
     end
 
     subgraph DMZ ["Zona DMZ · 10.66.10.0/24"]
-        target["<b>target</b> (10.66.10.10)<br/>• Apache 2.4 (HTTP 80)<br/>• OpenSSH 22 (confinado)<br/>• vsftpd 21 (remediado)<br/>• fail2ban (defensa activa)"]
+        target["<b>target</b> (10.66.10.10)<br/>• Apache 2.4 (HTTP 80)<br/>• OpenSSH 22 (confinado)<br/>• vsftpd 21 (remediado)<br/>• fail2ban (defensa activa)<br/>• AIDE FIM (SHA256)"]
     end
 
     attacker -->|"TCP 80 (HTTP)<br/>Escaneos descartados"| fw
@@ -330,13 +332,64 @@ flowchart LR
             </div>
         </section>
 
-        <!-- 6. Auditoría Ofensiva & Tabla Comparativa Antes/Después -->
+        <!-- 6. Detección Activa con Suricata & Monitoreo de Integridad con AIDE (Fase H) -->
+        <section class="mb-5">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon" style="color: var(--color-galaxy-purple);"><i class="fas fa-radar"></i></span>
+                        <span class="fw-bold fs-6 text-light">6. Detección Activa (Suricata NIDS) & Monitoreo de Integridad (AIDE FIM)</span>
+                    </div>
+                </div>
+                <h4 class="text-light mb-3">Cierre del Ciclo SecOps: De la Prevención a la Detección Forense</h4>
+                <p class="text-secondary">
+                    Para responder a requerimientos avanzados de <strong>Blue Team</strong> y correlación de incidentes, el laboratorio integra capacidades de detección en red y host mapeadas formalmente a <strong>MITRE ATT&CK</strong>:
+                </p>
+
+                <div class="row g-4 mb-4">
+                    <div class="col-md-6">
+                        <div class="p-3 rounded-3 h-100" style="background: rgba(139, 92, 246, 0.08); border: 1px solid rgba(139, 92, 246, 0.25);">
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <i class="fas fa-network-wired text-purple fs-5"></i>
+                                <h6 class="text-light m-0 fw-bold">Suricata 7 NIDS en Firewall (`fw`)</h6>
+                            </div>
+                            <p class="text-secondary small mb-3">
+                                Motor de detección de intrusiones en modo <code class="text-purple">AF_PACKET</code> sobre las interfaces WAN y DMZ. Inspecciona en tiempo real el tráfico forwarded y audita anomalías sin depender del kernel del host.
+                            </p>
+                            <ul class="feature-list text-secondary small m-0">
+                                <li><strong class="text-light">T1046 (Network Service Discovery):</strong> Detección de escaneos sigilosos TCP Null (<code class="text-purple">flags:0</code>), Xmas (<code class="text-purple">flags:FPU</code>) y FIN (<code class="text-purple">flags:F</code>) con SIDs 1000001–1000003.</li>
+                                <li><strong class="text-light">T1110 (Brute Force):</strong> Detección de ráfagas SSH (>5 SYN en 30s) con threshold stateful (SID 1000004).</li>
+                                <li><strong class="text-light">Demostración (`make ids-demo`):</strong> Lanza escaneos desde <code class="text-cyan">attacker</code> y captura alertas en vivo en <code class="text-light">/var/log/suricata/fast.log</code>.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-3 rounded-3 h-100" style="background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.25);">
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <i class="fas fa-fingerprint text-blue fs-5"></i>
+                                <h6 class="text-light m-0 fw-bold">AIDE FIM en Servidor DMZ (`target`)</h6>
+                            </div>
+                            <p class="text-secondary small mb-3">
+                                Sistema de monitoreo de integridad de archivos basado en base criptográfica de hashes SHA256 para detectar persistencia y manipulación no autorizada en archivos críticos.
+                            </p>
+                            <ul class="feature-list text-secondary small m-0">
+                                <li><strong class="text-light">T1078 / T1098 (Account Manipulation):</strong> Alerta inmediata ante adición o alteración en <code class="text-blue">/etc/passwd</code>, <code class="text-blue">/etc/shadow</code> y sudoers.</li>
+                                <li><strong class="text-light">T1053.003 (Cron Persistence):</strong> Detección de tareas programadas maliciosas depositadas en <code class="text-blue">/etc/cron.*</code>.</li>
+                                <li><strong class="text-light">Demostración (`make fim-demo`):</strong> Simula intrusión inyectando usuario backdoor, ejecuta <code class="text-light">aide --check</code>, expone la evidencia forense y restaura el estado original.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. Auditoría Ofensiva & Tabla Comparativa Antes/Después -->
         <section class="mb-5">
             <div class="glass-card">
                 <div class="glass-card-header">
                     <div class="d-flex align-items-center gap-2">
                         <span class="brand-icon" style="color: var(--color-galaxy-cyan);"><i class="fas fa-scale-balanced"></i></span>
-                        <span class="fw-bold fs-6 text-light">6. Auditoría Ofensiva & Tabla Comparativa Antes / Después</span>
+                        <span class="fw-bold fs-6 text-light">7. Auditoría Ofensiva & Tabla Comparativa Antes / Después</span>
                     </div>
                 </div>
                 <h4 class="text-light mb-3">Reducción Demostrable de Superficie de Ataque</h4>

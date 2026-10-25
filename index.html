@@ -518,18 +518,21 @@
                     <div class="project-card">
                         <div class="project-top-bar">
                             <span class="pill-badge badge-pink">Ciberseguridad Defensiva</span>
-                            <span class="pill-badge badge-blue"><i class="fas fa-hourglass-half me-1"></i>En desarrollo</span>
+                            <span class="pill-badge badge-blue">Publicado</span>
                         </div>
                         <div class="project-body">
-                            <h4 class="project-title">Laboratorio Reproducible de Hardening Linux & Seguridad de Redes</h4>
-                            <div class="tech-stack-label">Debian · Bash · nftables · auditd · fail2ban · Nmap · CIS Benchmarks · Docker</div>
+                            <h4 class="project-title">Hardening Linux, Filtrado (nftables) & Pentesting Ético</h4>
+                            <div class="tech-stack-label">Debian 13 · Bash · nftables · fail2ban · auditd · AppArmor · Nmap · CIS Benchmark</div>
                             <p class="project-description">
-                                Laboratorio aislado surgido del Diplomado Universitario en Redes Linux y Hacking Ético: scripts idempotentes de bastionado bajo lineamientos CIS, filtrado stateful con políticas DROP por defecto, auditoría de eventos críticos con auditd e informe de pentesting ético que mide la reducción de la superficie de ataque antes y después de la remediación.
+                                Laboratorio reproducible híbrido (Docker Compose + VM Debian 13): reducción de superficie de ataque del 66% (WAN), +4 puntos en índice CIS Lynis (69/100, 7 sugerencias remediadas), filtrado stateful con políticas DROP por defecto, descarte pasivo anti-scan, defensa activa O(1) con fail2ban y reporte formal de pentesting (PTES / CVSS 3.1).
                             </p>
-                            <div class="mt-auto pt-2">
-                                <span class="btn-secondary-glass w-100 btn-disabled" aria-disabled="true">
-                                    <i class="fas fa-flask me-2"></i>Repositorio en preparación
-                                </span>
+                            <div class="mt-auto pt-2 d-flex flex-column gap-2">
+                                <a href="proyectos/hardening-linux.html" class="btn-primary-glow w-100">
+                                    <i class="fas fa-file-shield me-2"></i>Ver caso de estudio
+                                </a>
+                                <a href="https://github.com/micaelaalvaradomendez/hardening-network-security" target="_blank" rel="noopener noreferrer" class="btn-secondary-glass w-100 text-center">
+                                    <i class="fab fa-github me-2"></i>Ver laboratorio & scripts
+                                </a>
                             </div>
                         </div>
                     </div>

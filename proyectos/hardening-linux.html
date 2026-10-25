@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caso de Estudio: Hardening Linux, Filtrado nftables & Pentesting Ético | Micaela Alvarado Mendez</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome 6.4.0 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts: Inter, Space Grotesk & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Cosmic Glassmorphism Stylesheet (Ruta relativa) -->
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+    <!-- Navegación Institucional Limpia -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <span class="brand-icon"><i class="fas fa-terminal"></i></span>
+                <span>Micaela Alvarado Mendez</span>
+            </a>
+            <div class="ms-auto d-flex align-items-center gap-2">
+                <a href="../index.html" class="btn-secondary-glass py-2 px-3">
+                    <i class="fas fa-arrow-left me-2"></i>Volver al Portafolio
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header del Caso de Estudio -->
+    <header class="case-study-hero">
+        <div class="container">
+            <div class="mb-3">
+                <a href="../index.html" class="btn-secondary-glass py-1 px-3" style="font-size: 0.85rem;">
+                    <i class="fas fa-chevron-left me-2"></i>Portada / Seguridad & Infraestructura
+                </a>
+            </div>
+            <div class="d-flex flex-wrap gap-2 mb-3">
+                <span class="pill-badge badge-pink">Ciberseguridad Defensiva</span>
+                <span class="pill-badge badge-blue">Debian 13 (Trixie)</span>
+                <span class="pill-badge badge-cyan">Netfilter & nftables</span>
+                <span class="pill-badge badge-purple">CIS Benchmark</span>
+                <span class="pill-badge badge-pink">Hacking Ético (PTES)</span>
+            </div>
+            <h1 class="hero-title text-start mb-3" style="font-size: clamp(1.8rem, 4vw, 2.6rem);">
+                Laboratorio Reproducible de Hardening Linux, Filtrado (nftables) & Pentesting Ético
+            </h1>
+            <p class="hero-subtitle text-start m-0" style="max-width: 900px;">
+                Sysadmin avanzado en Linux, bastionado integral de sistemas bajo lineamientos CIS, segmentación por zonas macvlan, mitigación de escaneos sigilosos, defensa activa con fail2ban y reporte cuantitativo antes/después con CVSS 3.1.
+            </p>
+        </div>
+    </header>
+
+    <main class="container my-4">
+
+        <!-- 1. El Problema & Contexto Operativo -->
+        <section class="mb-5">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon" style="color: var(--color-galaxy-pink);"><i class="fas fa-triangle-exclamation"></i></span>
+                        <span class="fw-bold fs-6 text-light">1. Contexto & Diagnóstico del Problema</span>
+                    </div>
+                </div>
+                <h4 class="text-light mb-3">De la Teoría a la Ingeniería de Infraestructura Segura</h4>
+                <p class="text-secondary">
+                    En entornos empresariales e institucionales, la mayoría de los incidentes de seguridad no provienen de vulnerabilidades de día cero (0-day), sino de <strong>configuraciones permisivas por defecto</strong>, falta de segmentación de red y ausencia de criterios de bastionado continuo. Este proyecto surgió para consolidar la formación técnica del <em>Diplomado Universitario en Redes Linux, Ciberseguridad y Hacking Ético</em> en un entorno de laboratorio 100% reproducible y auditable.
+                </p>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <div class="p-3 rounded-3 h-100" style="background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.2);">
+                            <h6 class="text-danger mb-2"><i class="fas fa-door-open me-2"></i>Superficie Expuesta</h6>
+                            <p class="text-secondary small m-0">Servicios legacy (vsftpd anónimo, SSH con contraseñas débiles) accesibles directamente desde redes públicas sin filtrado perimetral.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3 rounded-3 h-100" style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.2);">
+                            <h6 class="text-warning mb-2"><i class="fas fa-eye-slash me-2"></i>Ceguera Operativa</h6>
+                            <p class="text-secondary small m-0">Ausencia de auditoría de eventos de kernel (`auditd`), lo que permite manipulación de identidad (`/etc/shadow`) o sudoers sin rastro forense.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3 rounded-3 h-100" style="background: rgba(168, 85, 247, 0.08); border: 1px solid rgba(168, 85, 247, 0.2);">
+                            <h6 class="text-purple mb-2" style="color: #c084fc;"><i class="fas fa-layer-group me-2"></i>Desafío de Kernel</h6>
+                            <p class="text-secondary small m-0">Docker comparte el kernel del host: parámetros `sysctl`, módulos y `auditd` exigen un diseño híbrido con VM real para no falsear las pruebas.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-3 rounded-3" style="background: rgba(6, 182, 212, 0.1); border: 1px solid rgba(6, 182, 212, 0.25);">
+                    <p class="m-0 text-light small">
+                        <strong style="color: var(--color-galaxy-cyan);"><i class="fas fa-bullseye me-2"></i>Decisión Arquitectónica Clave (Laboratorio Híbrido):</strong>
+                        Se diseñó un entorno dual: <strong>Docker Compose</strong> sobre redes macvlan para la segmentación perimetral, filtrado nftables, emulación de ataques con Kali/Nmap y fail2ban; y una <strong>VM dedicada Debian 13</strong> (Vagrant + libvirt) para el bastionado de bajo nivel del sistema operativo (`sysctl`, inmutabilidad `auditd -e 2`, AppArmor y CIS Benchmark real).
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Topología de Red & Segmentación -->
+        <section class="mb-5">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon" style="color: var(--color-galaxy-cyan);"><i class="fas fa-network-wired"></i></span>
+                        <span class="fw-bold fs-6 text-light">2. Topología de Red & Aislamiento Estricto</span>
+                    </div>
+                </div>
+                <h4 class="text-light mb-3">Segmentación por Zonas (WAN, DMZ, MGMT) con macvlan</h4>
+                <p class="text-secondary">
+                    Para asegurar que ningún paquete pueda esquivar al firewall perimetral, el laboratorio descarta los bridges estándar de Docker y utiliza tres redes <strong>macvlan `internal`</strong> vinculadas a interfaces dedicadas del nodo `fw`. De este modo, el tráfico entre zonas debe ser ruteado e inspeccionado obligatoriamente por el kernel de `fw`.
+                </p>
+
+                <!-- Representación visual de la arquitectura -->
+                <div class="code-window mb-4">
+                    <div class="code-header">
+                        <div class="window-dots">
+                            <span class="dot dot-red"></span>
+                            <span class="dot dot-yellow"></span>
+                            <span class="dot dot-green"></span>
+                        </div>
+                        <span class="window-title">Topología de Red del Laboratorio (RFC 1918)</span>
+                        <span class="code-lang">ASCII</span>
+                    </div>
+                    <div class="code-body" style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: #a5f3fc; line-height: 1.5;">
+┌─────────────────────────────────┐         ┌─────────────────────────────────┐
+│     Zona WAN (10.66.0.0/24)     │         │     Zona DMZ (10.66.10.0/24)    │
+│                                 │         │                                 │
+│  [attacker] (10.66.0.10)        │         │  [target] (10.66.10.10)         │
+│  - Nmap 7.95, Hydra, Nikto      │         │  - Apache 2.4 (HTTP 80)         │
+│  - Audita y simula tráfico      │         │  - OpenSSH (SSH 22)             │
+│    externo no autenticado       │         │  - vsftpd (FTP 21)              │
+│               │                 │         │  - fail2ban (defensa activa)    │
+└───────────────┼─────────────────┘         └────────────────┼────────────────┘
+                │                                            │
+                │        ┌───────────────────────────┐       │
+                └───────►│  [fw] Perímetro (Router)  │◄──────┘
+                         │                           │
+                         │  - WAN:  10.66.0.2        │
+                         │  - DMZ:  10.66.10.2       │
+                         │  - MGMT: 10.66.20.2       │
+                         │  - nftables (DROP policy) │
+                         │  - scan_filter (raw)      │
+                         └─────────────▲─────────────┘
+                                       │
+                        ┌──────────────┴──────────────┐
+                        │    Zona MGMT (10.66.20.0/24)│
+                        │                             │
+                        │  [admin] (10.66.20.10)      │
+                        │  - Estación de gestión      │
+                        │  - Único origen SSH con     │
+                        │    clave pública Ed25519    │
+                        └─────────────────────────────┘
+                    </div>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <h6 class="text-light"><i class="fas fa-shield-halved text-cyan me-2"></i>Aislamiento L2/L3 Total</h6>
+                        <p class="text-secondary small">
+                            Al operar en modo `internal`, las redes macvlan no tienen salida a Internet en runtime (todo el software se aprovisiona durante la fase de build). El atacante no tiene visibilidad de la red de gestión y el servidor de la DMZ no puede iniciar conexiones hacia MGMT.
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-light"><i class="fas fa-route text-cyan me-2"></i>Independencia del Host</h6>
+                        <p class="text-secondary small">
+                            El tráfico entre contenedores nunca toca el subsistema `br_netfilter` ni las reglas iptables del host anfitrión (evitando interferencias con Docker, K8s o k3s locales).
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Filtrado Perimetral con nftables -->
+        <section class="mb-5">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon" style="color: var(--color-galaxy-purple);"><i class="fas fa-fire"></i></span>
+                        <span class="fw-bold fs-6 text-light">3. Filtrado Perimetral & Anti-Escaneo (nftables)</span>
+                    </div>
+                </div>
+                <h4 class="text-light mb-3">Políticas Fail-Closed, Conjuntos O(1) y Protección Raw</h4>
+                <p class="text-secondary">
+                    En lugar de reglas dispersas o sintaxis iptables obsoleta, se configuró una tabla unificada `inet hns_filter` en el nodo `fw`. El conjunto de reglas prioriza la evaluación basada en bytecode en kernel y la inspección de estados:
+                </p>
+
+                <div class="code-window mb-4">
+                    <div class="code-header">
+                        <div class="window-dots">
+                            <span class="dot dot-red"></span>
+                            <span class="dot dot-yellow"></span>
+                            <span class="dot dot-green"></span>
+                        </div>
+                        <span class="window-title">firewall/nftables.conf — Fragmentos Críticos</span>
+                        <span class="code-lang">nft</span>
+                    </div>
+                    <div class="code-body" style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: #f1f5f9; line-height: 1.5;">
+<span style="color: #94a3b8;"># Cadena prerouting en prioridad raw: descarta escaneos ilegales ANTES del conntrack</span>
+<span style="color: #c084fc;">chain</span> scan_filter {
+    <span style="color: #38bdf8;">type</span> filter <span style="color: #38bdf8;">hook</span> prerouting <span style="color: #38bdf8;">priority</span> raw; <span style="color: #38bdf8;">policy</span> accept;
+
+    <span style="color: #94a3b8;"># NULL scan (-sN), XMAS scan (-sX: FIN|PSH|URG), SYN+FIN y FIN sin ACK</span>
+    tcp flags & (fin|syn|rst|psh|ack|urg) == 0 <span style="color: #f43f5e;">counter log prefix "hns-scan-null: " group 1 drop</span>;
+    tcp flags & (fin|syn|rst|psh|ack|urg) == fin|psh|urg <span style="color: #f43f5e;">counter log prefix "hns-scan-xmas: " group 1 drop</span>;
+    tcp flags & (syn|fin) == syn|fin <span style="color: #f43f5e;">counter log prefix "hns-scan-synfin: " group 1 drop</span>;
+}
+
+<span style="color: #94a3b8;"># Cadena forward: filtrado de paso estricto por zonas</span>
+<span style="color: #c084fc;">chain</span> forward {
+    <span style="color: #38bdf8;">type</span> filter <span style="color: #38bdf8;">hook</span> forward <span style="color: #38bdf8;">priority</span> filter; <span style="color: #f43f5e;">policy drop</span>;
+
+    ct state established,related <span style="color: #4ade80;">accept</span>;
+    ct state invalid <span style="color: #f43f5e;">counter drop</span>;
+
+    <span style="color: #94a3b8;"># WAN -> DMZ: solo servicios públicos en conjunto dinámico (puerto 80)</span>
+    iifname "wan" oifname "dmz" ip daddr @dmz_hosts tcp dport @public_tcp ct state new <span style="color: #4ade80;">counter accept</span>;
+
+    <span style="color: #94a3b8;"># MGMT -> DMZ: SSH solo desde hosts autorizados con rate limit de nuevas conexiones</span>
+    iifname "mgmt" oifname "dmz" ip saddr @mgmt_hosts ip daddr @dmz_hosts tcp dport @mgmt_tcp \
+        ct state new <span style="color: #f59e0b;">limit rate over 20/minute burst 20 packets</span> log prefix "hns-ssh-ratelimit: " group 1 <span style="color: #f43f5e;">counter drop</span>;
+    iifname "mgmt" oifname "dmz" ip saddr @mgmt_hosts ip daddr @dmz_hosts tcp dport @mgmt_tcp ct state new <span style="color: #4ade80;">counter accept</span>;
+
+    <span style="color: #94a3b8;"># Respuesta diferenciada: Drop silencioso a WAN vs Reject explícito a redes internas</span>
+    iifname "wan" <span style="color: #f43f5e;">counter drop</span>;
+    <span style="color: #f43f5e;">counter reject with icmpx type admin-prohibited</span>;
+}
+                    </div>
+                </div>
+
+                <div class="p-3 rounded-3" style="background: rgba(168, 85, 247, 0.08); border: 1px solid rgba(168, 85, 247, 0.2);">
+                    <p class="m-0 text-light small">
+                        <strong style="color: #c084fc;"><i class="fas fa-microchip me-2"></i>Diferencial Técnico (Reject vs Drop verificado en pcap):</strong>
+                        El laboratorio incluye una captura de red automatizada (`make pcap-demo`) que demuestra forensemente cómo WAN recibe descarte pasivo (el escaneo de Nmap se congela esperando retransmisiones y timeout), mientras que un host en MGMT recibe un paquete `ICMP type 3 code 13 (Communication administratively prohibited)` en menos de 1 milisegundo.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Bastionado CIS de Sistema Operativo -->
+        <section class="mb-5">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon" style="color: var(--color-galaxy-cyan);"><i class="fab fa-linux"></i></span>
+                        <span class="fw-bold fs-6 text-light">4. Bastionado de SO en VM Debian 13 (CIS Benchmark)</span>
+                    </div>
+                </div>
+                <h4 class="text-light mb-3">Automatización Idempotente con Scripts Bash Modulares</h4>
+                <p class="text-secondary">
+                    Para los controles que tocan el espacio de usuario y kernel del servidor, se construyeron scripts idempotentes con soporte de modos `--check` (auditoría sin cambios) y `--apply` (aplicación con copias de respaldo automáticas bajo `/var/backups/`):
+                </p>
+
+                <div class="table-responsive mb-4">
+                    <table class="table table-dark table-hover align-middle" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1);">
+                        <thead>
+                            <tr class="text-secondary small">
+                                <th>Componente</th>
+                                <th>Control CIS Implementado</th>
+                                <th>Mecanismo Técnico</th>
+                                <th>Impacto de Seguridad</th>
+                            </tr>
+                        </thead>
+                        <tbody class="small text-light">
+                            <tr>
+                                <td><span class="badge bg-secondary">Kernel / Red</span></td>
+                                <td>CIS 3.2.1, 3.2.8</td>
+                                <td>`rp_filter=1`, `tcp_syncookies=1`, `log_martians=1`</td>
+                                <td>Mitiga Spoofing de IP y ataques de inundación SYN Flood.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge bg-secondary">Módulos</span></td>
+                                <td>CIS 3.1.1</td>
+                                <td>Blacklist de `dccp`, `sctp`, `rds`, `tipc`</td>
+                                <td>Reduce la superficie de ataque del kernel deshabilitando protocolos no usados.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge bg-secondary">Identidad</span></td>
+                                <td>CIS 5.6</td>
+                                <td>Restricción del comando `su` mediante `pam_wheel`</td>
+                                <td>Solo los usuarios del grupo `su-admin` pueden invocar elevación superusuario.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge bg-secondary">SSH Daemon</span></td>
+                                <td>CIS 5.2.1, 5.2.2</td>
+                                <td>`PermitRootLogin no`, `PasswordAuthentication no`</td>
+                                <td>Erradica ataques de fuerza bruta y exige autenticación nominal con Ed25519.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge bg-secondary">Auditoría</span></td>
+                                <td>CIS 4.1.3, 4.1.18</td>
+                                <td>`auditd` con reglas para `/etc/shadow`, sudoers y bloqueo `-e 2`</td>
+                                <td>Garantiza trazabilidad forense; la política es inmutable hasta reiniciar el host.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge bg-secondary">Servicios Web</span></td>
+                                <td>SecOps Best Practice</td>
+                                <td>Perfil AppArmor `enforce` + sandboxing systemd</td>
+                                <td>Confinamiento del proceso Apache: no puede leer directorios fuera de su alcance.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="p-3 rounded-3" style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.25);">
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                        <span class="text-light small">
+                            <strong class="text-success"><i class="fas fa-chart-line me-2"></i>Métrica de Bastionado (Lynis CIS Audit):</strong>
+                            El índice de hardening aumentó de <strong>65 a 69 (+4 puntos)</strong> en la VM Debian 13, resolviendo 7 sugerencias críticas (blacklisting de protocolos, carga de reglas auditd y configuración de SSH).
+                        </span>
+                        <span class="pill-badge badge-green">Hardening Index: 69 / 100</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Defensa Activa con fail2ban -->
+        <section class="mb-5">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon" style="color: var(--color-galaxy-pink);"><i class="fas fa-hand-fist"></i></span>
+                        <span class="fw-bold fs-6 text-light">5. Defensa Reactiva contra Fuerza Bruta (fail2ban + nftables)</span>
+                    </div>
+                </div>
+                <h4 class="text-light mb-3">Bloqueo Dinámico en Kernel en Tiempo O(1)</h4>
+                <p class="text-secondary">
+                    Incluso en la red de gestión (`mgmt`), una estación de trabajo podría sufrir una intrusión. Para contener el movimiento lateral, el servidor de la DMZ ejecuta <strong>fail2ban</strong> con acción directa sobre nftables (`banaction = nftables-multiport`):
+                </p>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <ul class="feature-list text-secondary small m-0">
+                            <li><strong class="text-light">Integración con rsyslog:</strong> En contenedor sin systemd, sshd escribe eventos nominales a `/var/log/auth.log` y fail2ban procesa los reintentos fallidos en tiempo real.</li>
+                            <li><strong class="text-light">Conjuntos Dinámicos de nftables:</strong> Al detectarse 3 fallos en menos de 10 minutos, fail2ban añade la IP atacante a `addr-set-sshd` en la tabla `inet f2b-table`.</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="feature-list text-secondary small m-0">
+                            <li><strong class="text-light">Demostración Automatizada (`make fail2ban-demo`):</strong> Un script reproducible lanza Hydra con contraseñas erróneas desde `admin`, constata el baneo en kernel y comprueba que las conexiones posteriores son rechazadas de inmediato.</li>
+                            <li><strong class="text-light">Restauración Limpia:</strong> Concluido el test, la IP es desbaneada y la disponibilidad del laboratorio vuelve al 100%.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Auditoría Ofensiva & Tabla Comparativa Antes/Después -->
+        <section class="mb-5">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon" style="color: var(--color-galaxy-cyan);"><i class="fas fa-scale-balanced"></i></span>
+                        <span class="fw-bold fs-6 text-light">6. Auditoría Ofensiva & Tabla Comparativa Antes / Después</span>
+                    </div>
+                </div>
+                <h4 class="text-light mb-3">Reducción Demostrable de Superficie de Ataque</h4>
+                <p class="text-secondary">
+                    Siguiendo la metodología PTES, se ejecutó un escaneo idéntico previo al hardening (línea base vulnerable) y posterior a la remediación defensiva. La tabla comparativa oficial refleja la efectividad del laboratorio:
+                </p>
+
+                <div class="table-responsive mb-4">
+                    <table class="table table-dark table-hover align-middle" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1);">
+                        <thead>
+                            <tr class="text-secondary small">
+                                <th>Vector de Ataque / Prueba</th>
+                                <th>Herramienta</th>
+                                <th>Estado Inicial (Antes)</th>
+                                <th>Estado Endurecido (Después)</th>
+                                <th>Mitigación & Impacto</th>
+                            </tr>
+                        </thead>
+                        <tbody class="small text-light">
+                            <tr>
+                                <td><strong>Puerto 21/TCP (vsftpd)</strong></td>
+                                <td>Nmap / curl FTP</td>
+                                <td><span class="text-danger fw-bold">open</span> · Login anónimo activo</td>
+                                <td><span class="text-success fw-bold">filtered</span> · DROP perimetral</td>
+                                <td>Aislado de WAN; previene exfiltración y fuerza bruta.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Puerto 22/TCP (OpenSSH)</strong></td>
+                                <td>Nmap / Hydra</td>
+                                <td><span class="text-danger fw-bold">open</span> · Clave débil crackeada</td>
+                                <td><span class="text-success fw-bold">filtered</span> · Timeout silencioso</td>
+                                <td>Reducción de superficie SSH al 0% para atacantes en WAN.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Puerto 80/TCP (Apache)</strong></td>
+                                <td>Nmap / curl HTTP</td>
+                                <td><span class="text-warning fw-bold">open</span> · Banners y listado `/backup/`</td>
+                                <td><span class="text-success fw-bold">open</span> · Stateful + AppArmor</td>
+                                <td>Servicio legítimo publicado; worker confinado en AppArmor.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Escaneos Sigilosos (NULL/XMAS)</strong></td>
+                                <td>Nmap `-sN`, `-sX`, `-sF`</td>
+                                <td><span class="text-warning fw-bold">open|filtered</span> (sin logs)</td>
+                                <td><span class="text-success fw-bold">filtered</span> (log en `nflog:1`)</td>
+                                <td>Prerouting raw descarta paquetes con combinaciones de flags no conformes a RFC.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Auditoría SSH desde WAN</strong></td>
+                                <td>ssh-audit</td>
+                                <td><span class="text-danger fw-bold">Conexión exitosa</span> (ciphers débiles)</td>
+                                <td><span class="text-success fw-bold">timed out</span> (inaccesible)</td>
+                                <td>Cero información técnica divulgada hacia el exterior.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Auditoría Lynis CIS (VM)</strong></td>
+                                <td>Lynis 3.1.6</td>
+                                <td>Índice: <strong>65</strong> (53 sugerencias)</td>
+                                <td>Índice: <strong>69</strong> (46 sugerencias)</td>
+                                <td><strong>+4 puntos</strong> en bastionado y 7 brechas críticas cerradas.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="p-3 rounded-3 text-center" style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1);">
+                            <div class="display-6 fw-bold text-success mb-1">-66%</div>
+                            <div class="text-secondary small">Superficie de red expuesta a WAN</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3 rounded-3 text-center" style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1);">
+                            <div class="display-6 fw-bold text-cyan mb-1">100%</div>
+                            <div class="text-secondary small">Tests unitarios y de red pasando (Bats + Bash)</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3 rounded-3 text-center" style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1);">
+                            <div class="display-6 fw-bold text-purple mb-1" style="color: #c084fc;">CVSS 0.0</div>
+                            <div class="text-secondary small">Vectores de acceso inicial neutralizados</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. Artefactos de Ingeniería & Documentación -->
+        <section class="mb-5">
+            <div class="glass-card text-center p-4">
+                <h4 class="text-light mb-3">Artefactos de Ingeniería & Repositorio Público</h4>
+                <p class="text-secondary mb-4 mx-auto" style="max-width: 750px;">
+                    Todo el código del laboratorio, configuraciones de firewall, scripts de bastionado, informes técnicos y batería de CI están disponibles en GitHub bajo licencia MIT:
+                </p>
+                <div class="d-flex flex-wrap justify-content-center gap-3">
+                    <a href="https://github.com/micaelaalvaradomendez/hardening-network-security" target="_blank" rel="noopener noreferrer" class="btn-primary-glow px-4 py-2">
+                        <i class="fab fa-github me-2"></i>Ver Repositorio en GitHub
+                    </a>
+                    <a href="https://github.com/micaelaalvaradomendez/hardening-network-security/blob/main/docs/informe-pentesting.md" target="_blank" rel="noopener noreferrer" class="btn-secondary-glass px-4 py-2">
+                        <i class="fas fa-file-shield me-2"></i>Informe Técnico de Pentesting
+                    </a>
+                    <a href="https://github.com/micaelaalvaradomendez/hardening-network-security/blob/main/docs/politicas-hardening.md" target="_blank" rel="noopener noreferrer" class="btn-secondary-glass px-4 py-2">
+                        <i class="fas fa-list-check me-2"></i>Matriz de Políticas CIS
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer Institucional -->
+    <footer class="py-4 text-center text-secondary small border-top border-dark">
+        <div class="container">
+            <p class="m-0">© 2026 Micaela Alvarado Mendez — Portafolio Profesional de Ingeniería & Ciberseguridad.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

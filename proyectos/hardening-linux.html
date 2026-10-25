@@ -114,47 +114,30 @@
                     Para asegurar que ningún paquete pueda esquivar al firewall perimetral, el laboratorio descarta los bridges estándar de Docker y utiliza tres redes <strong>macvlan `internal`</strong> vinculadas a interfaces dedicadas del nodo `fw`. De este modo, el tráfico entre zonas debe ser ruteado e inspeccionado obligatoriamente por el kernel de `fw`.
                 </p>
 
-                <!-- Representación visual de la arquitectura -->
-                <div class="code-window mb-4">
-                    <div class="code-header">
-                        <div class="window-dots">
-                            <span class="dot dot-red"></span>
-                            <span class="dot dot-yellow"></span>
-                            <span class="dot dot-green"></span>
-                        </div>
-                        <span class="window-title">Topología de Red del Laboratorio (RFC 1918)</span>
-                        <span class="code-lang">ASCII</span>
-                    </div>
-                    <div class="code-body" style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: #a5f3fc; line-height: 1.5;">
-┌─────────────────────────────────┐         ┌─────────────────────────────────┐
-│     Zona WAN (10.66.0.0/24)     │         │     Zona DMZ (10.66.10.0/24)    │
-│                                 │         │                                 │
-│  [attacker] (10.66.0.10)        │         │  [target] (10.66.10.10)         │
-│  - Nmap 7.95, Hydra, Nikto      │         │  - Apache 2.4 (HTTP 80)         │
-│  - Audita y simula tráfico      │         │  - OpenSSH (SSH 22)             │
-│    externo no autenticado       │         │  - vsftpd (FTP 21)              │
-│               │                 │         │  - fail2ban (defensa activa)    │
-└───────────────┼─────────────────┘         └────────────────┼────────────────┘
-                │                                            │
-                │        ┌───────────────────────────┐       │
-                └───────►│  [fw] Perímetro (Router)  │◄──────┘
-                         │                           │
-                         │  - WAN:  10.66.0.2        │
-                         │  - DMZ:  10.66.10.2       │
-                         │  - MGMT: 10.66.20.2       │
-                         │  - nftables (DROP policy) │
-                         │  - scan_filter (raw)      │
-                         └─────────────▲─────────────┘
-                                       │
-                        ┌──────────────┴──────────────┐
-                        │    Zona MGMT (10.66.20.0/24)│
-                        │                             │
-                        │  [admin] (10.66.20.10)      │
-                        │  - Estación de gestión      │
-                        │  - Único origen SSH con     │
-                        │    clave pública Ed25519    │
-                        └─────────────────────────────┘
-                    </div>
+                <!-- Representación visual de la arquitectura (Mermaid) -->
+                <div class="diagram-box mx-auto my-4" style="max-width: 920px;">
+<pre class="mermaid">
+flowchart LR
+    subgraph WAN ["Zona WAN · 10.66.0.0/24"]
+        attacker["<b>attacker</b> (10.66.0.10)<br/>• Nmap 7.95, Hydra, Nikto<br/>• Tráfico no autenticado"]
+    end
+
+    subgraph MGMT ["Zona MGMT · 10.66.20.0/24"]
+        admin["<b>admin</b> (10.66.20.10)<br/>• Estación de administración<br/>• Clave SSH Ed25519"]
+    end
+
+    subgraph FW ["Router Perimetral"]
+        fw["<b>fw</b> (Router multi-homed)<br/>• 10.66.0.2 / 10.66.10.2 / 10.66.20.2<br/>• nftables (DROP policy por defecto)<br/>• scan_filter (prerouting raw)<br/>• Conntrack stateful"]
+    end
+
+    subgraph DMZ ["Zona DMZ · 10.66.10.0/24"]
+        target["<b>target</b> (10.66.10.10)<br/>• Apache 2.4 (HTTP 80)<br/>• OpenSSH 22 (confinado)<br/>• vsftpd 21 (remediado)<br/>• fail2ban (defensa activa)"]
+    end
+
+    attacker -->|"TCP 80 (HTTP)<br/>Escaneos descartados"| fw
+    admin -->|"TCP 22 (SSH)<br/>Rate limited"| fw
+    fw -->|"Tráfico legítimo<br/>y validado"| target
+</pre>
                 </div>
 
                 <div class="row g-3">
@@ -188,18 +171,18 @@
                     En lugar de reglas dispersas o sintaxis iptables obsoleta, se configuró una tabla unificada `inet hns_filter` en el nodo `fw`. El conjunto de reglas prioriza la evaluación basada en bytecode en kernel y la inspección de estados:
                 </p>
 
-                <div class="code-window mb-4">
-                    <div class="code-header">
+                <div class="code-window my-4">
+                    <div class="code-window-header">
                         <div class="window-dots">
-                            <span class="dot dot-red"></span>
-                            <span class="dot dot-yellow"></span>
-                            <span class="dot dot-green"></span>
+                            <span class="window-dot dot-red"></span>
+                            <span class="window-dot dot-yellow"></span>
+                            <span class="window-dot dot-green"></span>
                         </div>
-                        <span class="window-title">firewall/nftables.conf — Fragmentos Críticos</span>
-                        <span class="code-lang">nft</span>
+                        <span class="code-window-title">firewall/nftables.conf — Fragmentos Críticos</span>
+                        <span class="badge bg-secondary" style="font-size: 0.7rem; font-family: var(--font-mono);">nft</span>
                     </div>
-                    <div class="code-body" style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: #f1f5f9; line-height: 1.5;">
-<span style="color: #94a3b8;"># Cadena prerouting en prioridad raw: descarta escaneos ilegales ANTES del conntrack</span>
+                    <div class="code-window-body">
+<pre class="m-0" style="white-space: pre; font-family: var(--font-mono); font-size: 0.85rem; line-height: 1.5; color: #f1f5f9; background: transparent; border: none; padding: 0; overflow-x: auto;"><span style="color: #94a3b8;"># Cadena prerouting en prioridad raw: descarta escaneos ilegales ANTES del conntrack</span>
 <span style="color: #c084fc;">chain</span> scan_filter {
     <span style="color: #38bdf8;">type</span> filter <span style="color: #38bdf8;">hook</span> prerouting <span style="color: #38bdf8;">priority</span> raw; <span style="color: #38bdf8;">policy</span> accept;
 
@@ -227,7 +210,7 @@
     <span style="color: #94a3b8;"># Respuesta diferenciada: Drop silencioso a WAN vs Reject explícito a redes internas</span>
     iifname "wan" <span style="color: #f43f5e;">counter drop</span>;
     <span style="color: #f43f5e;">counter reject with icmpx type admin-prohibited</span>;
-}
+}</pre>
                     </div>
                 </div>
 
@@ -255,16 +238,16 @@
                 </p>
 
                 <div class="table-responsive mb-4">
-                    <table class="table table-dark table-hover align-middle" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1);">
+                    <table class="table analysis-table align-middle mb-0">
                         <thead>
-                            <tr class="text-secondary small">
+                            <tr>
                                 <th>Componente</th>
                                 <th>Control CIS Implementado</th>
                                 <th>Mecanismo Técnico</th>
                                 <th>Impacto de Seguridad</th>
                             </tr>
                         </thead>
-                        <tbody class="small text-light">
+                        <tbody>
                             <tr>
                                 <td><span class="badge bg-secondary">Kernel / Red</span></td>
                                 <td>CIS 3.2.1, 3.2.8</td>
@@ -362,9 +345,9 @@
                 </p>
 
                 <div class="table-responsive mb-4">
-                    <table class="table table-dark table-hover align-middle" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1);">
+                    <table class="table analysis-table align-middle mb-0">
                         <thead>
-                            <tr class="text-secondary small">
+                            <tr>
                                 <th>Vector de Ataque / Prueba</th>
                                 <th>Herramienta</th>
                                 <th>Estado Inicial (Antes)</th>
@@ -372,7 +355,7 @@
                                 <th>Mitigación & Impacto</th>
                             </tr>
                         </thead>
-                        <tbody class="small text-light">
+                        <tbody>
                             <tr>
                                 <td><strong>Puerto 21/TCP (vsftpd)</strong></td>
                                 <td>Nmap / curl FTP</td>
@@ -421,20 +404,20 @@
 
                 <div class="row g-3">
                     <div class="col-md-4">
-                        <div class="p-3 rounded-3 text-center" style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1);">
+                        <div class="p-3 rounded-3 text-center" style="background: var(--bg-subtle); border: 1px solid var(--border-light);">
                             <div class="display-6 fw-bold text-success mb-1">-66%</div>
                             <div class="text-secondary small">Superficie de red expuesta a WAN</div>
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="p-3 rounded-3 text-center" style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1);">
+                        <div class="p-3 rounded-3 text-center" style="background: var(--bg-subtle); border: 1px solid var(--border-light);">
                             <div class="display-6 fw-bold text-cyan mb-1">100%</div>
                             <div class="text-secondary small">Tests unitarios y de red pasando (Bats + Bash)</div>
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="p-3 rounded-3 text-center" style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1);">
-                            <div class="display-6 fw-bold text-purple mb-1" style="color: #c084fc;">CVSS 0.0</div>
+                        <div class="p-3 rounded-3 text-center" style="background: var(--bg-subtle); border: 1px solid var(--border-light);">
+                            <div class="display-6 fw-bold text-purple mb-1" style="color: var(--violet-primary);">CVSS 0.0</div>
                             <div class="text-secondary small">Vectores de acceso inicial neutralizados</div>
                         </div>
                     </div>
@@ -474,5 +457,35 @@
 
     <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Mermaid JS -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({
+            startOnLoad: true,
+            securityLevel: 'strict',
+            theme: 'default',
+            themeVariables: {
+                background: '#ffffff',
+                primaryColor: '#f5f3ff',
+                primaryTextColor: '#0f172a',
+                primaryBorderColor: '#7c3aed',
+                lineColor: '#b829ac',
+                clusterBkg: '#f8fafc',
+                clusterBorder: '#cbd5e1',
+                fontFamily: 'Inter, sans-serif',
+                textColor: '#0f172a',
+                actorTextColor: '#0f172a',
+                signalColor: '#b829ac',
+                signalTextColor: '#0f172a',
+                labelBoxBkgColor: '#ffffff',
+                labelTextColor: '#0f172a',
+                loopTextColor: '#0f172a',
+                noteBkgColor: '#fdf4ff',
+                noteTextColor: '#701a75',
+                noteBorderColor: '#f5d0fe'
+            }
+        });
+    </script>
 </body>
 </html>
+

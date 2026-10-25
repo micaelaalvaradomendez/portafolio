@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caso de Estudio: Triage Forense de Alertas & Reducción de Falsos Positivos | Micaela Alvarado Mendez</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome 6.4.0 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts: Inter, Space Grotesk & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Hoja de Estilos Institucional -->
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+    <!-- Navegación Institucional Limpia -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <span class="brand-icon"><i class="fas fa-terminal"></i></span>
+                <span>Micaela Alvarado Mendez</span>
+            </a>
+            <div class="ms-auto d-flex align-items-center gap-2">
+                <a href="../index.html" class="btn-secondary-glass py-2 px-3">
+                    <i class="fas fa-arrow-left me-2"></i>Volver al Portafolio
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header del Caso de Estudio -->
+    <header class="case-study-hero">
+        <div class="container">
+            <div class="mb-3">
+                <a href="../index.html" class="btn-secondary-glass py-1 px-3" style="font-size: 0.85rem;">
+                    <i class="fas fa-chevron-left me-2"></i>Portada / Seguridad & Detección
+                </a>
+            </div>
+            <div class="d-flex flex-wrap gap-2 mb-3">
+                <span class="pill-badge badge-pink">Ciberseguridad Defensiva</span>
+                <span class="pill-badge badge-blue">SecOps & Triage SOC</span>
+                <span class="pill-badge badge-cyan">Ingeniería de Detección</span>
+                <span class="pill-badge badge-purple">MITRE ATT&CK</span>
+                <span class="pill-badge badge-emerald">Go & PostgreSQL</span>
+            </div>
+            <h1 class="hero-title text-start mb-3" style="font-size: clamp(1.8rem, 4vw, 2.6rem);">
+                Triage Forense de Alertas, Desmontaje de Falsos Positivos & Calibración de Detectores
+            </h1>
+            <p class="hero-subtitle text-start m-0" style="max-width: 900px;">
+                Análisis cuantitativo de un pico de alertas en infraestructura legacy: separación de ataques reales y ruido operativo, neutralización de la cadena RCE en CVE-2026-109618 (PHP2Shell), desmontaje de reportes externos de caja negra y diseño del detector pasivo desacoplado en Go y PostgreSQL.
+            </p>
+        </div>
+    </header>
+
+    <main class="container my-4">
+
+        <!-- 1. Resumen Ejecutivo & Métricas de Impacto -->
+        <section class="mb-5">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon" style="color: var(--violet-primary);"><i class="fas fa-chart-pie"></i></span>
+                        <span class="fw-bold fs-6 text-light">1. Resumen Ejecutivo & Métricas Cuantitativas</span>
+                    </div>
+                </div>
+                <h4 class="text-light mb-3">El Desafío Operativo del Ruido en Sistemas en Producción</h4>
+                <p class="text-secondary">
+                    En infraestructuras corporativas con aplicaciones web legacy (PHP LAMP), la falta de parches inmediatos de fabricante exige implementar <strong>controles compensatorios basados en detectores pasivos</strong>. Sin embargo, un detector teórico sin calibración context-aware satura al equipo de seguridad con falsos positivos. En una jornada operativa sobre una plataforma corporativa de mesa de ayuda, el motor de auditoría registró <strong>21 alertas críticas de 8 tipos distintos</strong>.
+                </p>
+                <p class="text-secondary">
+                    El objetivo de este trabajo no fue únicamente "atender alertas", sino ejecutar un <strong>triage forense riguroso</strong>: correlacionar eventos por origen, reclasificar incidentes operativos que no constituían amenazas de seguridad, desmontar técnicamente las limitaciones de herramientas comerciales de escaneo de caja negra y refactorizar las condiciones lógicas de los detectores para elevar la precisión al 100%.
+                </p>
+
+                <!-- Tarjetas KPI de Impacto -->
+                <div class="row g-3 my-2">
+                    <div class="col-md-3 col-6">
+                        <div class="p-3 rounded-3 text-center" style="background: var(--bg-subtle); border: 1px solid var(--border-light);">
+                            <div class="display-6 fw-bold text-success mb-1">-88%</div>
+                            <div class="text-secondary small">Ruido filtrado en detección XSS (Fix `cid:`)</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="p-3 rounded-3 text-center" style="background: var(--bg-subtle); border: 1px solid var(--border-light);">
+                            <div class="display-6 fw-bold text-cyan mb-1" style="color: var(--color-galaxy-cyan);">100%</div>
+                            <div class="text-secondary small">Ataques reales identificados y aislados</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="p-3 rounded-3 text-center" style="background: var(--bg-subtle); border: 1px solid var(--border-light);">
+                            <div class="display-6 fw-bold text-purple mb-1" style="color: var(--violet-primary);">CVSS 9.2</div>
+                            <div class="text-secondary small">Cadena RCE rota y verificada con `ini_get()`</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="p-3 rounded-3 text-center" style="background: var(--bg-subtle); border: 1px solid var(--border-light);">
+                            <div class="display-6 fw-bold text-success mb-1">0 Locks</div>
+                            <div class="text-secondary small">Impacto en DB productiva (Ingesta Read-Only)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. El Ciclo de Vida de la Ingeniería de Detección -->
+        <section class="mb-5">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon" style="color: var(--color-galaxy-cyan);"><i class="fas fa-arrows-spin"></i></span>
+                        <span class="fw-bold fs-6 text-light">2. Ciclo de Vida de la Ingeniería de Detección</span>
+                    </div>
+                </div>
+                <h4 class="text-light mb-3">Del Análisis de Parches a la Detección Resiliente</h4>
+                <p class="text-secondary">
+                    Las alertas evaluadas no nacieron de plantillas genéricas. Surgieron de un proceso formal de ingeniería inversa sobre vulnerabilidades corregidas en versiones superiores de la aplicación: cada parche de seguridad fue transformado en una firma pasiva para detectar si actores externos intentaban explotar dichas fallas en la versión en producción.
+                </p>
+
+                <!-- Diagrama Mermaid: Ciclo de Detección -->
+                <div class="diagram-box mx-auto my-4" style="max-width: 860px;">
+<pre class="mermaid">
+flowchart TD
+    A["<b>1. Análisis de Parches & CVEs</b><br/>• Monitoreo de boletines oficiales<br/>• Identificación de condiciones de explotación"] --> B["<b>2. Detector Pasivo</b><br/>• Extracción de firmas y patrones de log<br/>• Control compensatorio sin tocar código de producción"]
+    B --> C["<b>3. Triage Cuantitativo</b><br/>• Separación de ataques reales vs ruido operativo<br/>• Desmontaje de falsos positivos de caja negra"]
+    C --> D["<b>4. Calibración & Blindaje</b><br/>• Filtros específicos (exclusión cid:, dominios)<br/>• Hardening en runtime (ini_get, disable_functions)"]
+    D -->|"Mejora continua y menor ruido"| B
+</pre>
+                </div>
+
+                <p class="text-secondary small m-0">
+                    Este ciclo garantiza que la detección evolucione: el parche define qué buscar, el detector extrae la evidencia, el triage mide la precisión real y la calibración erradica los falsos positivos sin sacrificar la capacidad de respuesta.
+                </p>
+            </div>
+        </section>
+
+        <!-- 3. Triage Cuantitativo de los 8 Vectores de Alerta -->
+        <section class="mb-5">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon" style="color: var(--color-galaxy-pink);"><i class="fas fa-list-check"></i></span>
+                        <span class="fw-bold fs-6 text-light">3. Triage Cuantitativo de los 8 Vectores de Alerta</span>
+                    </div>
+                </div>
+                <h4 class="text-light mb-3">Matriz Forense: Clasificación Inicial vs. Veredicto Final</h4>
+                <p class="text-secondary">
+                    Durante la primera ejecución del motor pasivo sobre tráfico real, se generaron 21 alertas agregadas. El análisis forense detallado sobre la base de datos de auditoría permitió discriminar ataques reales de fallas operativas y comportamientos legítimos:
+                </p>
+
+                <div class="table-responsive mb-4">
+                    <table class="table analysis-table align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Código Detector</th>
+                                <th>Severidad</th>
+                                <th>Volumen de Eventos</th>
+                                <th>Veredicto Triage Forense</th>
+                                <th>Causa Raíz del Ruido / Mitigación</th>
+                                <th>Precisión Antes</th>
+                                <th>Precisión Después</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>BRUTE-001</code></td>
+                                <td><span class="badge bg-danger">Alta</span></td>
+                                <td>243 intentos (10 IPs)</td>
+                                <td><span class="text-danger fw-bold">Ataque Real</span></td>
+                                <td>Fuerza bruta distribuida forzando credenciales nominales en login administrativo.</td>
+                                <td>100%</td>
+                                <td>100% (umbrales diferenciados IP interna/externa)</td>
+                            </tr>
+                            <tr>
+                                <td><code>CSRF-001 / BOT</code></td>
+                                <td><span class="badge bg-danger">Alta</span></td>
+                                <td>140+ eventos (2 IPs)</td>
+                                <td><span class="text-warning fw-bold">Scraping / Bot</span></td>
+                                <td>Peticiones POST automatizadas sin cookies ni token CSRF de sesión.</td>
+                                <td>100%</td>
+                                <td>100% (reclasificado a bot scraping)</td>
+                            </tr>
+                            <tr>
+                                <td><code>XSS-001</code></td>
+                                <td><span class="badge bg-danger">Alta</span></td>
+                                <td>50 eventos (13 tickets)</td>
+                                <td><span class="text-success fw-bold">Falso Positivo</span></td>
+                                <td>44 eventos por adjuntos legítimos MIME <code>src="cid:..."</code>; 6 por firmas con logos externos.</td>
+                                <td>0%</td>
+                                <td><strong>88% filtrado</strong> (Fix B5 omitiendo esquema <code>cid:</code>)</td>
+                            </tr>
+                            <tr>
+                                <td><code>TRAVERSAL-001</code></td>
+                                <td><span class="badge bg-danger">Alta</span></td>
+                                <td>41 eventos</td>
+                                <td><span class="text-danger fw-bold">3 Reales</span> / 38 FP</td>
+                                <td>3 peticiones críticas con <code>../../Windows/win.ini</code> desde <code>198.51.100.36</code>. 38 eventos por procesador de emails.</td>
+                                <td>7.3%</td>
+                                <td><strong>100%</strong> (regex acotada a secuencias fuera de webroot)</td>
+                            </tr>
+                            <tr>
+                                <td><code>MAILER-001</code></td>
+                                <td><span class="badge bg-warning text-dark">Media</span></td>
+                                <td>72 eventos en 9 min</td>
+                                <td><span class="text-info fw-bold">Falla Operativa</span></td>
+                                <td>Caída TCP en relay SMTP externo (puerto 587, <code>socket write fail</code>). Cero intrusión.</td>
+                                <td>0%</td>
+                                <td><strong>Reclasificado</strong> a Alerta de Infraestructura / SLA</td>
+                            </tr>
+                            <tr>
+                                <td><code>ACTIVITY-001/2</code></td>
+                                <td><span class="badge bg-warning text-dark">Media</span></td>
+                                <td>24 picos de carga</td>
+                                <td><span class="text-success fw-bold">Tráfico Legítimo</span></td>
+                                <td>Procesamiento batch de importación de expedientes del usuario <code>client</code> (inflado por multi-IP).</td>
+                                <td>0%</td>
+                                <td><strong>100%</strong> (exclusión de cuentas de servicio programadas)</td>
+                            </tr>
+                            <tr>
+                                <td><code>SQL-INJECTION</code></td>
+                                <td><span class="badge bg-danger">Crítica</span></td>
+                                <td>2 eventos</td>
+                                <td><span class="text-secondary fw-bold">Prueba de Control</span></td>
+                                <td>Inyección de prueba durante testing de penetración previo desde IP de staging.</td>
+                                <td>N/A</td>
+                                <td>Filtrado por entorno</td>
+                            </tr>
+                            <tr>
+                                <td><code>PHP-UPLOAD-001</code></td>
+                                <td><span class="badge bg-danger">Crítica (9.2)</span></td>
+                                <td>3 rutas auditadas</td>
+                                <td><span class="text-success fw-bold">FP Externo / Mitigado</span></td>
+                                <td>Escáner de caja negra reporta HTTP 200 en multipart. Servidor tiene <code>upload_progress=0</code> e <code>ini_get()</code> comprobado.</td>
+                                <td>0%</td>
+                                <td><strong>100%</strong> (detector Go correlaciona con subprocesos de <code>www-data</code>)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Detalle de Casos Críticos de Falsos Positivos -->
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="p-3 rounded-3 h-100" style="background: var(--bg-subtle); border: 1px solid var(--border-light);">
+                            <h6 class="text-light fw-bold mb-2"><i class="fas fa-envelope-open-text text-cyan me-2"></i>Anatomía del Falso Positivo XSS (`cid:`)</h6>
+                            <p class="text-secondary small mb-0">
+                                Los clientes de correo electrónico (Outlook, Thunderbird, Gmail) envían las imágenes incrustadas en el cuerpo del mensaje utilizando el esquema estándar MIME <code>src="cid:valor_identificador"</code>. El detector original buscaba cualquier etiqueta <code>&lt;img src&gt;</code> sospechosa. Al ignorar el contexto de transporte de correo, clasificó como ataque XSS 44 fotos de comprobantes de pago, formularios escaneados y firmas corporativas enviadas legítimamente por usuarios.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-3 rounded-3 h-100" style="background: var(--bg-subtle); border: 1px solid var(--border-light);">
+                            <h6 class="text-light fw-bold mb-2"><i class="fas fa-folder-tree text-cyan me-2"></i>Resolución del Path Traversal (`TRAVERSAL-001`)</h6>
+                            <p class="text-secondary small mb-0">
+                                De los 41 eventos registrados, se aisló **un único incidente de reconocimiento coordinado**: la IP <code>198.51.100.36</code> envió 3 peticiones idénticas intentando leer <code>Windows/win.ini</code> mediante 18 a 21 repeticiones de <code>../</code>. La misma IP ejecutó violaciones CSRF horas antes. Los 38 eventos restantes fueron generados por rutas relativas en hilos procesados por <code>postmaster</code>, demostrando la necesidad de acotar la firma a secuencias no normalizadas fuera de la raíz web.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Mapeo a MITRE ATT&CK -->
+        <section class="mb-5">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon" style="color: var(--violet-primary);"><i class="fas fa-shield-halved"></i></span>
+                        <span class="fw-bold fs-6 text-light">4. Marco de Referencia MITRE ATT&CK</span>
+                    </div>
+                </div>
+                <h4 class="text-light mb-3">Mapeo Formal de Tácticas y Técnicas Adversarias</h4>
+                <p class="text-secondary">
+                    Cada patrón identificado fue catalogado bajo el estándar de la industria MITRE ATT&CK para garantizar interoperabilidad con matrices de riesgo institucionales y centros de operaciones de seguridad (SOC):
+                </p>
+
+                <div class="table-responsive">
+                    <table class="table analysis-table align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Técnica MITRE</th>
+                                <th>ID ATT&CK</th>
+                                <th>Táctica</th>
+                                <th>Vector Observado</th>
+                                <th>Control Compensatorio Aplicado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Password Guessing</strong></td>
+                                <td><code>T1110.001</code></td>
+                                <td>Credential Access</td>
+                                <td>243 intentos de fuerza bruta sobre login administrativo.</td>
+                                <td>Agregación en <code>ost_syslog</code> + Lista negra dinámica en kernel.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Exploit Public-Facing App</strong></td>
+                                <td><code>T1190</code></td>
+                                <td>Initial Access</td>
+                                <td>Sondeos POST automatizados sin tokens CSRF válidos.</td>
+                                <td>Validación token estricta + Rotación de huella de sesión (30 días).</td>
+                            </tr>
+                            <tr>
+                                <td><strong>JavaScript / Drive-by</strong></td>
+                                <td><code>T1059.007</code></td>
+                                <td>Execution</td>
+                                <td>Inyección sospechosa de etiquetas en tickets de soporte.</td>
+                                <td>Filtro de exclusión MIME <code>cid:</code> y sanitización HTML en backend.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>File & Directory Discovery</strong></td>
+                                <td><code>T1083</code></td>
+                                <td>Discovery</td>
+                                <td>Peticiones <code>GET /?InternalFile=../../Windows/win.ini</code>.</td>
+                                <td>Filtro regex de secuencias de escape + Least privilege en web server.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Server Component: Web Shell</strong></td>
+                                <td><code>T1505.003</code></td>
+                                <td>Persistence</td>
+                                <td>Abuso de <code>session.upload_progress</code> para RCE (PHP2Shell).</td>
+                                <td>Cadena neutralizada en runtime: <code>upload_progress=0</code> y <code>disable_functions</code>.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Auditoría Crítica: Desmontando la Caja Negra (CVE-2026-109618 / PHP2Shell) -->
+        <section class="mb-5">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon" style="color: var(--color-galaxy-pink);"><i class="fas fa-bug"></i></span>
+                        <span class="fw-bold fs-6 text-light">5. Auditoría Crítica: Desmontando la Caja Negra (CVE-2026-109618)</span>
+                    </div>
+                </div>
+                <h4 class="text-light mb-3">PHP2Shell (CVSS 9.2): La Ilusión de la Sonda Remota</h4>
+                <p class="text-secondary">
+                    En octubre de 2026 se publicó la vulnerabilidad crítica <strong>PHP2Shell</strong> (CVE-2026-109618 / CVE-2026-109619), que permite Ejecución Remota de Código (RCE) no autenticada mediante el parámetro <code>PHP_SESSION_UPLOAD_PROGRESS</code> en peticiones multipart. Una herramienta externa de auditoría de caja negra emitió un reporte de vulnerabilidad crítica porque los endpoints del servidor web devolvían <code>HTTP 200 OK</code> ante solicitudes multipart de prueba.
+                </p>
+                <p class="text-secondary">
+                    Como analista de seguridad, aceptar el veredicto del escáner comercial sin verificar el runtime hubiera significado bloquear rutas operativas legítimas (la carga de adjuntos en <code>/tickets/crear</code> exige multipart). Se elaboró un dictamen técnico demostrando que <strong>el reporte era un falso positivo</strong>: para que la vulnerabilidad sea explotable se requiere una <strong>cadena estricta de 3 eslabones</strong>, la cual se encontraba formalmente neutralizada en el servidor:
+                </p>
+
+                <!-- Diagrama Mermaid: Cadena de Explotación Rota -->
+                <div class="diagram-box mx-auto my-4" style="max-width: 900px;">
+<pre class="mermaid">
+flowchart LR
+    subgraph ATT ["Intento de Explotación (Sonda Externa)"]
+        A["Petición HTTP Multipart<br/>+ PHP_SESSION_UPLOAD_PROGRESS"]
+    end
+
+    subgraph E1 ["Eslabón 1: Inyección en Sesión"]
+        B1["Escritura en disco<br/>/tmp/sess_*"]
+        B2["<b>❌ NEUTRALIZADO DE RAÍZ</b><br/>session.upload_progress.enabled = 0<br/>(Verificado en runtime con ini_get)"]
+    end
+
+    subgraph E2 ["Eslabón 2: Inclusión Local (LFI)"]
+        C1["Inclusión de archivo de sesión<br/>include('/tmp/sess_...')"]
+        C2["<b>❌ BLOQUEADO</b><br/>osTicket v1.15.2 sin LFI conocido<br/>+ allow_url_include = Off"]
+    end
+
+    subgraph E3 ["Eslabón 3: Ejecución de Comandos (RCE)"]
+        D1["Invocación de Web Shell<br/>exec(), system(), popen()"]
+        D2["<b>❌ BLOQUEADO POR DEFENSA EN PROFUNDIDAD</b><br/>disable_functions activo<br/>(Control positivo en error.log)"]
+    end
+
+    A --> B2
+    B2 -.->|"Cadena rota: sesión vacía"| C2
+    C2 -.->|"Cadena rota: sin inclusión"| D2
+</pre>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="p-3 rounded-3 h-100" style="background: var(--bg-subtle); border: 1px solid var(--border-light);">
+                            <strong class="text-success small d-block mb-1"><i class="fas fa-check-circle me-1"></i>Eslabón 1 Neutralizado de Raíz</strong>
+                            <p class="text-secondary small m-0">
+                                La directiva <code>session.upload_progress.enabled = 0</code> fue verificada dinámicamente mediante <code>ini_get()</code> tanto en CLI como en la SAPI <code>mod_php</code>. El intérprete ignora el campo y no crea archivos residuales en disco.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3 rounded-3 h-100" style="background: var(--bg-subtle); border: 1px solid var(--border-light);">
+                            <strong class="text-success small d-block mb-1"><i class="fas fa-check-circle me-1"></i>Eslabón 2 Sin Vector LFI</strong>
+                            <p class="text-secondary small m-0">
+                                No existen vulnerabilidades de Local File Inclusion (LFI) reportadas para la versión desplegada, y la directiva <code>allow_url_include = Off</code> impide la carga de recursos remotos.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3 rounded-3 h-100" style="background: var(--bg-subtle); border: 1px solid var(--border-light);">
+                            <strong class="text-success small d-block mb-1"><i class="fas fa-check-circle me-1"></i>Eslabón 3 Confinamiento en Kernel</strong>
+                            <p class="text-secondary small m-0">
+                                La directiva <code>disable_functions</code> prohíbe la ejecución de <code>exec, system, shell_exec, passthru, proc_open, popen</code>. Se realizó un control positivo deliberado que confirmó el rechazo y registro en logs del sistema.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Arquitectura del Detector Pasivo Desacoplado PHP-UPLOAD-001 -->
+        <section class="mb-5">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon" style="color: var(--color-galaxy-cyan);"><i class="fas fa-cubes"></i></span>
+                        <span class="fw-bold fs-6 text-light">6. Diseño del Detector Pasivo Desacoplado `PHP-UPLOAD-001`</span>
+                    </div>
+                </div>
+                <h4 class="text-light mb-3">Supervisión Proactiva sin Degradación Transaccional</h4>
+                <p class="text-secondary">
+                    Para monitorear intentos de sondeo sin inyectar tráfico activo ni degradar la base de datos de producción, se implementó una arquitectura desacoplada de 4 capas:
+                </p>
+
+                <!-- Diagrama Mermaid: Arquitectura del Detector -->
+                <div class="diagram-box mx-auto my-4" style="max-width: 860px;">
+<pre class="mermaid">
+flowchart TB
+    subgraph SOURCE ["1. Servidor de Mesa de Ayuda (Producción)"]
+        DB["MariaDB (10.0.1.60)<br/>• ost_syslog (errores y eventos)<br/>• ost_thread_entry (mensajes y tickets)"]
+    end
+
+    subgraph HARVEST ["2. Ingesta Segura Read-Only"]
+        HW["Harvester Worker<br/>• Conexión READ-ONLY exclusiva<br/>• Extracción incremental sin locks"]
+    end
+
+    subgraph AUDIT_DB ["3. Plataforma de Auditoría Forense"]
+        PG["PostgreSQL (audit_operations)<br/>• Particionado histórico (90 días)<br/>• Inmutable / Append-only"]
+    end
+
+    subgraph ENGINE ["4. Motor de Análisis (Go)"]
+        GO["Audit Engine (Go Core)<br/>• pgDetectPHPUploadProgress<br/>• Búsqueda eficiente de IoCs<br/>• Endpoint REST API"]
+    end
+
+    subgraph UI ["5. Consola de Seguridad (SvelteKit)"]
+        SK["Dashboard SOC<br/>• Triage visual de alertas<br/>• Severidad CVSS 9.2 calculada"]
+    end
+
+    DB -->|"Select incremental (RO)"| HW
+    HW -->|"Insert append-only"| PG
+    PG -->|"Query indexada"| GO
+    GO -->|"JSON REST API"| SK
+</pre>
+                </div>
+
+                <!-- Fragmento de Código de Detección en Go -->
+                <div class="code-window my-4">
+                    <div class="code-window-header">
+                        <div class="window-dots">
+                            <span class="window-dot dot-red"></span>
+                            <span class="window-dot dot-yellow"></span>
+                            <span class="window-dot dot-green"></span>
+                        </div>
+                        <span class="code-window-title">core/scanners/vuln_scanner_critical.go — Firma de Detección</span>
+                        <span class="badge bg-secondary" style="font-size: 0.7rem; font-family: var(--font-mono);">Go</span>
+                    </div>
+                    <div class="code-window-body">
+<pre class="m-0" style="white-space: pre; font-family: var(--font-mono); font-size: 0.85rem; line-height: 1.5; color: #f1f5f9; background: transparent; border: none; padding: 0; overflow-x: auto;"><span style="color: #94a3b8;">// pgDetectPHPUploadProgress inspecciona operaciones históricas ingestadas</span>
+<span style="color: #94a3b8;">// buscando cadenas asociadas a sondeos de CVE-2026-109618 sin penalizar tráfico legítimo.</span>
+<span style="color: #c084fc;">func</span> (s *SecurityScanner) <span style="color: #38bdf8;">pgDetectPHPUploadProgress</span>(ctx context.Context, windowDays <span style="color: #38bdf8;">int</span>) ([]AlertFinding, <span style="color: #38bdf8;">error</span>) {
+    query := <span style="color: #4ade80;">`
+        SELECT id, ip_origen, uri_acceso, payload_raw, created_at
+        FROM audit_operations
+        WHERE created_at >= NOW() - ($1 || ' days')::INTERVAL
+          AND (
+              payload_raw ILIKE '%PHP_SESSION_UPLOAD_PROGRESS%'
+              OR payload_raw ILIKE '%session.upload_progress%'
+              OR uri_acceso ILIKE '%upload_progress%'
+          )
+        ORDER BY created_at DESC LIMIT 100`</span>
+
+    rows, err := s.db.QueryContext(ctx, query, windowDays)
+    <span style="color: #c084fc;">if</span> err != nil {
+        <span style="color: #c084fc;">return</span> nil, fmt.Errorf(<span style="color: #4ade80;">"falla al consultar audit_operations: %w"</span>, err)
+    }
+    <span style="color: #c084fc;">defer</span> rows.Close()
+
+    <span style="color: #94a3b8;">// El detector clasifica y calcula el score CVSS 9.2 automáticamente</span>
+    <span style="color: #c084fc;">return</span> s.processUploadProgressFindings(rows)
+}</pre>
+                    </div>
+                </div>
+
+                <div class="p-3 rounded-3" style="background: rgba(6, 182, 212, 0.08); border: 1px solid rgba(6, 182, 212, 0.25);">
+                    <p class="m-0 text-light small">
+                        <strong style="color: var(--color-galaxy-cyan);"><i class="fas fa-lightbulb me-2"></i>Lección de Arquitectura:</strong>
+                        El desacoplamiento de la base operativa fue determinante: el worker de ingesta realiza lecturas incrementales con rol <code>READ ONLY</code> en MariaDB, mientras que las consultas complejas de correlación forense corren sobre PostgreSQL en un esquema append-only particionado por tiempo.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. Conclusión & Lecciones de Ingeniería -->
+        <section class="mb-5">
+            <div class="glass-card text-center p-4">
+                <h4 class="text-light mb-3">Lecciones de Ingeniería & Madurez Profesional</h4>
+                <p class="text-secondary mb-4 mx-auto" style="max-width: 800px;">
+                    La experiencia en este caso sintetiza el rol de un analista de ciberseguridad moderno: la seguridad efectiva no consiste en instalar herramientas comerciales y reenviar alertas automáticamente, sino en comprender los fundamentos del sistema operativo, el intérprete y el código para <strong>discernir con evidencia empírica qué constituye una amenaza real y qué es mero ruido operativo</strong>.
+                </p>
+                <div class="d-flex flex-wrap justify-content-center gap-3">
+                    <a href="../index.html" class="btn-primary-glow px-4 py-2">
+                        <i class="fas fa-arrow-left me-2"></i>Explorar Otros Casos del Portafolio
+                    </a>
+                    <a href="hardening-linux.html" class="btn-secondary-glass px-4 py-2">
+                        <i class="fas fa-shield-cat me-2"></i>Ver Caso 9: Hardening Linux & Redes
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer Institucional -->
+    <footer class="py-4 text-center text-secondary small border-top border-dark">
+        <div class="container">
+            <p class="m-0">© 2026 Micaela Alvarado Mendez — Portafolio Profesional de Ingeniería & Ciberseguridad.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Mermaid JS -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({
+            startOnLoad: true,
+            securityLevel: 'strict',
+            theme: 'default',
+            themeVariables: {
+                background: '#ffffff',
+                primaryColor: '#f5f3ff',
+                primaryTextColor: '#0f172a',
+                primaryBorderColor: '#7c3aed',
+                lineColor: '#b829ac',
+                clusterBkg: '#f8fafc',
+                clusterBorder: '#cbd5e1',
+                fontFamily: 'Inter, sans-serif',
+                textColor: '#0f172a',
+                actorTextColor: '#0f172a',
+                signalColor: '#b829ac',
+                signalTextColor: '#0f172a',
+                labelBoxBkgColor: '#ffffff',
+                labelTextColor: '#0f172a',
+                loopTextColor: '#0f172a',
+                noteBkgColor: '#fdf4ff',
+                noteTextColor: '#701a75',
+                noteBorderColor: '#f5d0fe'
+            }
+        });
+    </script>
+</body>
+</html>

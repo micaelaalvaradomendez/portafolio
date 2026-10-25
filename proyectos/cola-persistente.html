@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caso de Estudio: Cola Persistente, Resiliencia Transaccional & Workers en Go | Micaela Alvarado Mendez</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome 6.4.0 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts: Inter, Space Grotesk & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Cosmic Glassmorphism Stylesheet (Ruta relativa) -->
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+    <!-- Navegación Institucional Limpia -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <span class="brand-icon"><i class="fas fa-terminal"></i></span>
+                <span>Micaela Alvarado Mendez</span>
+            </a>
+            <div class="ms-auto d-flex align-items-center gap-2">
+                <a href="../index.html#backend" class="btn-secondary-glass py-2 px-3">
+                    <i class="fas fa-arrow-left me-2"></i>Volver al Portafolio
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header del Caso de Estudio -->
+    <header class="case-study-hero">
+        <div class="container">
+            <div class="mb-3">
+                <a href="../index.html#backend" class="btn-secondary-glass py-1 px-3" style="font-size: 0.85rem;">
+                    <i class="fas fa-chevron-left me-2"></i>Portada / Backend & Arquitectura Distribuida
+                </a>
+            </div>
+            <div class="d-flex flex-wrap gap-2 mb-3">
+                <span class="pill-badge badge-blue">Go 1.22</span>
+                <span class="pill-badge badge-purple">PostgreSQL 16</span>
+                <span class="pill-badge badge-cyan">SELECT FOR UPDATE SKIP LOCKED</span>
+                <span class="pill-badge badge-pink">Transactional Outbox</span>
+                <span class="pill-badge badge-purple">Lease & Fencing Token</span>
+                <span class="pill-badge badge-blue">Backoff con Jitter</span>
+                <span class="pill-badge badge-emerald">Dead-Letter Queue (DLQ)</span>
+                <span class="pill-badge badge-cyan">Idempotencia End-to-End</span>
+            </div>
+            <h1 class="hero-title text-start mb-3" style="font-size: clamp(1.8rem, 4vw, 2.6rem);">
+                Procesamiento Masivo Confiable con Cola Persistente sobre PostgreSQL
+            </h1>
+            <p class="hero-subtitle text-start m-0" style="max-width: 920px;">
+                Diseño, benchmarking y post-mortems de una arquitectura de colas durables en Go y PostgreSQL para aplicar lotes masivos contra APIs externas lentas e inestables: <strong>0 duplicados</strong> bajo inyección de 30% de fallas de red, confirmación atómica en 22 ms y resolución formal de 5 incidentes reales de concurrencia y contención en producción.
+            </p>
+        </div>
+    </header>
+
+    <main class="container my-4">
+
+        <!-- 1. Diagnóstico del Problema: AS-IS vs TO-BE -->
+        <section class="mb-5">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon" style="color: var(--color-galaxy-pink);"><i class="fas fa-triangle-exclamation"></i></span>
+                        <span class="fw-bold fs-6 text-light">1. Contexto & Diagnóstico: El Problema de la API Lenta</span>
+                    </div>
+                </div>
+                <h4 class="text-light mb-3">¿Qué pasa cuando el sistema remoto falla a la mitad de un lote?</h4>
+                <p class="text-secondary">
+                    En la operativa logística y administrativa, un operador suele escanear cientos de ítems (pedidos, legajos o registros) para aplicarles una misma mutación contra un servicio externo (asignación de destinos, inventario o sistemas legados). La arquitectura ingenua procesa todo en una única llamada HTTP sincrónica, generando un conjunto de fallas críticas en cascada:
+                </p>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-3">
+                        <div class="p-3 rounded-3 h-100" style="background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.2);">
+                            <h6 class="text-danger mb-2"><i class="fas fa-rotate me-2"></i>Pérdida en Frontend</h6>
+                            <p class="text-secondary small m-0">Si el operador recarga la pestaña o parpadea la red, el formulario en memoria se evapora tras haber escaneado 200 ítems.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="p-3 rounded-3 h-100" style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.2);">
+                            <h6 class="text-warning mb-2"><i class="fas fa-hourglass-half me-2"></i>Timeout Sincrónico</h6>
+                            <p class="text-secondary small m-0">300 llamadas a 150 ms superan los 45 segundos. Los proxies intermedios o gateways cortan la conexión antes del cierre.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="p-3 rounded-3 h-100" style="background: rgba(168, 85, 247, 0.08); border: 1px solid rgba(168, 85, 247, 0.2);">
+                            <h6 class="text-purple mb-2" style="color: #c084fc;"><i class="fas fa-copy me-2"></i>Duplicación Ciega</h6>
+                            <p class="text-secondary small m-0">Ante un timeout, el usuario reintenta a ciegas: se duplican los ítems que la API externa ya había aplicado con éxito.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="p-3 rounded-3 h-100" style="background: rgba(6, 182, 212, 0.08); border: 1px solid rgba(6, 182, 212, 0.2);">
+                            <h6 class="text-cyan mb-2" style="color: var(--color-galaxy-cyan);"><i class="fas fa-circle-question me-2"></i>Cero Trazabilidad</h6>
+                            <p class="text-secondary small m-0">No hay auditoría append-only del progreso; es imposible determinar qué porcentaje del lote falló y por qué causa.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comparativa AS-IS vs TO-BE -->
+                <div class="table-responsive">
+                    <table class="table analysis-table align-middle">
+                        <thead>
+                            <tr>
+                                <th>Dimensión de Diseño</th>
+                                <th>Enfoque Ingenuo (AS-IS)</th>
+                                <th>Arquitectura Resiliente (TO-BE)</th>
+                                <th>Beneficio Operativo Demostrable</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Captura de Ítems</strong></td>
+                                <td>Estado en memoria en el cliente (DOM / React state).</td>
+                                <td><strong>Buffer persistente en PostgreSQL</strong> (sobrevive cierres y recargas).</td>
+                                <td>Cero trabajo manual perdido por fallos de navegador.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Confirmación</strong></td>
+                                <td>Loop síncrono en el controlador HTTP.</td>
+                                <td><strong>1 sola transacción atómica:</strong> creación de lote + outbox + limpieza de buffer.</td>
+                                <td>Confirmación en <strong>22 ms</strong>; desacoplamiento total de la red.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Consumo de Cola</strong></td>
+                                <td>Sin cola; ejecución secuencial en el hilo HTTP.</td>
+                                <td><strong>Workers paralelos con <code>SKIP LOCKED</code></strong> y lease temporal.</td>
+                                <td>Escalabilidad horizontal sin colisiones ni bloqueos.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tolerancia a Caídas</strong></td>
+                                <td>Reintento manual del lote completo.</td>
+                                <td><strong>Backoff exponencial con jitter</strong> + inspección de estado remoto.</td>
+                                <td><strong>0 duplicados</strong> ante timeouts posteriores a la mutación.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Manejo de Errores</strong></td>
+                                <td>Alerta genérica en pantalla.</td>
+                                <td><strong>Dead-Letter Queue (DLQ)</strong> auditada con reproceso transaccional.</td>
+                                <td>Tratamiento explícito de fallos temporales vs. de negocio.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Arquitectura de Concurrencia & Flujo Transaccional -->
+        <section class="mb-5">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon" style="color: var(--color-galaxy-blue);"><i class="fas fa-network-wired"></i></span>
+                        <span class="fw-bold fs-6 text-light">2. Arquitectura de Concurrencia & Pipeline Transaccional</span>
+                    </div>
+                </div>
+                <h4 class="text-light mb-3">Flujo End-to-End con Desacoplamiento Outbox e Idempotencia en Dos Capas</h4>
+                <p class="text-secondary">
+                    El sistema utiliza PostgreSQL como motor de cola transaccional mediante <code>SELECT ... FOR UPDATE SKIP LOCKED</code>. Cada worker adquiere un lote de ítems garantizando que ningún otro consumidor colisione, asociando un <strong>fencing token</strong> (número de intento atómico) y un vencimiento de <strong>lease</strong> para tolerar caídas intempestivas del proceso.
+                </p>
+
+                <!-- Diagrama de Secuencia Mermaid -->
+                <div class="p-3 rounded-3 mb-4 text-center" style="background: #ffffff; border: 1px solid var(--border-light);">
+                    <div class="mermaid">
+sequenceDiagram
+    autonumber
+    actor Op as Operador
+    participant API as API Handler (Go)
+    participant DB as PostgreSQL 16
+    participant W as Workers Concurrentes (Go)
+    participant UP as Upstream API (Depósitos)
+
+    Note over Op,DB: Fase 1: Captura & Confirmación Inmediata
+    Op->>API: 1. Escaneo de ítems
+    API->>DB: Guarda en buffer persistente
+    Op->>API: 2. Confirma lote (con Idempotency-Key)
+    activate API
+    rect rgb(240, 249, 255)
+    Note over API,DB: Transacción Única (Atómica en 22 ms)
+    API->>DB: INSERT batch + batch_items (COPY masivo)
+    API->>DB: DELETE FROM scan_buffer
+    API->>DB: INSERT INTO outbox (evento 'batch.confirmed')
+    end
+    API-->>Op: 201 Created (ID de lote para tracking)
+    deactivate API
+
+    Note over W,UP: Fase 2: Drenaje Asíncrono Resiliente
+    loop Cada ciclo de sondeo (Workers N)
+        W->>DB: SELECT FOR UPDATE SKIP LOCKED (Lease + Attempts++)
+        DB-->>W: Ítems reservados exclusivamente
+        W->>UP: POST /assignments (Idempotency-Key = item_id)
+        alt Éxito (200/201)
+            W->>DB: UPDATE status = 'applied'
+        else Timeout Ambiguo tras mutación
+            W->>UP: GET /assignments/{item_id} (Inspección de Estado)
+            alt Ya estaba aplicado
+                W->>DB: UPDATE status = 'applied' (already_applied)
+            else Falla transitoria
+                W->>DB: Reintento con Backoff + Jitter
+            end
+        else Error Permanente (4xx) o MaxAttempts Agotados
+            W->>DB: UPDATE status = 'dlq' (evento 'item.deadlettered')
+        end
+    end
+                    </div>
+                </div>
+
+                <!-- Máquina de Estados -->
+                <h5 class="text-light mb-3"><i class="fas fa-diagram-project me-2 text-cyan"></i>Máquina de Estados Finitos (FSM) del Ítem</h5>
+                <div class="p-3 rounded-3 mb-3 text-center" style="background: #ffffff; border: 1px solid var(--border-light);">
+                    <div class="mermaid">
+stateDiagram-v2
+    [*] --> PENDING: Confirmación en Lote
+    PENDING --> IN_PROGRESS: Claim (SKIP LOCKED + Lease)
+    
+    IN_PROGRESS --> APPLIED: Respuesta Exitosa (200/201)
+    IN_PROGRESS --> APPLIED: Recuperado vía GET (already_applied)
+    
+    IN_PROGRESS --> PENDING: Timeout de Lease Expirado
+    IN_PROGRESS --> RETRY: Falla de Red Transitoria (5xx/Timeout)
+    
+    RETRY --> PENDING: Backoff Exponencial con Jitter
+    
+    IN_PROGRESS --> DLQ: Falla de Negocio (4xx Inválido)
+    RETRY --> DLQ: Intentos Agotados (MaxAttempts >= 5)
+    
+    DLQ --> PENDING: Reproceso Manual Auditado (item.requeued)
+    APPLIED --> [*]
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Los 5 Post-Mortems de Concurrencia y Resiliencia en Producción -->
+        <section class="mb-5">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon" style="color: var(--color-galaxy-purple);"><i class="fas fa-microscope"></i></span>
+                        <span class="fw-bold fs-6 text-light">3. Post-Mortems de Producción: De la Falla al Diseño</span>
+                    </div>
+                </div>
+                <h4 class="text-light mb-3">La Experiencia Empírica que Justifica cada Decisión Técnica</h4>
+                <p class="text-secondary">
+                    Las garantías de resiliencia de esta cola no surgieron de suposiciones abstractas. Son el resultado directo de diagnosticar, medir y resolver <strong>5 incidentes severos de concurrencia y contención transaccional</strong> ocurridos en sistemas de backend reales:
+                </p>
+
+                <!-- Acordeón de Incidentes -->
+                <div class="row g-4">
+                    <!-- Incidente 1 -->
+                    <div class="col-lg-6">
+                        <div class="p-3 rounded-3 h-100" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(239, 68, 68, 0.3);">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-danger text-white">FAT-ERR-02</span>
+                                <small class="text-secondary font-monospace">PostgreSQL 25P02</small>
+                            </div>
+                            <h5 class="text-light fs-6 mb-2">1. La Transacción Zombi en PostgreSQL</h5>
+                            <p class="text-secondary small mb-2">
+                                <strong>Síntoma:</strong> Workers de fondo fallaban en cadena con el error: <code>current transaction is aborted, commands ignored until end of transaction block</code>.
+                            </p>
+                            <p class="text-secondary small mb-2">
+                                <strong>Causa Raíz:</strong> En PostgreSQL, tras un fallo SQL dentro de un bloque <code>BEGIN...COMMIT</code>, la conexión queda abortada. El worker intentaba registrar el fallo usando la misma transacción rota.
+                            </p>
+                            <div class="p-2 rounded bg-dark border border-secondary text-info small font-monospace">
+                                <strong>Remediación (ADR-02):</strong> Fail-fast con <code>tx.Rollback()</code> inmediato. El registro del fallo y la transición a la DLQ se aíslan en una <em>transacción limpia e independiente</em>.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Incidente 2 -->
+                    <div class="col-lg-6">
+                        <div class="p-3 rounded-3 h-100" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(245, 158, 11, 0.3);">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-warning text-dark">FAT-ERR-04</span>
+                                <small class="text-secondary font-monospace">Outbox Latency</small>
+                            </div>
+                            <h5 class="text-light fs-6 mb-2">2. Timeout por Ingesta Síncrona en Outbox</h5>
+                            <p class="text-secondary small mb-2">
+                                <strong>Síntoma:</strong> Caída masiva de conexiones del pool y timeouts HTTP por <code>context deadline exceeded</code>.
+                            </p>
+                            <p class="text-secondary small mb-2">
+                                <strong>Causa Raíz:</strong> Se invocaban validaciones de red y llamadas al upstream <em>dentro</em> de la transacción de base de datos antes de confirmar el evento Outbox.
+                            </p>
+                            <div class="p-2 rounded bg-dark border border-secondary text-info small font-monospace">
+                                <strong>Remediación (ADR-04):</strong> <em>Regla de oro del Outbox</em>. Una transacción SQL jamás cruza la frontera de red. La persistencia dura milisegundos; el worker despacha asíncronamente.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Incidente 3 -->
+                    <div class="col-lg-6">
+                        <div class="p-3 rounded-3 h-100" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(59, 130, 246, 0.3);">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-primary text-white">FAT-ERR-01</span>
+                                <small class="text-secondary font-monospace">Silent Hang</small>
+                            </div>
+                            <h5 class="text-light fs-6 mb-2">3. Sincronización Silenciosa por Dependencia Nil</h5>
+                            <p class="text-secondary small mb-2">
+                                <strong>Síntoma:</strong> El worker dejaba de drenar ítems durante horas sin emitir logs ni trazas de error.
+                            </p>
+                            <p class="text-secondary small mb-2">
+                                <strong>Causa Raíz:</strong> Un puntero devuelto como <code>nil</code> tras un fallo de red transitorio era evaluado como "0 ítems pendientes", entrando el bucle en suspensión infinita.
+                            </p>
+                            <div class="p-2 rounded bg-dark border border-secondary text-info small font-monospace">
+                                <strong>Remediación (ADR-03):</strong> Health checks activos cada 60 s con sondeo SQL y salida forzada (<code>os.Exit(1)</code>) para que Docker/K8s reinicie el pod limpiamente ante desincronización.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Incidente 4 -->
+                    <div class="col-lg-6">
+                        <div class="p-3 rounded-3 h-100" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(168, 85, 247, 0.3);">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-purple text-white" style="background: var(--violet-primary);">FAT-ERR-03</span>
+                                <small class="text-secondary font-monospace">Context Propagation</small>
+                            </div>
+                            <h5 class="text-light fs-6 mb-2">4. Huérfanos por Pérdida de Contexto en Go</h5>
+                            <p class="text-secondary small mb-2">
+                                <strong>Síntoma:</strong> Filas en la tabla de auditoría con el campo <code>actor_id</code> nulo o vacío.
+                            </p>
+                            <p class="text-secondary small mb-2">
+                                <strong>Causa Raíz:</strong> Al delegar tareas a goroutines de fondo mediante canales, se instanciaba <code>context.Background()</code>, perdiendo los metadatos de autenticación del usuario.
+                            </p>
+                            <div class="p-2 rounded bg-dark border border-secondary text-info small font-monospace">
+                                <strong>Remediación (ADR-06):</strong> Estructuras de evento (DTO) inmutables donde el <code>Actor</code> se extrae del token validado y se graba como columna <code>NOT NULL</code> verificada por schema.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Incidente 5 -->
+                    <div class="col-12">
+                        <div class="p-3 rounded-3" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(6, 182, 212, 0.3);">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-info text-dark">FAT-ERR-05</span>
+                                <small class="text-secondary font-monospace">Lock Contention O(N)</small>
+                            </div>
+                            <h5 class="text-light fs-6 mb-2">5. Degradación de Despacho O(N) por Escaneo Secuencial</h5>
+                            <p class="text-secondary small mb-2">
+                                <strong>Síntoma:</strong> El tiempo de extracción de lotes escalaba de 40 ms a más de 4.5 segundos al superar los 10.000 ítems en base de datos.
+                            </p>
+                            <p class="text-secondary small mb-2">
+                                <strong>Causa Raíz:</strong> <code>SELECT ... FOR UPDATE</code> recorría la tabla entera buscando filas pendientes, bloqueando las páginas de datos compartidas por múltiples workers concurrentes.
+                            </p>
+                            <div class="p-2 rounded bg-dark border border-secondary text-info small font-monospace">
+                                <strong>Remediación (ADR-01 & ADR-05):</strong> Índice condicional parcial <code>CREATE INDEX idx_queue_pending ON batch_item (priority DESC, id ASC) WHERE status = 'PENDING'</code> combinado con <code>SKIP LOCKED</code>: tiempo de despacho constante <strong>O(1)</strong> sin contención.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Benchmark & Simulación de Caos -->
+        <section class="mb-5">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon" style="color: var(--color-galaxy-emerald);"><i class="fas fa-chart-line"></i></span>
+                        <span class="fw-bold fs-6 text-light">4. Benchmark, Simulación de Caos & Resultados Medidos</span>
+                    </div>
+                </div>
+                <h4 class="text-light mb-3">Evidencia Experimental: 300 Pedidos bajo 30% de Fallas Inyectadas</h4>
+                <p class="text-secondary">
+                    Para validar la ausencia total de efectos colaterales duplicados y la tolerancia a particiones, se ejecutó un escenario de caos controlado con <strong>4 workers concurrentes</strong> contra un servidor mock que simula caídas aleatorias y cortes de red inmediatamente posteriores a la aplicación del cambio:
+                </p>
+
+                <!-- Métricas Destacadas -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-3">
+                        <div class="p-3 rounded-3 text-center" style="background: var(--bg-subtle); border: 1px solid var(--border-light);">
+                            <div class="display-6 fw-bold text-success mb-1">0</div>
+                            <div class="text-secondary small">Duplicados aplicados (Idempotencia)</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="p-3 rounded-3 text-center" style="background: var(--bg-subtle); border: 1px solid var(--border-light);">
+                            <div class="display-6 fw-bold text-cyan mb-1">22 ms</div>
+                            <div class="text-secondary small">Confirmación transaccional (1 sola TX)</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="p-3 rounded-3 text-center" style="background: var(--bg-subtle); border: 1px solid var(--border-light);">
+                            <div class="display-6 fw-bold text-purple mb-1" style="color: var(--violet-primary);">101.5 /s</div>
+                            <div class="text-secondary small">Throughput de drenaje en paralelo</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="p-3 rounded-3 text-center" style="background: var(--bg-subtle); border: 1px solid var(--border-light);">
+                            <div class="display-6 fw-bold text-warning mb-1">42</div>
+                            <div class="text-secondary small">Recuperados vía consulta de estado</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Consola del Benchmark -->
+                <div class="p-3 rounded-3 mb-3 bg-dark border border-secondary font-monospace" style="font-size: 0.85rem; color: #a5f3fc;">
+                    <div class="text-secondary mb-1"># Ejecución real: make simulate (Go + PostgreSQL 16 sobre Docker)</div>
+                    <div>Scenario: 300 orders (3 invalid), 4 workers, upstream failure=30% drop-after-apply=10% latency=20ms</div>
+                    <div>  Batch confirmation (1 transaction): <span class="text-success fw-bold">22ms</span></div>
+                    <div>  Drain time: <span class="text-info">2.954s (101.5 orders/s)</span></div>
+                    <div>  Applied: <span class="text-success">295</span>   Dead-lettered: <span class="text-danger">5</span> (3 validation errors + 2 exhausted retries)</div>
+                    <div>  Attempts recorded: 424 (1.41 per order)   Recovered via status lookup: <span class="text-warning">42</span></div>
+                    <div>  Upstream requests: 424   Keys retried: 89   <span class="text-success fw-bold">Duplicate applications: 0</span></div>
+                </div>
+                <p class="text-secondary small m-0">
+                    <i class="fas fa-check-double text-success me-1"></i>
+                    <strong>Análisis del Resultado:</strong> Los 42 ítems recuperados vía consulta de estado demuestran la eficacia de la segunda capa de defensa: cuando el upstream responde con timeout después de guardar, el worker consulta el recurso antes de reintentar el <code>POST</code>, evitando la creación de duplicados de negocio.
+                </p>
+            </div>
+        </section>
+
+        <!-- 5. Tabla de ADRs -->
+        <section class="mb-5">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="brand-icon" style="color: var(--color-galaxy-cyan);"><i class="fas fa-scale-balanced"></i></span>
+                        <span class="fw-bold fs-6 text-light">5. Matriz de Decisiones Arquitectónicas (ADRs)</span>
+                    </div>
+                </div>
+                <h4 class="text-light mb-3">¿Por qué PostgreSQL y no Kafka o RabbitMQ?</h4>
+                <p class="text-secondary mb-4">
+                    La pregunta habitual de arquitectura es: <em>"¿Por qué no usar un broker de mensajería dedicado?"</em>. La decisión se fundamenta en la escala real (decenas de miles de pedidos por día, lotes de hasta 300 ítems) y en la necesidad de <strong>atomicidad ACID nativa</strong> entre el modelo relacional del negocio y los eventos de la cola, evitando la coordinación distribuida de dos fuentes de verdad:
+                </p>
+
+                <div class="table-responsive">
+                    <table class="table analysis-table align-middle">
+                        <thead>
+                            <tr>
+                                <th>ADR</th>
+                                <th>Decisión Técnica Adoptada</th>
+                                <th>Alternativa Descartada</th>
+                                <th>Justificación de Ingeniería</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>ADR-01</strong></td>
+                                <td>PostgreSQL con <code>SKIP LOCKED</code> como motor de cola.</td>
+                                <td>Apache Kafka / Redis Streams.</td>
+                                <td>Evita doble fuente de verdad; transaccionalidad nativa con la base del negocio sin operar nueva infraestructura.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>ADR-02</strong></td>
+                                <td>Confirmación en 1 sola transacción atómica (lote + ítems + outbox).</td>
+                                <td>Persistencia incremental por pasos en el backend.</td>
+                                <td>Garantiza invariante total: o el lote existe con todos sus ítems y eventos auditados, o no existe nada.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>ADR-03</strong></td>
+                                <td>Idempotencia remota en 2 capas (Header <code>Idempotency-Key</code> + GET de sondeo).</td>
+                                <td>Reintento ciego basado únicamente en códigos de estado HTTP.</td>
+                                <td>Elimina duplicados cuando el upstream procesa el registro pero se corta el socket de respuesta.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>ADR-04</strong></td>
+                                <td>Lease temporal con <code>attempts</code> como token de cercado (fencing).</td>
+                                <td>Locks indefinidos en base de datos.</td>
+                                <td>Un worker zombi o pausado por GC no puede pisar el trabajo de un consumidor sucesor.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>ADR-05</strong></td>
+                                <td>Backoff exponencial con jitter y enrutamiento directo a DLQ.</td>
+                                <td>Reintentos a intervalo fijo y descarte silencioso.</td>
+                                <td>Evita tormentas de reintentos sincronizados (thundering herd) y asegura auditoría humana de excepciones.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>ADR-06</strong></td>
+                                <td>Identidad del actor resuelta estrictamente desde token criptográfico.</td>
+                                <td>Confianza en cabeceras HTTP arbitrarias enviadas por el cliente.</td>
+                                <td>Invariante de trazabilidad: previene suplantación de identidad en auditorías forenses.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>ADR-07</strong></td>
+                                <td>Límites de carga estrictos (300 ítems/lote, 50 por ciclo de worker).</td>
+                                <td>Lotes con capacidad no acotada.</td>
+                                <td>Garantiza tiempos de respuesta subsegundo y previene agotamiento de memoria en workers.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Enlaces & Artefactos de Ingeniería -->
+        <section class="mb-5">
+            <div class="glass-card text-center p-4">
+                <h4 class="text-light mb-3">Repositorio de Código, ADRs & Batería de Pruebas</h4>
+                <p class="text-secondary mb-4 mx-auto" style="max-width: 750px;">
+                    El código fuente completo en Go, el esquema DDL de PostgreSQL, los tests de integración con flag <code>-race</code> y el script de simulación de caos están disponibles públicamente:
+                </p>
+                <div class="d-flex flex-wrap justify-content-center gap-3">
+                    <a href="https://github.com/micaelaalvaradomendez/pg-durable-queue" target="_blank" rel="noopener noreferrer" class="btn-primary-glow px-4 py-2">
+                        <i class="fab fa-github me-2"></i>Ver Repositorio en GitHub
+                    </a>
+                    <a href="https://github.com/micaelaalvaradomendez/pg-durable-queue/blob/main/docs/decisiones.md" target="_blank" rel="noopener noreferrer" class="btn-secondary-glass px-4 py-2">
+                        <i class="fas fa-file-code me-2"></i>Registros de Decisión (7 ADRs)
+                    </a>
+                    <a href="https://github.com/micaelaalvaradomendez/pg-durable-queue/blob/main/README.md" target="_blank" rel="noopener noreferrer" class="btn-secondary-glass px-4 py-2">
+                        <i class="fas fa-book-open me-2"></i>Documentación de Arquitectura
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer Institucional -->
+    <footer class="py-4 text-center text-secondary small border-top border-dark">
+        <div class="container">
+            <p class="m-0">© 2026 Micaela Alvarado Mendez — Portafolio Profesional de Ingeniería & Ciberseguridad.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Mermaid JS -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({
+            startOnLoad: true,
+            securityLevel: 'strict',
+            theme: 'default',
+            themeVariables: {
+                background: '#ffffff',
+                primaryColor: '#f5f3ff',
+                primaryTextColor: '#0f172a',
+                primaryBorderColor: '#7c3aed',
+                lineColor: '#b829ac',
+                clusterBkg: '#f8fafc',
+                clusterBorder: '#cbd5e1',
+                fontFamily: 'Inter, sans-serif',
+                textColor: '#0f172a',
+                actorTextColor: '#0f172a',
+                signalColor: '#b829ac',
+                signalTextColor: '#0f172a',
+                labelBoxBkgColor: '#ffffff',
+                labelTextColor: '#0f172a',
+                loopTextColor: '#0f172a',
+                noteBkgColor: '#fdf4ff',
+                noteTextColor: '#701a75',
+                noteBorderColor: '#f5d0fe'
+            }
+        });
+    </script>
+</body>
+</html>

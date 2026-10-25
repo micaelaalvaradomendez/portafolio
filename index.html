@@ -422,11 +422,14 @@
                             <h4 class="project-title">Procesamiento Masivo Confiable contra una API Externa</h4>
                             <div class="tech-stack-label">Go · PostgreSQL · SKIP LOCKED · Outbox · Backoff con Jitter · DLQ · Idempotencia · CI</div>
                             <p class="project-description">
-                                Cola durable sobre PostgreSQL para aplicar cientos de cambios contra un sistema externo inestable: confirmación transaccional, workers concurrentes con lease, reintentos y DLQ auditada. 300 pedidos con 30&nbsp;% de fallas: 0 duplicados.
+                                Cola durable sobre PostgreSQL para procesar lotes masivos contra APIs externas inestables: confirmación transaccional en 22&nbsp;ms, workers concurrentes con <code>SKIP LOCKED</code>, resolución de 5 post-mortems de producción y 0 duplicados bajo 30&nbsp;% de fallas inyectadas.
                             </p>
-                            <div class="mt-auto pt-2">
-                                <a href="https://github.com/micaelaalvaradomendez/pg-durable-queue" target="_blank" rel="noopener noreferrer" class="btn-primary-glow w-100">
-                                    <i class="fab fa-github me-2"></i>Repositorio & Decisiones
+                            <div class="mt-auto pt-2 d-flex flex-column gap-2">
+                                <a href="proyectos/cola-persistente.html" class="btn-primary-glow w-100 text-center">
+                                    <i class="fas fa-file-lines me-2"></i>Ver caso de estudio
+                                </a>
+                                <a href="https://github.com/micaelaalvaradomendez/pg-durable-queue" target="_blank" rel="noopener noreferrer" class="btn-secondary-glass w-100 text-center">
+                                    <i class="fab fa-github me-2"></i>Ver repositorio & ADRs
                                 </a>
                             </div>
                         </div>

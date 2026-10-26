@@ -129,6 +129,50 @@ flowchart TD
     D -->|"Mejora continua y menor ruido"| B
 </pre>
                 </div>
+
+                <!-- Subsección: Calibración Activa v3 a v4 -->
+                <div class="mt-4 pt-3 border-top border-secondary border-opacity-25">
+                    <h5 class="text-light fs-6 mb-2">
+                        <i class="fas fa-microchip me-2" style="color: var(--color-galaxy-cyan);"></i>Calibración Metodológica de Herramientas Activas: De v3 a v4
+                    </h5>
+                    <p class="text-secondary small mb-3">
+                        El rigor del motor pasivo surgió de aprender cómo se equivocan las herramientas de evaluación activa. Durante el desarrollo iterativo de los scanners (v1 a v5), la transición de v3 a v4 se centró en eliminar sistemáticamente las asunciones teóricas que producían falsos positivos:
+                    </p>
+
+                    <div class="table-responsive">
+                        <table class="table analysis-table align-middle mb-0" style="font-size: 0.85rem;">
+                            <thead>
+                                <tr>
+                                    <th>Vector de Ataque</th>
+                                    <th>Antipatrón en v3 (Falso Positivo)</th>
+                                    <th>Corrección Metodológica Rigurosa en v4</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong class="text-light">XSS Almacenado</strong></td>
+                                    <td class="text-secondary">Esperar ver el payload reflejado en la respuesta inmediata del <code>POST</code> de creación.</td>
+                                    <td><span class="text-info">Segunda petición HTTP obligatoria:</span> re-consulta explícita del ticket creado para verificar persistencia real en base de datos.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong class="text-light">SQLi Ciego por Tiempo</strong></td>
+                                    <td class="text-secondary">Umbral estático fijo (ej. 5s), hipersensible al jitter y fluctuaciones ordinarias de red.</td>
+                                    <td><span class="text-info">Medición de latencia base (RTT baseline):</span> cálculo del delta diferencial estadísticamente significativo contra el baseline.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong class="text-light">Remote Code Execution (RCE)</strong></td>
+                                    <td class="text-secondary">Búsqueda de strings genéricos o comandos comunes devueltos en la salida.</td>
+                                    <td><span class="text-info">Marcador criptográfico único:</span> inyección de un token/nonce aleatorio exclusivo para certificar ejecución propia.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong class="text-light">SSRF (Server-Side Request)</strong></td>
+                                    <td class="text-secondary">Búsqueda de indicios o códigos de error en el cuerpo devuelto por la aplicación.</td>
+                                    <td><span class="text-warning">Limitación técnica reconocida:</span> el SSRF exige confirmación pericial mediante listener fuera de banda (OOB Callback).</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -544,6 +588,66 @@ flowchart TB
     <span style="color: #94a3b8;">// El detector clasifica y calcula el score CVSS 9.2 automáticamente</span>
     <span style="color: #c084fc;">return</span> s.processUploadProgressFindings(rows)
 }</pre>
+                    </div>
+                </div>
+
+                <!-- Subsección: Invariantes de Ingeniería en Go y AppSec -->
+                <div class="mt-4 pt-3 border-top border-secondary border-opacity-25">
+                    <h5 class="text-light fs-6 mb-3">
+                        <i class="fas fa-shield-halved me-2" style="color: var(--color-galaxy-purple);"></i>Invariantes de Ingeniería en Go & Seguridad por Diseño (AppSec)
+                    </h5>
+                    <p class="text-secondary small mb-3">
+                        La plataforma desacoplada de auditoría opera sobre principios estrictos de resiliencia de datos y mitigación intrínseca de riesgos de seguridad:
+                    </p>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="p-3 rounded-3 h-100" style="background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(148, 163, 184, 0.2);">
+                                <div class="d-flex align-items-center gap-2 mb-2">
+                                    <span class="badge bg-primary">Manifest-First & Fast-Forward</span>
+                                    <small class="text-secondary font-monospace">Ingesta Resiliente</small>
+                                </div>
+                                <p class="text-secondary small m-0">
+                                    Contrato estricto sobre las 6 tablas origen de la fuente. Algoritmo de <em>fast-forward</em> que permite arrancar en frío omitiendo histórico irrelevante y checkpointing idempotente con auto-recuperación ante inconsistencias.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="p-3 rounded-3 h-100" style="background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(148, 163, 184, 0.2);">
+                                <div class="d-flex align-items-center gap-2 mb-2">
+                                    <span class="badge bg-success">Garantía Mecánica Read-Only</span>
+                                    <small class="text-secondary font-monospace">SET SESSION RO</small>
+                                </div>
+                                <p class="text-secondary small m-0">
+                                    El aislamiento no depende solo de las credenciales DSN: se fuerza <code>SET SESSION TRANSACTION READ ONLY</code> a nivel de conexión en Go y se valida con tests de integración negativos que verifican el rechazo de mutaciones.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="p-3 rounded-3 h-100" style="background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(148, 163, 184, 0.2);">
+                                <div class="d-flex align-items-center gap-2 mb-2">
+                                    <span class="badge bg-danger">Regla Anti-Fuga CRYPTO-001</span>
+                                    <small class="text-secondary font-monospace">Protección Credenciales</small>
+                                </div>
+                                <p class="text-secondary small m-0">
+                                    Al auditar cuentas de personal con hashes obsoletos, el detector guarda exclusivamente el nombre del algoritmo (ej. <code>MD5</code>) o un flag booleano. El material criptográfico jamás se persiste ni se envía a la API/UI.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="p-3 rounded-3 h-100" style="background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(148, 163, 184, 0.2);">
+                                <div class="d-flex align-items-center gap-2 mb-2">
+                                    <span class="badge bg-info text-dark">Catálogo de 25 Detectores</span>
+                                    <small class="text-secondary font-monospace">Router Declarativo</small>
+                                </div>
+                                <p class="text-secondary small m-0">
+                                    Matriz de 25 reglas pasivas mapeadas a MITRE ATT&CK. En la interfaz SvelteKit, cada regla posee un schema estricto (<code>alert-router-config.ts</code>) con modales forenses dedicados y fallback defensivo.
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
